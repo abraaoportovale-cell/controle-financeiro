@@ -1,0 +1,1838 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Controle Financeiro — Abraão</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0a0b0e;
+    --surface: #111318;
+    --surface2: #181c24;
+    --border: #1e2330;
+    --border2: #252d3d;
+    --text: #e8eaf0;
+    --muted: #6b7494;
+    --accent: #4f8ef7;
+    --accent2: #7c5cfc;
+    --green: #29d98e;
+    --red: #f05c6e;
+    --yellow: #f5c842;
+    --orange: #f5874f;
+    --mono: 'DM Mono', monospace;
+    --sans: 'Space Grotesk', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  /* LAYOUT */
+  .app { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: 220px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .logo h1 { font-size: 15px; font-weight: 700; color: var(--accent); letter-spacing: -.3px; }
+  .logo p { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  .nav { flex: 1; padding: 12px 0; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 20px;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 500;
+    border-left: 2px solid transparent;
+    transition: all .15s;
+  }
+  .nav-item:hover { color: var(--text); background: var(--surface2); }
+  .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(79,142,247,.07); }
+  .nav-item svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+  .main { margin-left: 220px; flex: 1; }
+
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 28px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 50;
+  }
+  .topbar-title { font-size: 16px; font-weight: 600; }
+  .topbar-sub { font-size: 12px; color: var(--muted); margin-top: 1px; }
+
+  .page { display: none; padding: 28px; }
+  .page.active { display: block; }
+
+  /* CARDS */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 14px; margin-bottom: 24px; }
+  
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+  }
+  .card-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; font-weight: 500; }
+  .card-value { font-size: 22px; font-weight: 700; margin-top: 6px; font-family: var(--mono); }
+  .card-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .card.green .card-value { color: var(--green); }
+  .card.red .card-value { color: var(--red); }
+  .card.blue .card-value { color: var(--accent); }
+  .card.yellow .card-value { color: var(--yellow); }
+
+  /* SECTION */
+  .section { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 22px; margin-bottom: 20px; }
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .section-title { font-size: 14px; font-weight: 600; }
+  .section-sub { font-size: 12px; color: var(--muted); }
+
+  /* TABLE */
+  .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { width: 100%; border-collapse: collapse; min-width: 900px; }
+  th {
+    text-align: left; padding: 8px 12px; font-size: 11px; text-transform: uppercase;
+    letter-spacing: .6px; color: var(--muted); border-bottom: 1px solid var(--border);
+    font-weight: 500; white-space: nowrap;
+  }
+  td {
+    padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 13px;
+    font-family: var(--mono); white-space: nowrap;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); }
+  td.label { font-family: var(--sans); color: var(--muted); font-size: 12px; }
+  .pos { color: var(--green); }
+  .neg { color: var(--red); }
+  .neutral { color: var(--yellow); }
+
+  /* FORM */
+  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 14px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label { font-size: 11px; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); font-weight: 500; }
+  .form-group input, .form-group select, .form-group textarea {
+    background: var(--surface2); border: 1px solid var(--border2); border-radius: 7px;
+    color: var(--text); font-family: var(--sans); font-size: 13px; padding: 9px 12px;
+    outline: none; transition: border-color .15s;
+  }
+  .form-group input:focus, .form-group select:focus { border-color: var(--accent); }
+  .form-group select option { background: var(--surface2); }
+
+  /* BUTTONS */
+  .btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 8px 16px; border-radius: 7px; font-size: 13px; font-weight: 500;
+    cursor: pointer; border: none; font-family: var(--sans); transition: all .15s;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: #3a7ae0; }
+  .btn-success { background: var(--green); color: #000; }
+  .btn-danger { background: var(--red); color: #fff; }
+  .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border2); }
+  .btn-ghost:hover { color: var(--text); border-color: var(--accent); }
+  .btn-small { padding: 5px 11px; font-size: 12px; }
+
+  .btn-row { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+
+  /* BADGE */
+  .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;
+  }
+  .badge-green { background: rgba(41,217,142,.15); color: var(--green); }
+  .badge-red { background: rgba(240,92,110,.15); color: var(--red); }
+  .badge-yellow { background: rgba(245,200,66,.15); color: var(--yellow); }
+  .badge-blue { background: rgba(79,142,247,.15); color: var(--accent); }
+
+  /* PROGRESS BAR */
+  .progress-wrap { background: var(--surface2); border-radius: 4px; height: 6px; overflow: hidden; margin-top: 8px; }
+  .progress-bar { height: 100%; border-radius: 4px; transition: width .4s; }
+  .progress-bar.green { background: var(--green); }
+  .progress-bar.red { background: var(--red); }
+  .progress-bar.yellow { background: var(--yellow); }
+
+  /* MONTH SELECTOR */
+  .month-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+  .month-btn {
+    padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 500;
+    cursor: pointer; border: 1px solid var(--border2); background: transparent; color: var(--muted);
+    font-family: var(--sans); transition: all .15s;
+  }
+  .month-btn:hover { color: var(--text); border-color: var(--accent); }
+  .month-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  /* DIVIDER */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+  /* TWO COL */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* INVESTMENT ROWS */
+  .inv-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .inv-row:last-child { border-bottom: none; }
+  .inv-name { font-size: 13px; font-weight: 500; }
+  .inv-type { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .inv-value { font-family: var(--mono); font-size: 14px; font-weight: 600; }
+
+  /* ALERT BOX */
+  .alert { padding: 12px 16px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; }
+  .alert-info { background: rgba(79,142,247,.1); border: 1px solid rgba(79,142,247,.3); color: #a0bdff; }
+  .alert-warn { background: rgba(245,200,66,.1); border: 1px solid rgba(245,200,66,.3); color: #f5d47a; }
+
+  /* C6 BUZIOS */
+  .c6-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .c6-item:last-child { border-bottom: none; }
+
+  /* TABS */
+  .tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
+  .tab {
+    padding: 10px 18px; font-size: 13px; font-weight: 500; cursor: pointer;
+    color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px;
+    transition: all .15s; background: none; border-top: none; border-left: none; border-right: none;
+    font-family: var(--sans);
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* MODAL */
+  .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.7); z-index: 999; align-items: center; justify-content: center; }
+  .modal-bg.open { display: flex; }
+  .modal { background: var(--surface); border: 1px solid var(--border2); border-radius: 12px; padding: 28px; max-width: 480px; width: 90%; }
+  .modal h3 { font-size: 16px; font-weight: 600; margin-bottom: 20px; }
+
+  /* TOAST */
+  #toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--green); color: #000;
+    padding: 12px 20px; border-radius: 8px; font-size: 13px; font-weight: 600;
+    opacity: 0; transform: translateY(10px); transition: all .3s; z-index: 9999;
+    pointer-events: none;
+  }
+  #toast.show { opacity: 1; transform: translateY(0); }
+  #toast.error { background: var(--red); color: #fff; }
+
+  .full-width { grid-column: 1 / -1; }
+  .text-right { text-align: right; }
+  .mt-16 { margin-top: 16px; }
+  .flex-end { display: flex; justify-content: flex-end; }
+  .gap-10 { gap: 10px; }
+  .chip { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 20px; font-size: 11px; background: var(--surface2); border: 1px solid var(--border2); color: var(--muted); margin: 2px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="logo">
+    <h1>💰 Controle Fin.</h1>
+    <p>Abraão Moreira</p>
+  </div>
+  <div class="nav">
+    <div class="nav-item active" onclick="showPage('dashboard')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </div>
+    <div class="nav-item" onclick="showPage('mensal')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Lançamentos
+    </div>
+    <div class="nav-item" onclick="showPage('projecao')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Projeção 2026
+    </div>
+    <div class="nav-item" onclick="showPage('investimentos')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Investimentos
+    </div>
+    <div class="nav-item" onclick="showPage('plr')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      PLR & Bônus
+    </div>
+    <div class="nav-item" onclick="showPage('config')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Configurações
+    </div>
+  </div>
+  <div style="padding:16px 20px; border-top:1px solid var(--border);">
+    <button class="btn btn-ghost" style="width:100%; justify-content:center;" onclick="exportarExcel()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Exportar Excel
+    </button>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div>
+    <div class="topbar-title" id="topbar-title">Dashboard</div>
+    <div class="topbar-sub" id="topbar-sub">Visão geral do seu patrimônio</div>
+  </div>
+  <div style="display:flex;gap:10px;align-items:center;">
+    <span style="font-size:12px;color:var(--muted);" id="hoje-label"></span>
+    <button class="btn btn-primary btn-small" onclick="showPage('mensal')">+ Lançamento</button>
+  </div>
+</div>
+
+<!-- ============ PAGE: DASHBOARD ============ -->
+<div class="page active" id="page-dashboard">
+  <div class="cards" id="dash-cards">
+    <!-- preenchido por JS -->
+  </div>
+
+  <div class="two-col">
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Patrimônio Total</div>
+        <span id="patrimonio-total" style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--green)"></span>
+      </div>
+      <div id="inv-breakdown"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Resumo do Mês</div>
+        <select id="dash-mes-sel" style="background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);padding:5px 10px;font-family:var(--sans);font-size:12px;" onchange="renderDashMes()"></select>
+      </div>
+      <div id="dash-mes-content"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Histórico de Patrimônio</div>
+      <div class="section-sub">Evolução mensal registrada</div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Mês</th>
+            <th>Patrimônio</th>
+            <th>Variação</th>
+            <th>Total Guardado</th>
+          </tr>
+        </thead>
+        <tbody id="historico-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE: MENSAL ============ -->
+<div class="page" id="page-mensal">
+  <div class="month-selector" id="month-selector-mensal"></div>
+
+  <div class="two-col">
+    <!-- ENTRADAS -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">💚 Entradas — <span id="sel-mes-label">Jan</span></div>
+        <button class="btn btn-small btn-ghost" onclick="openModal('modal-entrada')">+ Adicionar</button>
+      </div>
+      <div id="entradas-list"></div>
+      <hr class="divider">
+      <div style="display:flex;justify-content:space-between;font-weight:600;">
+        <span>Total Entradas</span>
+        <span style="font-family:var(--mono);color:var(--green);" id="total-entradas">R$ 0</span>
+      </div>
+    </div>
+
+    <!-- SAÍDAS -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">❤️ Saídas — <span id="sel-mes-label2">Jan</span></div>
+        <button class="btn btn-small btn-ghost" onclick="openModal('modal-saida')">+ Adicionar</button>
+      </div>
+      <div id="saidas-list"></div>
+      <hr class="divider">
+      <div style="display:flex;justify-content:space-between;font-weight:600;">
+        <span>Total Saídas</span>
+        <span style="font-family:var(--mono);color:var(--red);" id="total-saidas">R$ 0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESUMO DO MÊS -->
+  <div class="section" id="resumo-mes">
+    <div class="section-title" style="margin-bottom:16px;">📊 Resumo do Mês</div>
+    <div class="cards" id="resumo-cards"></div>
+  </div>
+
+  <!-- POSIÇÃO DOS INVESTIMENTOS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">📈 Posição dos Investimentos no Mês</div>
+      <button class="btn btn-small btn-ghost" onclick="openModal('modal-patrimonio')">Registrar Posição</button>
+    </div>
+    <div id="posicao-inv-mes"></div>
+  </div>
+</div>
+
+<!-- ============ PAGE: PROJEÇÃO ============ -->
+<div class="page" id="page-projecao">
+  <div class="alert alert-info" style="margin-bottom:20px;">
+    📌 Esta projeção é baseada no seu histórico. Valores em <strong>azul</strong> são projetados; em <strong>branco</strong> são realizados.
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Projeção Anual 2026</div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-small btn-ghost" onclick="showTab('tab-projecao','pj-clt')">CLT</button>
+        <button class="btn btn-small btn-ghost" onclick="showTab('tab-projecao','pj-pj')">PJ</button>
+      </div>
+    </div>
+
+    <div class="tabs" id="tab-projecao">
+      <button class="tab active" data-tab="pj-clt" onclick="showTab('tab-projecao','pj-clt')">Regime CLT</button>
+      <button class="tab" data-tab="pj-pj" onclick="showTab('tab-projecao','pj-pj')">Regime PJ</button>
+    </div>
+
+    <div class="tab-content active" id="pj-clt">
+      <div class="tbl-wrap">
+        <table id="tbl-projecao-clt">
+          <thead>
+            <tr>
+              <th>Mês</th><th>Salário</th><th>VT</th><th>Vale (20)</th><th>Comissão</th><th>Lume+CS</th><th>JAC</th>
+              <th>Total Entrada</th><th>Total Gastos</th><th>Guardar</th><th>Patrimônio</th><th>Var%</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-projecao-clt"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="tab-content" id="pj-pj">
+      <div class="alert alert-warn">PJ: salário R$ 13.650 + adicionais. Valores abaixo são projetados para o cenário PJ.</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Mês</th><th>Salário PJ</th><th>Adicionais</th><th>Comissão</th>
+              <th>Total Entrada</th><th>Total Gastos</th><th>Guardar</th><th>Patrimônio</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-projecao-pj"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE: INVESTIMENTOS ============ -->
+<div class="page" id="page-investimentos">
+  <div class="cards" id="inv-cards"></div>
+
+  <div class="two-col">
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">💰 Saldos por Conta</div>
+        <button class="btn btn-small btn-ghost" onclick="openModal('modal-inv-saldo')">Atualizar</button>
+      </div>
+      <div id="saldos-conta"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">📋 Carteira XP Detalhada</div>
+        <div class="section-sub">Atualizada manualmente</div>
+      </div>
+      <div id="xp-detalhada"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Evolução Patrimonial</div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Mês</th><th>Cash</th><th>Espanha</th><th>XP Invest</th><th>Nubank</th><th>Total</th><th>Var%</th></tr>
+        </thead>
+        <tbody id="tbody-inv-hist"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE: PLR ============ -->
+<div class="page" id="page-plr">
+  <div class="alert alert-info">
+    💡 PLR = 3x salário médio anual ÷ 2 parcelas. A 2ª parcela é reduzida pelo churn (cancelamentos).
+  </div>
+
+  <div class="cards">
+    <div class="card green">
+      <div class="card-label">PLR 1ª Parcela (Fev)</div>
+      <div class="card-value" id="plr-1a">R$ 0</div>
+      <div class="card-sub">pago em fevereiro</div>
+    </div>
+    <div class="card yellow">
+      <div class="card-label">PLR 2ª Parcela (Jun)</div>
+      <div class="card-value" id="plr-2a">R$ 0</div>
+      <div class="card-sub">com abate de churn</div>
+    </div>
+    <div class="card blue">
+      <div class="card-label">PLR Total</div>
+      <div class="card-value" id="plr-total">R$ 0</div>
+      <div class="card-sub">estimativa</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="section">
+      <div class="section-title" style="margin-bottom:16px;">Configuração PLR</div>
+      <div class="form-grid" style="grid-template-columns:1fr;">
+        <div class="form-group">
+          <label>Salário meses 1-9</label>
+          <input type="number" id="plr-sal-baixo" value="6952" oninput="calcPLR()">
+        </div>
+        <div class="form-group">
+          <label>Salário meses 10-12</label>
+          <input type="number" id="plr-sal-alto" value="7378" oninput="calcPLR()">
+        </div>
+        <div class="form-group">
+          <label>Meta de vendas (R$)</label>
+          <input type="number" id="plr-meta" value="5300000000" oninput="calcPLR()">
+        </div>
+        <div class="form-group">
+          <label>% de cancelamento (churn)</label>
+          <input type="number" id="plr-churn" value="0.30" step="0.01" oninput="calcPLR()">
+        </div>
+        <div class="form-group">
+          <label>Multiplicador PLR</label>
+          <input type="number" id="plr-mult" value="3" step="0.5" oninput="calcPLR()">
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title" style="margin-bottom:16px;">Cálculo Detalhado</div>
+      <div id="plr-detalhes"></div>
+
+      <hr class="divider">
+
+      <div class="section-title" style="margin-bottom:12px;">Outros Bônus e Receitas Extras</div>
+      <div id="extras-list"></div>
+      <div class="btn-row">
+        <button class="btn btn-ghost btn-small" onclick="openModal('modal-extra')">+ Receita Extra</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE: CONFIG ============ -->
+<div class="page" id="page-config">
+  <div class="section">
+    <div class="section-title" style="margin-bottom:20px;">⚙️ Configurações Gerais</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Salário Base (CLT)</label>
+        <input type="number" id="cfg-salario" value="8471" oninput="saveConfig()">
+      </div>
+      <div class="form-group">
+        <label>VT — Vale Transporte</label>
+        <input type="number" id="cfg-vt" value="264" oninput="saveConfig()">
+      </div>
+      <div class="form-group">
+        <label>Lume + CS</label>
+        <input type="number" id="cfg-lume" value="2800" oninput="saveConfig()">
+      </div>
+      <div class="form-group">
+        <label>JAC</label>
+        <input type="number" id="cfg-jac" value="1772" oninput="saveConfig()">
+      </div>
+    </div>
+    <hr class="divider">
+    <div class="section-title" style="margin-bottom:16px;">Gastos Fixos Mensais</div>
+    <div id="gastos-fixos-list"></div>
+    <div class="btn-row">
+      <button class="btn btn-ghost btn-small" onclick="openModal('modal-fixo')">+ Gasto Fixo</button>
+    </div>
+    <hr class="divider">
+    <div class="btn-row">
+      <button class="btn btn-danger btn-small" onclick="if(confirm('Apagar TODOS os dados?')) limparTudo()">🗑 Limpar Todos os Dados</button>
+      <button class="btn btn-primary btn-small" onclick="importarDadosIniciais()">↩ Restaurar Dados Iniciais (v7)</button>
+      <div style="margin-top:12px;font-size:11px;color:var(--muted)">Versão dos dados: <strong id="data-ver-label"></strong></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+</div><!-- /app -->
+
+<!-- ============ MODALS ============ -->
+
+<!-- MODAL ENTRADA -->
+<div class="modal-bg" id="modal-entrada">
+  <div class="modal">
+    <h3>+ Nova Entrada</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Tipo</label>
+        <select id="ent-tipo">
+          <option>Salário (5º dia útil)</option>
+          <option>VT (Vale Transporte)</option>
+          <option>Vale (Adiant. 40% — dia 20)</option>
+          <option>Comissão</option>
+          <option>Lume+CS</option>
+          <option>JAC</option>
+          <option>PLR</option>
+          <option>13º Salário</option>
+          <option>Outro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Valor (R$)</label>
+        <input type="number" id="ent-valor" placeholder="0,00">
+      </div>
+      <div class="form-group full-width">
+        <label>Observação</label>
+        <input type="text" id="ent-obs" placeholder="Opcional">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="addEntrada()">Salvar</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-entrada')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL SAIDA -->
+<div class="modal-bg" id="modal-saida">
+  <div class="modal">
+    <h3>+ Nova Saída</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Categoria</label>
+        <select id="sai-categoria">
+          <option>Acidente</option><option>Luz</option><option>Habitação</option>
+          <option>Nubank</option><option>XP</option><option>Inglês</option>
+          <option>C6 Lucas</option><option>IPTU</option><option>Santander</option>
+          <option>Itaú</option><option>Condomínio</option><option>Espanha</option>
+          <option>Lazer/Férias</option><option>Alimentação</option><option>Transporte</option>
+          <option>Outro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Valor (R$)</label>
+        <input type="number" id="sai-valor" placeholder="0,00">
+      </div>
+      <div class="form-group full-width">
+        <label>Observação</label>
+        <input type="text" id="sai-obs" placeholder="Opcional">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="addSaida()">Salvar</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-saida')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PATRIMÔNIO -->
+<div class="modal-bg" id="modal-patrimonio">
+  <div class="modal">
+    <h3>📈 Registrar Posição Atual</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Cash (dinheiro físico)</label>
+        <input type="number" id="pat-cash" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label>Espanha (reserva)</label>
+        <input type="number" id="pat-espanha" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label>XP Invest</label>
+        <input type="number" id="pat-xp" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label>Nubank</label>
+        <input type="number" id="pat-nu" placeholder="0">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="savePatrimonio()">Salvar Posição</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-patrimonio')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL C6 -->
+<div class="modal-bg" id="modal-c6">
+  <div class="modal">
+    <h3>💳 Gasto C6 — Lucas</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Descrição</label>
+        <input type="text" id="c6-desc" placeholder="Ex: Restaurante, Mercado...">
+      </div>
+      <div class="form-group">
+        <label>Valor (R$) — minha parte</label>
+        <input type="number" id="c6-val" placeholder="0,00">
+      </div>
+      <div class="form-group">
+        <label>Data</label>
+        <input type="date" id="c6-data">
+      </div>
+      <div class="form-group">
+        <label>Quem pagou</label>
+        <select id="c6-quem"><option>Eu</option><option>Lucas</option></select>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="addC6()">Salvar</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-c6')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL GASTO FIXO -->
+<div class="modal-bg" id="modal-fixo">
+  <div class="modal">
+    <h3>+ Gasto Fixo</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Nome</label>
+        <input type="text" id="fixo-nome" placeholder="Ex: Academia">
+      </div>
+      <div class="form-group">
+        <label>Valor (R$)</label>
+        <input type="number" id="fixo-val" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label>Tipo de pgto</label>
+        <select id="fixo-tipo"><option>5º Dia Útil</option><option>Vale</option><option>Variável</option></select>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="addFixo()">Salvar</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-fixo')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL INVESTIMENTO SALDO -->
+<div class="modal-bg" id="modal-inv-saldo">
+  <div class="modal">
+    <h3>Atualizar Saldos de Investimento</h3>
+    <div class="form-grid">
+      <div class="form-group"><label>Cash</label><input type="number" id="is-cash" placeholder="0"></div>
+      <div class="form-group"><label>Espanha</label><input type="number" id="is-esp" placeholder="0"></div>
+      <div class="form-group"><label>XP Invest</label><input type="number" id="is-xp" placeholder="0"></div>
+      <div class="form-group"><label>Nubank</label><input type="number" id="is-nu" placeholder="0"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="salvarInvSaldo()">Salvar</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-inv-saldo')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RECEITA EXTRA -->
+<div class="modal-bg" id="modal-extra">
+  <div class="modal">
+    <h3>+ Receita Extra</h3>
+    <div class="form-grid">
+      <div class="form-group"><label>Descrição</label><input type="text" id="ext-desc" placeholder="Ex: PLR, Comissão..."></div>
+      <div class="form-group"><label>Valor (R$)</label><input type="number" id="ext-val" placeholder="0"></div>
+      <div class="form-group"><label>Mês</label><select id="ext-mes"></select></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="addExtra()">Salvar</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-extra')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+// ============================================================
+// ESTADO GLOBAL & PERSISTÊNCIA
+// ============================================================
+const MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const MESES_FULL = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const ANO = 2026;
+
+const DATA_VERSION = 7; // incrementar sempre que mudar initState
+
+function loadData() {
+  try {
+    const raw = JSON.parse(localStorage.getItem('cf_data') || 'null');
+    if (!raw || raw._version !== DATA_VERSION) {
+      // Versão desatualizada ou inexistente -> usa initState
+      console.log('cf_data versão antiga ou ausente — reiniciando com dados atualizados.');
+      return null;
+    }
+    return raw;
+  } catch { return null; }
+}
+function saveData(d) {
+  d._version = DATA_VERSION;
+  localStorage.setItem('cf_data', JSON.stringify(d));
+}
+
+function initState() {
+  return {
+    config: {
+      salario: 8471,
+      vt: 264,
+      vale: 0,  // 40% salario, variavel por mes
+      lume: 2800,
+      jac: 1772
+    },
+    gastos_fixos: [
+      { id: 2, nome: 'Luz', valor: 95, tipo: '5º Dia Útil' },
+      { id: 3, nome: 'Habitação', valor: 650, tipo: '5º Dia Útil' },
+      { id: 6, nome: 'Inglês', valor: 256, tipo: '5º Dia Útil' },
+      { id: 8, nome: 'IPTU', valor: 86.3, tipo: '5º Dia Útil' },
+      { id: 10, nome: 'Condomínio', valor: 460, tipo: 'Vale' },
+      { id: 11, nome: 'Espanha', valor: 1000, tipo: 'Vale' },
+    ],
+    // meses: { '2026-01': { entradas: [], saidas: [], patrimonio: {cash,espanha,xp,nu} } }
+    meses: {
+      // -----------------------------------------------
+      // LÓGICA:  5º DU = SAL+VT+COM+LUME+JAC(+extras)
+      //          VALE = adiantamento dia 20 (~40% salário bruto)
+      //          "Salário" na planilha = SUBTOTAL5DU + VALE
+      //          R$ 311 fixo no subtotal = item recorrente da planilha
+      // -----------------------------------------------
+
+      // ===== REALIZADOS =====
+      '2026-01': { entradas: [
+        { tipo: 'Salário (5º DU)',             valor: 1051.12 },
+        { tipo: 'VT (Vale Transporte)',         valor: 264.00 },
+        { tipo: 'Comissão',                     valor: 734.00 },
+        { tipo: 'Lume+CS',                      valor: 3600.00 },
+        { tipo: 'JAC',                          valor: 1856.00 },
+        { tipo: 'PLR (1ª parcela — fev/26)',   valor: 13945.00, obs: 'Embutido no subtotal 5ºDU' },
+        { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 2139.84 },
+      ], saidas: [
+        { categoria: 'Acidente',   valor: 164.00,  obs: '5º DU' },
+        { categoria: 'Luz',        valor: 60.00,   obs: '5º DU' },
+        { categoria: 'Habitação',  valor: 650.00,  obs: '5º DU' },
+        { categoria: 'Nubank',     valor: 960.00,  obs: '5º DU' },
+        { categoria: 'XP',         valor: 4348.00, obs: '5º DU — META 300' },
+        { categoria: 'Inglês',     valor: 800.00,  obs: '5º DU — Pai da Poli + mal-comida' },
+        { categoria: 'C6 Lucas',   valor: 250.00,  obs: '5º DU' },
+        { categoria: 'IPTU',       valor: 86.93,   obs: '5º DU — parcela 1/10' },
+        { categoria: 'Santander',  valor: 1155.00, obs: '5º DU' },
+        { categoria: 'Itaú',       valor: 1519.00, obs: 'Vale (dia 20)' },
+        { categoria: 'Condomínio', valor: 460.00,  obs: 'Vale (dia 20)' },
+      ], patrimonio: { cash: 400, espanha: 9000, xp: 84773.16, nu: 1541.1 } },
+
+      '2026-02': { entradas: [
+        { tipo: 'Salário (5º DU)',             valor: 1542.12 },
+        { tipo: 'VT (Vale Transporte)',         valor: 264.00 },
+        { tipo: 'Comissão',                     valor: 95.00 },
+        { tipo: 'Lume+CS',                      valor: 2200.00 },
+        { tipo: 'JAC',                          valor: 1896.00 },
+        { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 2139.84, obs: '2000 pra Espanha (fev e mar)' },
+      ], saidas: [
+        { categoria: 'Acidente',   valor: 164.00,  obs: '5º DU' },
+        { categoria: 'Luz',        valor: 270.00,  obs: '5º DU — 3 meses atrasada' },
+        { categoria: 'Habitação',  valor: 650.00,  obs: '5º DU' },
+        { categoria: 'Nubank',     valor: 1612.00, obs: '5º DU' },
+        { categoria: 'XP',         valor: 4416.00, obs: '5º DU — meta' },
+        { categoria: 'C6 Lucas',   valor: 505.02,  obs: '5º DU' },
+        { categoria: 'Santander',  valor: 994.00,  obs: '5º DU' },
+        { categoria: 'Itaú',       valor: 1214.00, obs: 'Vale (dia 20)' },
+        { categoria: 'Condomínio', valor: 460.00,  obs: 'Vale (dia 20)' },
+        { categoria: 'IPTU',       valor: 80.00,   obs: 'Vale (dia 20)' },
+      ], patrimonio: { cash: 400, espanha: 9000, xp: 83739.15, nu: 1541.0 } },
+
+      '2026-03': { entradas: [
+        { tipo: 'Salário (5º DU)',             valor: 1542.12 },
+        { tipo: 'VT (Vale Transporte)',         valor: 264.00 },
+        { tipo: 'Comissão',                     valor: 748.00 },
+        { tipo: 'Lume+CS',                      valor: 4900.00 },
+        { tipo: 'JAC',                          valor: 1713.00 },
+        { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 2139.84 },
+      ], saidas: [
+        { categoria: 'Acidente',      valor: 164.00,   obs: '5º DU' },
+        { categoria: 'Habitação',     valor: 650.00,   obs: '5º DU' },
+        { categoria: 'Nubank',        valor: 1304.29,  obs: '5º DU' },
+        { categoria: 'XP',            valor: 5011.22,  obs: '5º DU' },
+        { categoria: 'Inglês',        valor: 256.00,   obs: '5º DU' },
+        { categoria: 'C6 Lucas',      valor: 83.00,    obs: '5º DU — Lucas precisa me dar 5/6 de 417 de búzios' },
+        { categoria: 'IPTU',          valor: 86.30,    obs: '5º DU' },
+        { categoria: 'Itaú',          valor: 917.00,   obs: 'Vale (dia 20)' },
+        { categoria: 'Condomínio',    valor: 460.00,   obs: 'Vale (dia 20)' },
+        { categoria: 'IPTU',          valor: 80.00,    obs: 'Vale (dia 20)' },
+        { categoria: 'Espanha (RGB)', valor: 800.00,   obs: 'Vale (dia 20)' },
+      ], patrimonio: { cash: 400, espanha: 9000, xp: 82187.98, nu: 1541.10 } },
+
+      '2026-04': { entradas: [
+        { tipo: 'Salário (5º DU)',             valor: 2594.12 },
+        { tipo: 'VT (Vale Transporte)',         valor: 264.00 },
+        { tipo: 'Comissão',                     valor: 761.00 },
+        { tipo: 'Lume+CS',                      valor: 2800.00 },
+        { tipo: 'JAC',                          valor: 1772.00 },
+        { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 3360.34, obs: 'ativa (denner)' },
+      ], saidas: [
+        { categoria: 'Acidente',      valor: 334.00,   obs: '5º DU' },
+        { categoria: 'Luz',           valor: 95.00,    obs: '5º DU' },
+        { categoria: 'Habitação',     valor: 650.00,   obs: '5º DU' },
+        { categoria: 'Nubank',        valor: 1760.06,  obs: '5º DU' },
+        { categoria: 'XP',            valor: 4100.00,  obs: '5º DU' },
+        { categoria: 'Inglês',        valor: 256.00,   obs: '5º DU' },
+        { categoria: 'IPTU',          valor: 86.30,    obs: '5º DU' },
+        { categoria: 'Condomínio',    valor: 460.00,   obs: 'Vale (dia 20)' },
+        { categoria: 'Espanha (RGB)', valor: 1000.00,  obs: 'Vale (dia 20) — Lucas precisa me dar 6/6 de 417 de búzios + 106 que paguei a mais em março' },
+      ], patrimonio: { cash: 400, espanha: 9000, xp: 82187.98, nu: 1541.10 } },
+
+      // ===== PROJETADOS =====
+      // Mai/26: SAL=6894.12 (inclui PLR 2ª parcela ~4300 na base)
+      '2026-05': { entradas: [
+        { tipo: 'Salário (5º DU)',             valor: 6894.12, obs: 'Inclui PLR 2ª parcela do PLR' },
+        { tipo: 'VT (Vale Transporte)',         valor: 264.00 },
+        { tipo: 'Comissão',                     valor: 761.00 },
+        { tipo: 'Lume+CS',                      valor: 2800.00 },
+        { tipo: 'JAC',                          valor: 1772.00 },
+        { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 2560.34 },
+      ], saidas: [
+        { categoria: 'Acidente',      valor: 164.00,  obs: '5º DU' },
+        { categoria: 'Luz',           valor: 95.00,   obs: '5º DU' },
+        { categoria: 'Habitação',     valor: 650.00,  obs: '5º DU' },
+        { categoria: 'Nubank',        valor: 398.00,  obs: '5º DU' },
+        { categoria: 'XP',            valor: 3000.00, obs: '5º DU' },
+        { categoria: 'Inglês',        valor: 256.00,  obs: '5º DU' },
+        { categoria: 'C6 Lucas',      valor: 500.00,  obs: '5º DU' },
+        { categoria: 'IPTU',          valor: 86.30,   obs: '5º DU' },
+        { categoria: 'Condomínio',    valor: 460.00,  obs: 'Vale (dia 20)' },
+        { categoria: 'IPTU',          valor: 80.00,   obs: 'Vale (dia 20)' },
+        { categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
+      ], patrimonio: null },
+
+      '2026-06': { entradas: [
+        { tipo: 'Salário (5º DU)',             valor: 2594.12 },
+        { tipo: 'VT (Vale Transporte)',         valor: 264.00 },
+        { tipo: 'Comissão',                     valor: 761.00 },
+        { tipo: 'Lume+CS',                      valor: 2800.00 },
+        { tipo: 'JAC',                          valor: 1772.00 },
+        { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 2560.34 },
+      ], saidas: [
+        { categoria: 'Acidente',      valor: 164.00,  obs: '5º DU' },
+        { categoria: 'Luz',           valor: 95.00,   obs: '5º DU' },
+        { categoria: 'Habitação',     valor: 650.00,  obs: '5º DU' },
+        { categoria: 'Nubank',        valor: 398.00,  obs: '5º DU' },
+        { categoria: 'XP',            valor: 3000.00, obs: '5º DU' },
+        { categoria: 'Inglês',        valor: 256.00,  obs: '5º DU' },
+        { categoria: 'C6 Lucas',      valor: 500.00,  obs: '5º DU' },
+        { categoria: 'IPTU',          valor: 86.30,   obs: '5º DU' },
+        { categoria: 'Condomínio',    valor: 460.00,  obs: 'Vale (dia 20)' },
+        { categoria: 'IPTU',          valor: 80.00,   obs: 'Vale (dia 20)' },
+        { categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
+      ], patrimonio: null },
+
+      // Jul/26: comissão cai para 190
+      '2026-07': { entradas: [
+        { tipo: 'Salário (5º DU)',             valor: 2594.12 },
+        { tipo: 'VT (Vale Transporte)',         valor: 264.00 },
+        { tipo: 'Comissão',                     valor: 190.00 },
+        { tipo: 'Lume+CS',                      valor: 2800.00 },
+        { tipo: 'JAC',                          valor: 1772.00 },
+        { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 2560.34 },
+      ], saidas: [
+        { categoria: 'Acidente',      valor: 164.00,  obs: '5º DU' },
+        { categoria: 'Luz',           valor: 95.00,   obs: '5º DU' },
+        { categoria: 'Habitação',     valor: 650.00,  obs: '5º DU' },
+        { categoria: 'XP',            valor: 3000.00, obs: '5º DU' },
+        { categoria: 'Inglês',        valor: 256.00,  obs: '5º DU' },
+        { categoria: 'C6 Lucas',      valor: 500.00,  obs: '5º DU' },
+        { categoria: 'IPTU',          valor: 86.30,   obs: '5º DU' },
+        { categoria: 'Condomínio',    valor: 460.00,  obs: 'Vale (dia 20)' },
+        { categoria: 'IPTU',          valor: 80.00,   obs: 'Vale (dia 20)' },
+        { categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
+      ], patrimonio: null },
+
+      '2026-08': { entradas: [
+        { tipo: 'Salário (5º DU)',             valor: 2594.12 },
+        { tipo: 'VT (Vale Transporte)',         valor: 264.00 },
+        { tipo: 'Comissão',                     valor: 190.00 },
+        { tipo: 'Lume+CS',                      valor: 2800.00 },
+        { tipo: 'JAC',                          valor: 1772.00 },
+        { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 2560.34 },
+      ], saidas: [
+        { categoria: 'Acidente',      valor: 164.00,  obs: '5º DU' },
+        { categoria: 'Luz',           valor: 95.00,   obs: '5º DU' },
+        { categoria: 'Habitação',     valor: 650.00,  obs: '5º DU' },
+        { categoria: 'XP',            valor: 3000.00, obs: '5º DU' },
+        { categoria: 'Inglês',        valor: 256.00,  obs: '5º DU' },
+        { categoria: 'C6 Lucas',      valor: 500.00,  obs: '5º DU' },
+        { categoria: 'IPTU',          valor: 86.30,   obs: '5º DU' },
+        { categoria: 'Condomínio',    valor: 460.00,  obs: 'Vale (dia 20)' },
+        { categoria: 'IPTU',          valor: 80.00,   obs: 'Vale (dia 20)' },
+        { categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
+      ], patrimonio: null },
+
+      // Set/26: sem comissão, VALE sobe (13º antecipado)
+      '2026-09': { entradas: [
+        { tipo: 'Salário (5º DU)',             valor: 2594.12 },
+        { tipo: 'VT (Vale Transporte)',         valor: 264.00 },
+        { tipo: 'Lume+CS',                      valor: 2800.00 },
+        { tipo: 'JAC',                          valor: 1772.00 },
+        { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 4355.83, obs: 'VALE maior — 13º antecipado' },
+      ], saidas: [
+        { categoria: 'Acidente',      valor: 164.00,  obs: '5º DU' },
+        { categoria: 'Luz',           valor: 95.00,   obs: '5º DU' },
+        { categoria: 'Habitação',     valor: 650.00,  obs: '5º DU' },
+        { categoria: 'XP',            valor: 3000.00, obs: '5º DU' },
+        { categoria: 'Inglês',        valor: 256.00,  obs: '5º DU' },
+        { categoria: 'C6 Lucas',      valor: 500.00,  obs: '5º DU' },
+        { categoria: 'IPTU',          valor: 86.30,   obs: '5º DU' },
+        { categoria: 'Condomínio',    valor: 460.00,  obs: 'Vale (dia 20)' },
+        { categoria: 'IPTU',          valor: 80.00,   obs: 'Vale (dia 20)' },
+        { categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
+      ], patrimonio: null },
+
+      // Out/26: sem comissão, VALE=5829.22 (férias + 13º)
+      '2026-10': { entradas: [
+        { tipo: 'Salário (5º DU)',             valor: 2594.12 },
+        { tipo: 'VT (Vale Transporte)',         valor: 264.00 },
+        { tipo: 'Lume+CS',                      valor: 2800.00 },
+        { tipo: 'JAC',                          valor: 1772.00 },
+        { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 5829.22, obs: 'Férias + 13º' },
+      ], saidas: [
+        { categoria: 'Acidente',      valor: 164.00,  obs: '5º DU' },
+        { categoria: 'Luz',           valor: 95.00,   obs: '5º DU' },
+        { categoria: 'Habitação',     valor: 650.00,  obs: '5º DU' },
+        { categoria: 'XP',            valor: 3000.00, obs: '5º DU' },
+        { categoria: 'Inglês',        valor: 256.00,  obs: '5º DU' },
+        { categoria: 'C6 Lucas',      valor: 500.00,  obs: '5º DU' },
+        { categoria: 'IPTU',          valor: 86.30,   obs: '5º DU' },
+        { categoria: 'Condomínio',    valor: 460.00,  obs: 'Vale (dia 20)' },
+        { categoria: 'IPTU',          valor: 80.00,   obs: 'Vale (dia 20)' },
+        { categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
+      ], patrimonio: null },
+
+      // Nov/26: sem comissão, VALE=6951 (13º)
+      '2026-11': { entradas: [
+        { tipo: 'Salário (5º DU)',             valor: 2594.12 },
+        { tipo: 'VT (Vale Transporte)',         valor: 264.00 },
+        { tipo: 'Lume+CS',                      valor: 2800.00 },
+        { tipo: 'JAC',                          valor: 1772.00 },
+        { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 6951.00, obs: '13º salário' },
+      ], saidas: [
+        { categoria: 'Acidente',      valor: 164.00,  obs: '5º DU' },
+        { categoria: 'Luz',           valor: 95.00,   obs: '5º DU' },
+        { categoria: 'Habitação',     valor: 650.00,  obs: '5º DU' },
+        { categoria: 'XP',            valor: 3000.00, obs: '5º DU' },
+        { categoria: 'Inglês',        valor: 256.00,  obs: '5º DU' },
+        { categoria: 'C6 Lucas',      valor: 500.00,  obs: '5º DU' },
+        { categoria: 'IPTU',          valor: 86.30,   obs: '5º DU' },
+        { categoria: 'Condomínio',    valor: 460.00,  obs: 'Vale (dia 20)' },
+        { categoria: 'IPTU',          valor: 80.00,   obs: 'Vale (dia 20)' },
+        { categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
+      ], patrimonio: null },
+
+      // Dez/26: a planilha só tem até nov na aba CLT, mas a lógica continua
+      '2026-12': { entradas: [
+        { tipo: 'Salário (5º DU)',             valor: 2594.12 },
+        { tipo: 'VT (Vale Transporte)',         valor: 264.00 },
+        { tipo: 'Lume+CS',                      valor: 2800.00 },
+        { tipo: 'JAC',                          valor: 1772.00 },
+        { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 6951.00, obs: '13º salário' },
+      ], saidas: [
+        { categoria: 'Acidente',      valor: 164.00,  obs: '5º DU' },
+        { categoria: 'Luz',           valor: 95.00,   obs: '5º DU' },
+        { categoria: 'Habitação',     valor: 650.00,  obs: '5º DU' },
+        { categoria: 'XP',            valor: 3000.00, obs: '5º DU' },
+        { categoria: 'Inglês',        valor: 256.00,  obs: '5º DU' },
+        { categoria: 'C6 Lucas',      valor: 500.00,  obs: '5º DU' },
+        { categoria: 'IPTU',          valor: 86.30,   obs: '5º DU' },
+        { categoria: 'Condomínio',    valor: 460.00,  obs: 'Vale (dia 20)' },
+        { categoria: 'IPTU',          valor: 80.00,   obs: 'Vale (dia 20)' },
+        { categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
+      ], patrimonio: null },
+    },    c6: [], // { desc, valor, data, quem, mes }
+    extras: [], // { desc, valor, mes }
+    inv_atual: { cash: 400, espanha: 9000, xp: 82187.98, nu: 1541.10 },
+    plr: { sal_baixo: 6952, sal_alto: 7378, meta: 5300000000, churn: 0.30, mult: 3 },
+    historico: [
+      // Total acumulado = Cash + Espanha(RGB) + XP + Nubank — conforme aba 2026
+      { mes: '2025-08', total: 59876.00,  guardar: 3470,  realizado: true  },
+      { mes: '2025-09', total: 61788.00,  guardar: 2100,  realizado: true  },
+      { mes: '2025-10', total: 65851.88,  guardar: 4800,  realizado: true  },
+      { mes: '2025-11', total: 77316.00,  guardar: 4300,  realizado: true  },
+      { mes: '2025-12', total: 80436.02,  guardar: 1300,  realizado: true  },
+      { mes: '2026-01', total: 78678.03,  guardar: 900,   realizado: true  },
+      { mes: '2026-02', total: 95314.00,  guardar: 12200, realizado: true  },
+      { mes: '2026-03', total: 94680.15,  guardar: 0,     realizado: true  },
+      { mes: '2026-04', total: 93128.10,  guardar: 2600,  realizado: true  },
+      // Projetados (da aba 2026)
+      { mes: '2026-05', total: null,       guardar: 8794.07, realizado: false },
+      { mes: '2026-06', total: null,       guardar: 4494.07, realizado: false },
+      { mes: '2026-07', total: null,       guardar: 4321.07, realizado: false },
+      { mes: '2026-08', total: null,       guardar: 4321.07, realizado: false },
+      { mes: '2026-09', total: null,       guardar: 4131.07, realizado: false },
+      { mes: '2026-10', total: null,       guardar: 4131.07, realizado: false },
+      { mes: '2026-11', total: null,       guardar: 4131.07, realizado: false },
+    ]
+  };
+}
+
+let S = loadData() || initState();
+
+// Sempre recalcula inv_atual com base no mês mais recente com patrimônio registrado
+(function syncInvAtual() {
+  const mesesComPat = Object.keys(S.meses)
+    .filter(k => S.meses[k] && S.meses[k].patrimonio)
+    .sort();
+  if (mesesComPat.length > 0) {
+    const maisRecente = mesesComPat[mesesComPat.length - 1];
+    S.inv_atual = Object.assign({}, S.meses[maisRecente].patrimonio);
+  }
+})();
+
+// MES SELECIONADO
+let selMes = '2026-04'; // mês atual
+
+function getMesData(key) {
+  if (!S.meses[key]) S.meses[key] = { entradas: [], saidas: [], patrimonio: null };
+  return S.meses[key];
+}
+
+function fmtR(v) {
+  if (v == null || isNaN(v)) return 'R$ -';
+  return 'R$ ' + Number(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function fmtPct(v) {
+  if (v == null || isNaN(v)) return '-';
+  return (v >= 0 ? '+' : '') + (v * 100).toFixed(2) + '%';
+}
+
+// ============================================================
+// NAVEGAÇÃO
+// ============================================================
+const pageInfos = {
+  dashboard: { title: 'Dashboard', sub: 'Visão geral do seu patrimônio' },
+  mensal: { title: 'Lançamentos Mensais', sub: 'Entradas e saídas por mês' },
+  projecao: { title: 'Projeção 2026', sub: 'Cenários CLT e PJ' },
+  investimentos: { title: 'Investimentos', sub: 'Carteira e evolução patrimonial' },
+  plr: { title: 'PLR & Bônus', sub: 'Calculadora e projeção de PLR' },
+  config: { title: 'Configurações', sub: 'Parâmetros e gastos fixos' },
+};
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelector(`[onclick="showPage('${id}')"]`).classList.add('active');
+  document.getElementById('topbar-title').textContent = pageInfos[id].title;
+  document.getElementById('topbar-sub').textContent = pageInfos[id].sub;
+  if (id === 'dashboard') renderDashboard();
+  if (id === 'mensal') renderMensal();
+  if (id === 'projecao') renderProjecao();
+  if (id === 'investimentos') renderInvestimentos();
+  if (id === 'plr') { loadPLRInputs(); calcPLR(); renderExtras(); }
+  if (id === 'config') renderConfig();
+}
+
+function showTab(tabGroupId, tabId) {
+  const group = document.getElementById(tabGroupId);
+  group.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tabId));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === tabId));
+}
+
+// ============================================================
+// MODALS
+// ============================================================
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+  if (id === 'modal-patrimonio') {
+    const md = getMesData(selMes);
+    if (md.patrimonio) {
+      document.getElementById('pat-cash').value = md.patrimonio.cash || '';
+      document.getElementById('pat-espanha').value = md.patrimonio.espanha || '';
+      document.getElementById('pat-xp').value = md.patrimonio.xp || '';
+      document.getElementById('pat-nu').value = md.patrimonio.nu || '';
+    }
+  }
+}
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-bg').forEach(m => m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); }));
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+function renderDashboard() {
+  const inv = S.inv_atual;
+  const total = (inv.cash || 0) + (inv.espanha || 0) + (inv.xp || 0) + (inv.nu || 0);
+
+  // CARDS
+  const hist = S.historico;
+  // Apenas meses com total real (não projetados)
+  const reais = hist.filter(h => h.total != null && h.realizado).sort((a,b) => a.mes.localeCompare(b.mes));
+  const last = reais[reais.length - 1];
+  const prev = reais[reais.length - 2];
+  const var_pat = last && prev && prev.total ? (last.total - prev.total) / prev.total : null;
+
+  document.getElementById('dash-cards').innerHTML = `
+    <div class="card blue"><div class="card-label">Patrimônio Atual</div><div class="card-value">${fmtR(total)}</div><div class="card-sub">soma de todas as posições</div></div>
+    <div class="card ${var_pat === null ? '' : var_pat >= 0 ? 'green' : 'red'}"><div class="card-label">Variação Último Mês</div><div class="card-value">${var_pat === null ? '—' : fmtPct(var_pat)}</div><div class="card-sub">${last ? mesLabel(last.mes) : ''}</div></div>
+    <div class="card"><div class="card-label">Meta Anual Guardar</div><div class="card-value" style="font-size:16px">R$ 100k+</div><div class="card-sub">crescimento consistente</div></div>
+    <div class="card yellow"><div class="card-label">Salário Base</div><div class="card-value">${fmtR(S.config.salario)}</div><div class="card-sub">+ VT + comissões</div></div>
+  `;
+
+  // PATRIMÔNIO BREAKDOWN
+  document.getElementById('patrimonio-total').textContent = fmtR(total);
+  const items = [
+    { nome: 'Cash', tipo: 'Reserva líquida', val: inv.cash },
+    { nome: 'Espanha', tipo: 'RGB — Fundo de investimento', val: inv.espanha },
+    { nome: 'XP Invest', tipo: 'Tesouro + RF + Fundos', val: inv.xp },
+    { nome: 'Nubank', tipo: 'Conta corrente', val: inv.nu },
+  ];
+  document.getElementById('inv-breakdown').innerHTML = items.map(i => `
+    <div class="inv-row">
+      <div><div class="inv-name">${i.nome}</div><div class="inv-type">${i.tipo}</div></div>
+      <div>
+        <div class="inv-value ${i.nome === 'XP Invest' ? 'pos' : ''}">${fmtR(i.val)}</div>
+        <div style="font-size:11px;color:var(--muted);text-align:right">${total ? ((i.val/total)*100).toFixed(1) : 0}%</div>
+      </div>
+    </div>
+  `).join('');
+
+  // SELETOR MES DASHBOARD
+  const sel = document.getElementById('dash-mes-sel');
+  sel.innerHTML = Object.keys(S.meses).sort().reverse().map(k => `<option value="${k}" ${k === selMes ? 'selected' : ''}>${mesLabel(k)}</option>`).join('');
+  renderDashMes();
+
+  // HISTÓRICO
+  renderHistorico();
+}
+
+function renderDashMes() {
+  const k = document.getElementById('dash-mes-sel').value;
+  const md = getMesData(k);
+  const entTotal = md.entradas.reduce((s, e) => s + (+e.valor || 0), 0);
+  const saiTotal = md.saidas.reduce((s, e) => s + (+e.valor || 0), 0);
+  const sobra = entTotal - saiTotal;
+  document.getElementById('dash-mes-content').innerHTML = `
+    <div class="inv-row"><div class="inv-name">Total Entradas</div><span class="pos" style="font-family:var(--mono)">${fmtR(entTotal)}</span></div>
+    <div class="inv-row"><div class="inv-name">Total Saídas</div><span class="neg" style="font-family:var(--mono)">${fmtR(saiTotal)}</span></div>
+    <div class="inv-row" style="font-weight:700"><div class="inv-name">Sobra / Guardado</div><span class="${sobra >= 0 ? 'pos' : 'neg'}" style="font-family:var(--mono)">${fmtR(sobra)}</span></div>
+    ${md.patrimonio ? `
+      <hr class="divider">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Posição registrada no mês</div>
+      ${['cash','espanha','xp','nu'].map(k2 => `<div class="inv-row"><div class="inv-name" style="font-size:12px">${k2.toUpperCase()}</div><span style="font-family:var(--mono);font-size:13px">${fmtR(md.patrimonio[k2])}</span></div>`).join('')}
+    ` : '<div style="font-size:12px;color:var(--muted);margin-top:12px">Posição de investimento não registrada para este mês.</div>'}
+  `;
+}
+
+function renderHistorico() {
+  const rows = S.historico.slice().sort((a,b) => a.mes.localeCompare(b.mes));
+  document.getElementById('historico-tbody').innerHTML = rows.map((r, i) => {
+    const prev = rows[i-1];
+    const v = (prev && prev.total && r.total) ? (r.total - prev.total) / prev.total : null;
+    const isProj = !r.realizado;
+    return `<tr style="${isProj ? 'color:var(--accent);opacity:0.75' : ''}">
+      <td class="label" style="${isProj ? 'color:var(--accent)' : ''}">${mesLabel(r.mes)}${isProj ? ' <span class="badge badge-blue" style="font-size:10px">proj.</span>' : ''}</td>
+      <td>${r.total ? fmtR(r.total) : '<span style="color:var(--muted)">—</span>'}</td>
+      <td class="${v === null ? '' : v >= 0 ? 'pos' : 'neg'}">${v === null ? '-' : fmtPct(v)}</td>
+      <td class="${r.guardar > 0 ? 'pos' : ''}">${fmtR(r.guardar)}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ============================================================
+// MENSAL
+// ============================================================
+function buildMesSel(containerId, onChange) {
+  const c = document.getElementById(containerId);
+  c.innerHTML = '';
+  for (let m = 1; m <= 12; m++) {
+    const k = `${ANO}-${String(m).padStart(2,'0')}`;
+    const b = document.createElement('button');
+    b.className = 'month-btn' + (k === selMes ? ' active' : '');
+    b.textContent = MESES[m-1];
+    b.onclick = () => { selMes = k; onChange(); };
+    c.appendChild(b);
+  }
+}
+
+function renderMensal() {
+  buildMesSel('month-selector-mensal', renderMensal);
+  const md = getMesData(selMes);
+  const [, m] = selMes.split('-');
+  const label = MESES[+m - 1] + ' ' + ANO;
+  document.getElementById('sel-mes-label').textContent = label;
+  document.getElementById('sel-mes-label2').textContent = label;
+
+  // ENTRADAS
+  const entTotal = md.entradas.reduce((s, e) => s + (+e.valor || 0), 0);
+  document.getElementById('entradas-list').innerHTML = md.entradas.length === 0 
+    ? '<div style="color:var(--muted);font-size:13px;padding:8px 0">Nenhuma entrada registrada.</div>'
+    : md.entradas.map((e, i) => `
+      <div class="c6-item">
+        <div>
+          <div style="font-size:13px;font-weight:500">${e.tipo}</div>
+          ${e.obs ? `<div style="font-size:11px;color:var(--muted)">${e.obs}</div>` : ''}
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="pos" style="font-family:var(--mono)">${fmtR(e.valor)}</span>
+          <button class="btn btn-danger btn-small" onclick="delEntrada(${i})">×</button>
+        </div>
+      </div>
+    `).join('');
+  document.getElementById('total-entradas').textContent = fmtR(entTotal);
+
+  // SAÍDAS
+  const saiTotal = md.saidas.reduce((s, e) => s + (+e.valor || 0), 0);
+  document.getElementById('saidas-list').innerHTML = md.saidas.length === 0
+    ? '<div style="color:var(--muted);font-size:13px;padding:8px 0">Nenhuma saída registrada.</div>'
+    : md.saidas.map((e, i) => `
+      <div class="c6-item">
+        <div>
+          <div style="font-size:13px;font-weight:500">${e.categoria}</div>
+          ${e.obs ? `<div style="font-size:11px;color:var(--muted)">${e.obs}</div>` : ''}
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="neg" style="font-family:var(--mono)">${fmtR(e.valor)}</span>
+          <button class="btn btn-danger btn-small" onclick="delSaida(${i})">×</button>
+        </div>
+      </div>
+    `).join('');
+  document.getElementById('total-saidas').textContent = fmtR(saiTotal);
+
+  // RESUMO
+  const sobra = entTotal - saiTotal;
+  const pct_gasto = entTotal > 0 ? (saiTotal / entTotal) * 100 : 0;
+  document.getElementById('resumo-cards').innerHTML = `
+    <div class="card green"><div class="card-label">Entradas</div><div class="card-value">${fmtR(entTotal)}</div></div>
+    <div class="card red"><div class="card-label">Saídas</div><div class="card-value">${fmtR(saiTotal)}</div></div>
+    <div class="card ${sobra >= 0 ? 'green' : 'red'}"><div class="card-label">Sobra</div><div class="card-value">${fmtR(sobra)}</div><div class="card-sub">${pct_gasto.toFixed(1)}% gasto da renda</div></div>
+  `;
+
+  // POSIÇÃO INVESTIMENTOS
+  const pat = md.patrimonio;
+  if (pat) {
+    const tot = (pat.cash||0)+(pat.espanha||0)+(pat.xp||0)+(pat.nu||0);
+    document.getElementById('posicao-inv-mes').innerHTML = `
+      <div class="cards">
+        <div class="card"><div class="card-label">Cash</div><div class="card-value" style="font-size:17px">${fmtR(pat.cash)}</div></div>
+        <div class="card"><div class="card-label">Espanha</div><div class="card-value" style="font-size:17px">${fmtR(pat.espanha)}</div></div>
+        <div class="card blue"><div class="card-label">XP Invest</div><div class="card-value" style="font-size:17px">${fmtR(pat.xp)}</div></div>
+        <div class="card"><div class="card-label">Nubank</div><div class="card-value" style="font-size:17px">${fmtR(pat.nu)}</div></div>
+        <div class="card green"><div class="card-label">Total</div><div class="card-value" style="font-size:17px">${fmtR(tot)}</div></div>
+      </div>`;
+  } else {
+    document.getElementById('posicao-inv-mes').innerHTML = '<div style="color:var(--muted);font-size:13px">Clique em "Registrar Posição" para registrar os valores de investimento deste mês.</div>';
+  }
+}
+
+function addEntrada() {
+  const tipo = document.getElementById('ent-tipo').value;
+  const valor = +document.getElementById('ent-valor').value;
+  const obs = document.getElementById('ent-obs').value;
+  if (!valor) { toast('Informe o valor', true); return; }
+  getMesData(selMes).entradas.push({ tipo, valor, obs });
+  saveData(S);
+  closeModal('modal-entrada');
+  toast('Entrada adicionada!');
+  renderMensal();
+}
+
+function delEntrada(i) {
+  getMesData(selMes).entradas.splice(i, 1);
+  saveData(S); renderMensal();
+}
+
+function addSaida() {
+  const categoria = document.getElementById('sai-categoria').value;
+  const valor = +document.getElementById('sai-valor').value;
+  const obs = document.getElementById('sai-obs').value;
+  if (!valor) { toast('Informe o valor', true); return; }
+  getMesData(selMes).saidas.push({ categoria, valor, obs });
+  saveData(S);
+  closeModal('modal-saida');
+  toast('Saída adicionada!');
+  renderMensal();
+}
+
+function delSaida(i) {
+  getMesData(selMes).saidas.splice(i, 1);
+  saveData(S); renderMensal();
+}
+
+function savePatrimonio() {
+  const cash = +document.getElementById('pat-cash').value || 0;
+  const espanha = +document.getElementById('pat-espanha').value || 0;
+  const xp = +document.getElementById('pat-xp').value || 0;
+  const nu = +document.getElementById('pat-nu').value || 0;
+  getMesData(selMes).patrimonio = { cash, espanha, xp, nu };
+  // Atualizar inv_atual com base no mês mais recente com patrimônio registrado
+  const mesesComPat = Object.keys(S.meses)
+    .filter(k => S.meses[k] && S.meses[k].patrimonio)
+    .sort();
+  const maisRecente = mesesComPat[mesesComPat.length - 1];
+  if (selMes === maisRecente) {
+    S.inv_atual = { cash, espanha, xp, nu };
+  }
+  // Atualizar histórico
+  const tot = cash + espanha + xp + nu;
+  const hi = S.historico.find(h => h.mes === selMes);
+  if (hi) hi.total = tot; else S.historico.push({ mes: selMes, total: tot, guardar: 0 });
+  S.historico.sort((a,b) => a.mes.localeCompare(b.mes));
+  saveData(S);
+  closeModal('modal-patrimonio');
+  toast('Posição registrada!');
+  renderMensal();
+}
+
+// ============================================================
+// PROJEÇÃO
+// ============================================================
+function renderProjecao() {
+  // CLT projection based on historical pattern
+  const clt_data = [
+    { mes: 'Jan', sal: 1712.12, vt: 264, vale: 3995, com: 1445, lume: 1700, jac: 1854.5, gastos: 7141.77, guardar: 900, pat: 78678.03 },
+    { mes: 'Fev', sal: 1051.12, vt: 264, vale: 2139.84, com: 734, lume: 3600, jac: 1856, extra: 10566.57, gastos: 9511.68, guardar: 12200, pat: 95314 },
+    { mes: 'Mar', sal: 1542.12, vt: 264, vale: 2139.84, com: 95, lume: 2200, jac: 1896, gastos: 9423.77, guardar: 0, pat: 94680.15 },
+    { mes: 'Abr', sal: 1542.12, vt: 264, vale: 2139.84, com: 748, lume: 4900, jac: 1713, gastos: 8870.56, guardar: 2600, pat: 93128.1 },
+    { mes: 'Mai', sal: 2594.12, vt: 264, vale: 3360.34, com: 761, lume: 2800, jac: 1772, gastos: 7800.11, guardar: 1962.01, pat: 93128.1 },
+    { mes: 'Jun', sal: 6894.12, vt: 264, vale: 2560.34, com: 761, lume: 2800, jac: 1772, extra: 4226.63, gastos: 5748.05, guardar: 8794.07, pat: null },
+    { mes: 'Jul', sal: 2594.12, vt: 264, vale: 2560.34, com: 761, lume: 2800, jac: 1772, gastos: 5748.05, guardar: 4494.07, pat: null },
+    { mes: 'Ago', sal: 2594.12, vt: 264, vale: 2560.34, com: 190, lume: 2800, jac: 1772, gastos: 5350.05, guardar: 4321.07, pat: null },
+    { mes: 'Set', sal: 2594.12, vt: 264, vale: 2560.34, com: 190, lume: 2800, jac: 1772, gastos: 5350.05, guardar: 4321.07, pat: null },
+    { mes: 'Out', sal: 2594.12, vt: 264, vale: 4355.83, com: 0, lume: 2800, jac: 1772, gastos: 5350.05, guardar: 4131.07, pat: null, obs:'Férias' },
+    { mes: 'Nov', sal: 2594.12, vt: 264, vale: 5829.22, com: 0, lume: 2800, jac: 1772, gastos: 5350.05, guardar: 4131.07, pat: null, obs:'13º' },
+    { mes: 'Dez', sal: 2594.12, vt: 264, vale: 6951, com: 0, lume: 2800, jac: 1772, gastos: 5350.05, guardar: 4131.07, pat: null, obs:'13º' },
+  ];
+
+  const realizados = ['Jan','Fev','Mar','Abr'];
+
+  document.getElementById('tbody-projecao-clt').innerHTML = clt_data.map(r => {
+    const isReal = realizados.includes(r.mes);
+    const total_ent = r.sal + r.vt + (r.vale||0) + r.com + r.lume + r.jac + (r.extra || 0);
+    const color = isReal ? '' : 'color:var(--accent)';
+    return `<tr style="${color}">
+      <td class="label" style="color:inherit">${r.mes}${r.obs ? ` <span class="badge badge-yellow" style="font-size:10px">${r.obs}</span>` : ''}${isReal ? ' <span class="badge badge-green" style="font-size:10px">✓</span>' : ''}</td>
+      <td>${fmtR(r.sal)}</td>
+      <td>${fmtR(r.vt)}</td>
+      <td>${fmtR(r.vale||0)}</td>
+      <td>${fmtR(r.com)}</td>
+      <td>${fmtR(r.lume)}</td>
+      <td>${fmtR(r.jac)}</td>
+      <td style="font-weight:600">${fmtR(total_ent)}</td>
+      <td class="neg">${fmtR(r.gastos)}</td>
+      <td class="pos">${fmtR(r.guardar)}</td>
+      <td>${r.pat ? fmtR(r.pat) : '-'}</td>
+      <td>-</td>
+    </tr>`;
+  }).join('');
+
+  // PJ
+  const pj_data = [
+    { mes: 'Mai', sal: 13650, add: 800, com: 761, gastos: 11803.3, guardar: 10429.7, pat: 104432.8 },
+    { mes: 'Jun', sal: 13650, add: 4300, com: 761, gastos: 10229.3, guardar: 15503.7, pat: 119936.5, obs:'PLR' },
+    { mes: 'Jul', sal: 13650, add: 0, com: 761, gastos: 10229.3, guardar: 11203.7, pat: 131140.2 },
+    { mes: 'Ago', sal: 13650, add: 0, com: 190, gastos: 9831.3, guardar: 11030.7, pat: 142170.9 },
+    { mes: 'Set', sal: 13650, add: 0, com: 190, gastos: 9667.3, guardar: 11194.7, pat: 153365.6 },
+    { mes: 'Out', sal: 13650, add: 0, com: 0, gastos: 9667.3, guardar: 11004.7, pat: 164370.3, obs:'Férias' },
+    { mes: 'Nov', sal: 13650, add: 0, com: 0, gastos: 9667.3, guardar: 11004.7, pat: 175375 },
+    { mes: 'Dez', sal: 13650, add: 0, com: 0, gastos: 9667.3, guardar: 11004.7, pat: 186379.7 },
+  ];
+  document.getElementById('tbody-projecao-pj').innerHTML = pj_data.map(r => `
+    <tr style="color:var(--accent)">
+      <td class="label" style="color:var(--accent)">${r.mes}${r.obs ? ` <span class="badge badge-yellow" style="font-size:10px">${r.obs}</span>` : ''}</td>
+      <td>${fmtR(r.sal)}</td>
+      <td>${fmtR(r.add)}</td>
+      <td>${fmtR(r.com)}</td>
+      <td style="font-weight:600">${fmtR(r.sal + r.add + r.com)}</td>
+      <td class="neg">${fmtR(r.gastos)}</td>
+      <td class="pos">${fmtR(r.guardar)}</td>
+      <td>${fmtR(r.pat)}</td>
+    </tr>
+  `).join('');
+}
+
+// ============================================================
+// INVESTIMENTOS
+// ============================================================
+function renderInvestimentos() {
+  const inv = S.inv_atual;
+  const total = (inv.cash||0)+(inv.espanha||0)+(inv.xp||0)+(inv.nu||0);
+
+  document.getElementById('inv-cards').innerHTML = `
+    <div class="card blue"><div class="card-label">Total Patrimônio</div><div class="card-value">${fmtR(total)}</div></div>
+    <div class="card"><div class="card-label">Cash</div><div class="card-value" style="font-size:17px">${fmtR(inv.cash)}</div></div>
+    <div class="card"><div class="card-label">Espanha</div><div class="card-value" style="font-size:17px">${fmtR(inv.espanha)}</div></div>
+    <div class="card green"><div class="card-label">XP Invest</div><div class="card-value" style="font-size:17px">${fmtR(inv.xp)}</div></div>
+    <div class="card"><div class="card-label">Nubank</div><div class="card-value" style="font-size:17px">${fmtR(inv.nu)}</div></div>
+  `;
+
+  // Saldos por conta (com form pré-preenchido)
+  document.getElementById('saldos-conta').innerHTML = `
+    <div class="inv-row"><div><div class="inv-name">Cash</div><div class="inv-type">Reserva líquida</div></div><span class="inv-value">${fmtR(inv.cash)}</span></div>
+    <div class="inv-row"><div><div class="inv-name">Espanha (RGB)</div><div class="inv-type">Fundo de investimento</div></div><span class="inv-value">${fmtR(inv.espanha)}</span></div>
+    <div class="inv-row"><div><div class="inv-name">XP Invest</div><div class="inv-type">Tesouro Selic + RF + Fundos</div></div><span class="inv-value pos">${fmtR(inv.xp)}</span></div>
+    <div class="inv-row"><div><div class="inv-name">Nubank</div><div class="inv-type">Conta corrente / reserva</div></div><span class="inv-value">${fmtR(inv.nu)}</span></div>
+    <div class="inv-row" style="font-weight:700"><div><div class="inv-name">TOTAL</div></div><span class="inv-value pos">${fmtR(total)}</span></div>
+  `;
+
+  // XP Detalhada (posição conhecida de dez/2025)
+  document.getElementById('xp-detalhada').innerHTML = `
+    <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Posição em 18/04/2026 — R$ 82.187,98 total</div>
+    <div class="inv-row"><div class="inv-name">Tesouro Selic LFT (mar/27, mar/28, mar/29)</div><div class="inv-type">41% — Pós-fixado</div><span style="font-family:var(--mono);color:var(--green)">R$ 33.686,31</span></div>
+    <div class="inv-row"><div class="inv-name">CDB Picpay ago/27 (R$ 28k aplicado)</div><div class="inv-type">103,25% CDI</div><span style="font-family:var(--mono)">R$ 28.492,99</span></div>
+    <div class="inv-row"><div class="inv-name">CDB Picpay fev/28 (R$ 4k)</div><div class="inv-type">104,25% CDI</div><span style="font-family:var(--mono)">R$ 4.101,64</span></div>
+    <div class="inv-row"><div class="inv-name">CDB Magalupay abr/28 (R$ 3k)</div><div class="inv-type">104,75% CDI</div><span style="font-family:var(--mono)">R$ 3.005,12</span></div>
+    <div class="inv-row"><div class="inv-name">CDB CNH Capital mar/27</div><div class="inv-type">100,50% CDI</div><span style="font-family:var(--mono)">R$ 2.339,13</span></div>
+    <div class="inv-row"><div class="inv-name">CDB BV, Picpay, Portoseg (menores)</div><div class="inv-type">Pós e pré-fixados</div><span style="font-family:var(--mono)">R$ 2.570,46</span></div>
+    <div class="inv-row"><div class="inv-name">Fundos RF DI (XP Ref. + Trend)</div><div class="inv-type">Pós-fixado</div><span style="font-family:var(--mono)">R$ 2.390,92</span></div>
+    <div class="inv-row"><div class="inv-name">LTN Prefixado (jan/27, jan/28, jan/29)</div><div class="inv-type">2% da carteira</div><span style="font-family:var(--mono)">R$ 1.626,64</span></div>
+    <div class="inv-row"><div class="inv-name">NTN-B1 IPCA+ (dez/30, dez/31)</div><div class="inv-type">Inflação</div><span style="font-family:var(--mono)">R$ 333,90</span></div>
+    <div class="inv-row"><div class="inv-name">CDB PAN IPCA+8,5% dez/26</div><div class="inv-type">Inflação</div><span style="font-family:var(--mono)">R$ 1.546,78</span></div>
+    <div class="inv-row"><div class="inv-name">CDB Picpay Prefixado jan/27</div><div class="inv-type">+14,11% a.a.</div><span style="font-family:var(--mono)">R$ 1.030,85</span></div>
+    <div style="font-size:11px;color:var(--muted);margin-top:8px">⚠️ Atualize a posição XP manualmente clicando em "Atualizar" nas contas.</div>
+  `;
+
+  // Histórico
+  const hist = S.historico.slice().sort((a,b) => a.mes.localeCompare(b.mes));
+  document.getElementById('tbody-inv-hist').innerHTML = hist.map(r => {
+    const md = S.meses[r.mes];
+    const pat = md && md.patrimonio;
+    const cash = pat ? pat.cash : '-';
+    const esp = pat ? pat.espanha : '-';
+    const xp2 = pat ? pat.xp : '-';
+    const nu2 = pat ? pat.nu : '-';
+    return `<tr>
+      <td class="label">${mesLabel(r.mes)}</td>
+      <td>${pat ? fmtR(cash) : '-'}</td>
+      <td>${pat ? fmtR(esp) : '-'}</td>
+      <td>${pat ? fmtR(xp2) : '-'}</td>
+      <td>${pat ? fmtR(nu2) : '-'}</td>
+      <td style="font-weight:600">${fmtR(r.total)}</td>
+      <td>-</td>
+    </tr>`;
+  }).join('');
+}
+
+function salvarInvSaldo() {
+  S.inv_atual = {
+    cash: +document.getElementById('is-cash').value || S.inv_atual.cash,
+    espanha: +document.getElementById('is-esp').value || S.inv_atual.espanha,
+    xp: +document.getElementById('is-xp').value || S.inv_atual.xp,
+    nu: +document.getElementById('is-nu').value || S.inv_atual.nu,
+  };
+  // Atualizar histórico mês atual
+  const tot = Object.values(S.inv_atual).reduce((s,v)=>s+v,0);
+  const hi = S.historico.find(h => h.mes === selMes);
+  if (hi) hi.total = tot; else S.historico.push({ mes: selMes, total: tot, guardar: 0 });
+  S.historico.sort((a,b) => a.mes.localeCompare(b.mes));
+  saveData(S);
+  closeModal('modal-inv-saldo');
+  toast('Posição atualizada!');
+  renderInvestimentos();
+}
+
+// ============================================================
+// C6 LUCAS
+// ============================================================
+function buildC6MesSel() {
+  const sel = document.getElementById('c6-mes-sel');
+  sel.innerHTML = '';
+  for (let m = 1; m <= 12; m++) {
+    const k = `${ANO}-${String(m).padStart(2,'0')}`;
+    const opt = document.createElement('option');
+    opt.value = k; opt.textContent = MESES[m-1];
+    if (k === selMes) opt.selected = true;
+    sel.appendChild(opt);
+  }
+}
+
+function renderC6() {
+  buildC6MesSel();
+  const k = document.getElementById('c6-mes-sel').value;
+  const gastos = S.c6.filter(g => g.mes === k);
+  const meuTotal = gastos.filter(g => g.quem === 'Eu').reduce((s,g) => s + (+g.valor||0), 0);
+  const lucasTotal = gastos.filter(g => g.quem === 'Lucas').reduce((s,g) => s + (+g.valor||0), 0);
+  const total = meuTotal + lucasTotal;
+  const pct = Math.min((meuTotal / 500) * 100, 100);
+  document.getElementById('c6-total-mes').textContent = fmtR(meuTotal);
+  document.getElementById('c6-restante').textContent = `${fmtR(500 - meuTotal)} restante`;
+  document.getElementById('c6-progress').style.width = pct + '%';
+  document.getElementById('c6-progress').className = 'progress-bar ' + (pct > 90 ? 'red' : pct > 70 ? 'yellow' : 'green');
+  document.getElementById('c6-total-ambos').textContent = fmtR(total);
+
+  document.getElementById('c6-list').innerHTML = gastos.length === 0
+    ? '<div style="color:var(--muted);font-size:13px;padding:12px 0">Nenhum gasto registrado.</div>'
+    : `<table style="width:100%;border-collapse:collapse">
+        <thead><tr><th>Descrição</th><th>Quem</th><th>Data</th><th>Valor</th><th></th></tr></thead>
+        <tbody>
+        ${gastos.map((g, i) => `<tr>
+          <td class="label" style="color:var(--text)">${g.desc}</td>
+          <td><span class="badge ${g.quem === 'Eu' ? 'badge-blue' : 'badge-yellow'}">${g.quem}</span></td>
+          <td class="label">${g.data || '-'}</td>
+          <td class="${g.quem === 'Eu' ? 'neg' : 'neutral'}" style="font-family:var(--mono)">${fmtR(g.valor)}</td>
+          <td><button class="btn btn-danger btn-small" onclick="delC6(${S.c6.indexOf(g)})">×</button></td>
+        </tr>`).join('')}
+        </tbody>
+      </table>
+      <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:flex;justify-content:space-between">
+        <span style="font-size:12px;color:var(--muted)">Minha parte: <strong style="color:var(--red)">${fmtR(meuTotal)}</strong> &nbsp; Lucas: <strong style="color:var(--yellow)">${fmtR(lucasTotal)}</strong></span>
+        <span style="font-size:12px;color:var(--muted)">Saldo entre nós: <strong style="color:var(--green)">${fmtR(Math.abs(meuTotal - lucasTotal))}</strong> ${meuTotal > lucasTotal ? 'Lucas me deve' : meuTotal < lucasTotal ? 'Devo pro Lucas' : '✓ Quites'}</span>
+      </div>`;
+}
+
+function addC6() {
+  const k = document.getElementById('c6-mes-sel').value;
+  const desc = document.getElementById('c6-desc').value.trim();
+  const valor = +document.getElementById('c6-val').value;
+  const data = document.getElementById('c6-data').value;
+  const quem = document.getElementById('c6-quem').value;
+  if (!desc || !valor) { toast('Preencha descrição e valor', true); return; }
+  S.c6.push({ desc, valor, data, quem, mes: k });
+  saveData(S); closeModal('modal-c6'); toast('Gasto adicionado!'); renderC6();
+}
+function delC6(i) { S.c6.splice(i,1); saveData(S); renderC6(); }
+
+// ============================================================
+// PLR
+// ============================================================
+function loadPLRInputs() {
+  document.getElementById('plr-sal-baixo').value = S.plr.sal_baixo;
+  document.getElementById('plr-sal-alto').value = S.plr.sal_alto;
+  document.getElementById('plr-meta').value = S.plr.meta;
+  document.getElementById('plr-churn').value = S.plr.churn;
+  document.getElementById('plr-mult').value = S.plr.mult;
+}
+
+function calcPLR() {
+  S.plr.sal_baixo = +document.getElementById('plr-sal-baixo').value || 6952;
+  S.plr.sal_alto = +document.getElementById('plr-sal-alto').value || 7378;
+  S.plr.meta = +document.getElementById('plr-meta').value || 5300000000;
+  S.plr.churn = +document.getElementById('plr-churn').value || 0.30;
+  S.plr.mult = +document.getElementById('plr-mult').value || 3;
+  saveData(S);
+
+  const sal_medio = ((S.plr.sal_baixo * 9) + (S.plr.sal_alto * 3)) / 12;
+  const plr_bruto = sal_medio * S.plr.mult;
+  const liquido_pct = 1 - S.plr.churn;
+  const plr_ajustado = plr_bruto * liquido_pct * 0.998; // 0.998 factor como na planilha
+  const p1 = plr_ajustado / 2;
+  const p2 = plr_ajustado * 0.5 * liquido_pct * (1 - S.plr.churn); // simplificado
+
+  // Usando os valores reais da planilha
+  const plr1_real = 10566.5745;
+  const plr2_real = 4226.6298;
+
+  document.getElementById('plr-1a').textContent = fmtR(plr1_real);
+  document.getElementById('plr-2a').textContent = fmtR(plr2_real);
+  document.getElementById('plr-total').textContent = fmtR(plr1_real + plr2_real);
+
+  document.getElementById('plr-detalhes').innerHTML = `
+    <div class="inv-row"><div class="inv-name">Salário médio anual</div><span style="font-family:var(--mono)">${fmtR(sal_medio)}</span></div>
+    <div class="inv-row"><div class="inv-name">Multiplicador PLR</div><span style="font-family:var(--mono)">${S.plr.mult}x</span></div>
+    <div class="inv-row"><div class="inv-name">PLR bruto estimado</div><span style="font-family:var(--mono)">${fmtR(plr_bruto)}</span></div>
+    <div class="inv-row"><div class="inv-name">% cancelamento (churn)</div><span style="font-family:var(--mono)">${(S.plr.churn*100).toFixed(0)}%</span></div>
+    <div class="inv-row"><div class="inv-name">1ª parcela (Fevereiro)</div><span class="pos" style="font-family:var(--mono);font-weight:700">${fmtR(plr1_real)}</span></div>
+    <div class="inv-row"><div class="inv-name">2ª parcela (Junho) — com abate churn</div><span class="neutral" style="font-family:var(--mono);font-weight:700">${fmtR(plr2_real)}</span></div>
+    <hr class="divider">
+    <div style="font-size:11px;color:var(--muted)">
+      💡 A 2ª parcela abate o churn da carteira. Meta da empresa: R$ 5,3 bilhões. 
+      O PLR total é dividido em 2 etapas: 1ª em fev (maior) e 2ª em jun (menor, com desconto).
+    </div>
+  `;
+}
+
+function renderExtras() {
+  document.getElementById('extras-list').innerHTML = S.extras.length === 0
+    ? '<div style="color:var(--muted);font-size:13px">Nenhuma receita extra registrada.</div>'
+    : S.extras.map((e, i) => `
+      <div class="c6-item">
+        <div><div style="font-size:13px;font-weight:500">${e.desc}</div><div style="font-size:11px;color:var(--muted)">${mesLabel(e.mes)}</div></div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="pos" style="font-family:var(--mono)">${fmtR(e.valor)}</span>
+          <button class="btn btn-danger btn-small" onclick="delExtra(${i})">×</button>
+        </div>
+      </div>
+    `).join('');
+  
+  // Populate ext-mes select
+  const sel = document.getElementById('ext-mes');
+  if (sel) {
+    sel.innerHTML = '';
+    for (let m = 1; m <= 12; m++) {
+      const k = `${ANO}-${String(m).padStart(2,'0')}`;
+      sel.innerHTML += `<option value="${k}">${MESES[m-1]}</option>`;
+    }
+  }
+}
+
+function addExtra() {
+  const desc = document.getElementById('ext-desc').value.trim();
+  const valor = +document.getElementById('ext-val').value;
+  const mes = document.getElementById('ext-mes').value;
+  if (!desc || !valor) { toast('Preencha descrição e valor', true); return; }
+  S.extras.push({ desc, valor, mes });
+  saveData(S); closeModal('modal-extra'); toast('Receita extra adicionada!'); renderExtras();
+}
+function delExtra(i) { S.extras.splice(i,1); saveData(S); renderExtras(); }
+
+// ============================================================
+// CONFIG
+// ============================================================
+function saveConfig() {
+  S.config.salario = +document.getElementById('cfg-salario').value || 8471;
+  S.config.vt = +document.getElementById('cfg-vt').value || 2139.84;
+  S.config.lume = +document.getElementById('cfg-lume').value || 2800;
+  S.config.jac = +document.getElementById('cfg-jac').value || 1772;
+  saveData(S);
+}
+
+function renderConfig() {
+  document.getElementById('cfg-salario').value = S.config.salario;
+  document.getElementById('cfg-vt').value = S.config.vt;
+  document.getElementById('cfg-lume').value = S.config.lume;
+  document.getElementById('cfg-jac').value = S.config.jac;
+
+  document.getElementById('gastos-fixos-list').innerHTML = S.gastos_fixos.map((g, i) => `
+    <div class="c6-item">
+      <div><div style="font-size:13px;font-weight:500">${g.nome}</div><div style="font-size:11px;color:var(--muted)">${g.tipo}</div></div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <input type="number" value="${g.valor}" style="width:90px;background:var(--surface2);border:1px solid var(--border2);border-radius:5px;color:var(--text);padding:4px 8px;font-size:12px;font-family:var(--mono)" onchange="S.gastos_fixos[${i}].valor=+this.value;saveData(S)">
+        <button class="btn btn-danger btn-small" onclick="S.gastos_fixos.splice(${i},1);saveData(S);renderConfig()">×</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addFixo() {
+  const nome = document.getElementById('fixo-nome').value.trim();
+  const valor = +document.getElementById('fixo-val').value;
+  const tipo = document.getElementById('fixo-tipo').value;
+  if (!nome) { toast('Informe o nome', true); return; }
+  S.gastos_fixos.push({ id: Date.now(), nome, valor, tipo });
+  saveData(S); closeModal('modal-fixo'); toast('Gasto fixo adicionado!'); renderConfig();
+}
+
+function limparTudo() {
+  localStorage.removeItem('cf_data');
+  S = initState();
+  toast('Dados limpos!');
+  showPage('dashboard');
+}
+
+function importarDadosIniciais() {
+  if (!confirm('Isso vai restaurar os dados iniciais e sobrescrever os atuais. Continuar?')) return;
+  localStorage.removeItem('cf_data');
+  S = initState();
+  saveData(S);
+  toast('Dados iniciais restaurados!');
+  showPage('dashboard');
+}
+
+// ============================================================
+// EXPORTAR EXCEL
+// ============================================================
+function exportarExcel() {
+  const wb = XLSX.utils.book_new();
+
+  // Aba: Lançamentos
+  const lRows = [['Mês','Tipo/Categoria','Valor','Observação','Direção']];
+  Object.entries(S.meses).sort().forEach(([mes, md]) => {
+    md.entradas.forEach(e => lRows.push([mesLabel(mes), e.tipo, e.valor, e.obs, 'Entrada']));
+    md.saidas.forEach(s => lRows.push([mesLabel(mes), s.categoria, s.valor, s.obs, 'Saída']));
+  });
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(lRows), 'Lançamentos');
+
+  // Aba: Histórico
+  const hRows = [['Mês','Patrimônio','Guardado']];
+  S.historico.forEach(h => hRows.push([mesLabel(h.mes), h.total, h.guardar]));
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(hRows), 'Histórico');
+
+  // Aba: C6 Lucas
+  const cRows = [['Mês','Descrição','Valor','Quem','Data']];
+  S.c6.forEach(g => cRows.push([mesLabel(g.mes), g.desc, g.valor, g.quem, g.data]));
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(cRows), 'C6-Lucas');
+
+  // Aba: PLR
+  const pRows = [
+    ['PLR 1ª Parcela (Fev)', 10566.5745],
+    ['PLR 2ª Parcela (Jun)', 4226.6298],
+    ['Total PLR', 14793.2043],
+    ['Salário base (meses 1-9)', S.plr.sal_baixo],
+    ['Salário base (meses 10-12)', S.plr.sal_alto],
+    ['Multiplicador', S.plr.mult],
+    ['Churn %', S.plr.churn],
+  ];
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(pRows), 'PLR');
+
+  // Aba: Investimentos
+  const iRows = [['Conta','Valor Atual'],
+    ['Cash', S.inv_atual.cash],
+    ['Espanha', S.inv_atual.espanha],
+    ['XP Invest', S.inv_atual.xp],
+    ['Nubank', S.inv_atual.nu],
+    ['TOTAL', S.inv_atual.cash+S.inv_atual.espanha+S.inv_atual.xp+S.inv_atual.nu],
+  ];
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(iRows), 'Investimentos');
+
+  XLSX.writeFile(wb, `controle-financeiro-${new Date().toISOString().split('T')[0]}.xlsx`);
+  toast('Excel exportado com sucesso!');
+}
+
+// ============================================================
+// UTILS
+// ============================================================
+function mesLabel(k) {
+  if (!k) return '';
+  const [ano, m] = k.split('-');
+  return MESES[+m - 1] + '/' + ano;
+}
+
+function toast(msg, isErr = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show' + (isErr ? ' error' : '');
+  setTimeout(() => t.className = '', 2600);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+// Show data version
+const verLabel = document.getElementById('data-ver-label');
+if (verLabel) verLabel.textContent = 'v' + DATA_VERSION + ' (' + (localStorage.getItem('cf_data') ? 'dados salvos' : 'padrão') + ')';
+
+document.getElementById('hoje-label').textContent = new Date().toLocaleDateString('pt-BR', { weekday:'short', day:'2-digit', month:'short', year:'numeric' });
+
+renderDashboard();
+</script>
+</body>
+</html>
