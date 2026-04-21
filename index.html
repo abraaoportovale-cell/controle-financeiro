@@ -847,7 +847,6 @@ function iniciarLogin() {
 let _tokenRefreshTimer = null;
 function scheduleTokenRefresh() {
   if (_tokenRefreshTimer) clearTimeout(_tokenRefreshTimer);
-  // Renova 5 min antes de expirar (tokens duram ~3600s)
   _tokenRefreshTimer = setTimeout(() => {
     try {
       const client = google.accounts.oauth2.initTokenClient({
@@ -864,10 +863,10 @@ function scheduleTokenRefresh() {
       });
       client.requestAccessToken();
     } catch(e) { console.warn('Token refresh falhou:', e); }
-  }, 55 * 60 * 1000); // 55 minutos
+  }, 55 * 60 * 1000);
 }
 
-
+// ---- Drive helpers ----
 async function driveRequest(method, url, body, isJson = true) {
   const headers = { Authorization: 'Bearer ' + gToken };
   if (isJson && body) headers['Content-Type'] = 'application/json';
@@ -890,12 +889,9 @@ async function loadData() {
   const meta = await driveRequest('GET',
     `https://www.googleapis.com/drive/v3/files/${gFileId}?alt=media`, null);
   if (!meta) return null;
-  // Se versão diferente, migra os dados ao invés de descartar
   if (meta._version && meta._version !== DATA_VERSION) {
-    console.warn(`Migrando dados da versão ${meta._version} para ${DATA_VERSION}`);
-    // Mantém os dados existentes e atualiza a versão
-    const base = initState();
-    const merged = Object.assign({}, base, meta);
+    console.warn(`Migrando dados v${meta._version} → v${DATA_VERSION}`);
+    const merged = Object.assign({}, initState(), meta);
     merged._version = DATA_VERSION;
     await saveData(merged).catch(e => console.warn('Erro ao migrar:', e));
     return merged;
@@ -934,6 +930,7 @@ async function initApp() {
     console.error(e);
     S = initState();
   }
+  syncInvAtual(); // garante inv_atual correto baseado no mês mais recente
   document.getElementById('loading-overlay').style.display = 'none';
   renderDashboard();
 }
@@ -1266,8 +1263,9 @@ function initState() {
 
 let S = null; // inicializado em initApp()
 
-// Sempre recalcula inv_atual com base no mês mais recente com patrimônio registrado
-(function syncInvAtual() {
+// Recalcula inv_atual com base no mês mais recente com patrimônio registrado
+function syncInvAtual() {
+  if (!S) return;
   const mesesComPat = Object.keys(S.meses)
     .filter(k => S.meses[k] && S.meses[k].patrimonio)
     .sort();
@@ -1275,7 +1273,7 @@ let S = null; // inicializado em initApp()
     const maisRecente = mesesComPat[mesesComPat.length - 1];
     S.inv_atual = Object.assign({}, S.meses[maisRecente].patrimonio);
   }
-})();
+}
 
 // MES SELECIONADO
 let selMes = '2026-04'; // mês atual
