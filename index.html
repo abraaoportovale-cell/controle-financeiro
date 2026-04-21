@@ -778,32 +778,187 @@
 <!-- TOAST -->
 <div id="toast"></div>
 
+<!-- OVERLAY: Login Google -->
+<div id="auth-overlay" style="display:none;position:fixed;inset:0;background:#0a0b0eee;z-index:9999;flex-direction:column;align-items:center;justify-content:center;gap:24px;">
+  <div style="background:#111318;border:1px solid #1e2330;border-radius:16px;padding:40px 48px;text-align:center;max-width:380px;width:90%;">
+    <div style="font-size:36px;margin-bottom:16px;">💰</div>
+    <h2 style="color:#e8eaf0;font-size:22px;margin-bottom:8px;">Controle Financeiro</h2>
+    <p style="color:#6b7494;font-size:14px;margin-bottom:28px;">Entre com sua conta Google para sincronizar seus dados em qualquer dispositivo.</p>
+    <button onclick="iniciarLogin()" style="background:#4f8ef7;color:#fff;border:none;border-radius:10px;padding:13px 32px;font-size:15px;font-weight:600;cursor:pointer;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;">
+      <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.29-8.16 2.29-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+      Entrar com Google
+    </button>
+    <p style="color:#3a4055;font-size:12px;margin-top:20px;">Os dados ficam salvos no seu próprio Google Drive (pasta privada do app).</p>
+  </div>
+</div>
+
+<!-- OVERLAY: Loading -->
+<div id="loading-overlay" style="display:flex;position:fixed;inset:0;background:#0a0b0ecc;z-index:9998;align-items:center;justify-content:center;flex-direction:column;gap:16px;">
+  <div style="width:40px;height:40px;border:3px solid #1e2330;border-top-color:#4f8ef7;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+  <span style="color:#6b7494;font-size:14px;">Carregando seus dados...</span>
+</div>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+
+<script src="https://accounts.google.com/gsi/client" async></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 // ============================================================
-// ESTADO GLOBAL & PERSISTÊNCIA
+// ESTADO GLOBAL & PERSISTÊNCIA — GOOGLE DRIVE
 // ============================================================
 const MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 const MESES_FULL = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 const ANO = 2026;
+const DATA_VERSION = 7;
 
-const DATA_VERSION = 7; // incrementar sempre que mudar initState
+// ---- Google Identity & Drive config ----
+// SUBSTITUA pelo seu Client ID do Google Cloud Console:
+const GOOGLE_CLIENT_ID = '915295850372-s2h73h9u7l64gmim6s3drih37s8v9hoc.apps.googleusercontent.com';
+const DRIVE_FILENAME   = 'controle-financeiro-data.json';
+const DRIVE_SCOPE      = 'https://www.googleapis.com/auth/drive.file';
 
-function loadData() {
-  try {
-    const raw = JSON.parse(localStorage.getItem('cf_data') || 'null');
-    if (!raw || raw._version !== DATA_VERSION) {
-      // Versão desatualizada ou inexistente -> usa initState
-      console.log('cf_data versão antiga ou ausente — reiniciando com dados atualizados.');
-      return null;
+let gToken = null;       // access token atual
+let gFileId = null;      // ID do arquivo no Drive
+
+// ---- Overlay de auth ----
+function showAuthOverlay(show) {
+  document.getElementById('auth-overlay').style.display = show ? 'flex' : 'none';
+}
+
+// ---- Iniciar login Google ----
+function iniciarLogin() {
+  const client = google.accounts.oauth2.initTokenClient({
+    client_id: GOOGLE_CLIENT_ID,
+    scope: DRIVE_SCOPE,
+    callback: async (resp) => {
+      if (resp.error) { toast('Erro ao autenticar: ' + resp.error, true); return; }
+      gToken = resp.access_token;
+      localStorage.setItem('gToken', gToken);
+      scheduleTokenRefresh();
+      showAuthOverlay(false);
+      toast('Conectado ao Google Drive!');
+      await initApp();
     }
-    return raw;
-  } catch { return null; }
+  });
+  client.requestAccessToken();
 }
-function saveData(d) {
+
+// ---- Auto-refresh token (expira em 1h) ----
+let _tokenRefreshTimer = null;
+function scheduleTokenRefresh() {
+  if (_tokenRefreshTimer) clearTimeout(_tokenRefreshTimer);
+  _tokenRefreshTimer = setTimeout(() => {
+    try {
+      const client = google.accounts.oauth2.initTokenClient({
+        client_id: GOOGLE_CLIENT_ID,
+        scope: DRIVE_SCOPE,
+        prompt: '',
+        callback: (resp) => {
+          if (resp && resp.access_token) {
+            gToken = resp.access_token;
+            localStorage.setItem('gToken', gToken);
+            scheduleTokenRefresh();
+          }
+        }
+      });
+      client.requestAccessToken();
+    } catch(e) { console.warn('Token refresh falhou:', e); }
+  }, 55 * 60 * 1000);
+}
+
+// ---- Drive helpers ----
+async function driveRequest(method, url, body, isJson = true) {
+  const headers = { Authorization: 'Bearer ' + gToken };
+  if (isJson && body) headers['Content-Type'] = 'application/json';
+  const resp = await fetch(url, { method, headers, body: body ? (isJson ? JSON.stringify(body) : body) : undefined });
+  if (resp.status === 401) { gToken = null; showAuthOverlay(true); return null; }
+  if (!resp.ok) return null;
+  const text = await resp.text();
+  try { return JSON.parse(text); } catch { return text; }
+}
+
+async function findFile() {
+  const r = await driveRequest('GET',
+    `https://www.googleapis.com/drive/v3/files?q=name%3D'${DRIVE_FILENAME}'%20and%20trashed%3Dfalse&fields=files(id)`, null);
+  return r && r.files && r.files.length ? r.files[0].id : null;
+}
+
+async function loadData() {
+  gFileId = await findFile();
+  if (!gFileId) return null;
+  const meta = await driveRequest('GET',
+    `https://www.googleapis.com/drive/v3/files/${gFileId}?alt=media`, null);
+  if (!meta) return null;
+  if (meta._version && meta._version !== DATA_VERSION) {
+    console.warn(`Migrando dados v${meta._version} → v${DATA_VERSION}`);
+    const merged = Object.assign({}, initState(), meta);
+    merged._version = DATA_VERSION;
+    await saveData(merged).catch(e => console.warn('Erro ao migrar:', e));
+    return merged;
+  }
+  return meta;
+}
+
+async function saveData(d) {
   d._version = DATA_VERSION;
-  localStorage.setItem('cf_data', JSON.stringify(d));
+  const blob = new Blob([JSON.stringify(d)], { type: 'application/json' });
+  if (!gFileId) {
+    // Criar arquivo
+    const meta = { name: DRIVE_FILENAME };
+    const form = new FormData();
+    form.append('metadata', new Blob([JSON.stringify(meta)], { type: 'application/json' }));
+    form.append('file', blob);
+    const r = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id',
+      { method: 'POST', headers: { Authorization: 'Bearer ' + gToken }, body: form });
+    const j = await r.json();
+    gFileId = j.id;
+  } else {
+    // Atualizar arquivo existente
+    await fetch(`https://www.googleapis.com/upload/drive/v3/files/${gFileId}?uploadType=media`,
+      { method: 'PATCH', headers: { Authorization: 'Bearer ' + gToken, 'Content-Type': 'application/json' }, body: JSON.stringify(d) });
+  }
 }
+
+// ---- Inicialização ----
+async function initApp() {
+  document.getElementById('loading-overlay').style.display = 'flex';
+  try {
+    const saved = await loadData();
+    S = saved ? saved : initState();
+    if (!saved) await saveData(S).catch(e=>console.warn("drive save:",e));
+  } catch(e) {
+    console.error(e);
+    S = initState();
+  }
+  document.getElementById('loading-overlay').style.display = 'none';
+  renderDashboard();
+}
+
+// Verificar token salvo ao carregar
+window.addEventListener('load', async () => {
+  const savedToken = localStorage.getItem('gToken');
+  if (savedToken) {
+    gToken = savedToken;
+    // Testa se o token ainda é válido
+    const teste = await fetch('https://www.googleapis.com/drive/v3/files?pageSize=1&q=trashed%3Dfalse', {
+      headers: { Authorization: 'Bearer ' + savedToken }
+    });
+    if (teste.ok) {
+      scheduleTokenRefresh();
+      showAuthOverlay(false);
+      await initApp();
+    } else {
+      // Token expirado — pede login de novo
+      localStorage.removeItem('gToken');
+      gToken = null;
+      showAuthOverlay(true);
+      document.getElementById('loading-overlay').style.display = 'none';
+    }
+  } else {
+    showAuthOverlay(true);
+    document.getElementById('loading-overlay').style.display = 'none';
+  }
+});
 
 function initState() {
   return {
@@ -1105,7 +1260,18 @@ function initState() {
   };
 }
 
-let S = (function() { const d = loadData(); if (d) return d; const init = initState(); saveData(init); return init; })();
+let S = null; // inicializado em initApp()
+
+// Sempre recalcula inv_atual com base no mês mais recente com patrimônio registrado
+(function syncInvAtual() {
+  const mesesComPat = Object.keys(S.meses)
+    .filter(k => S.meses[k] && S.meses[k].patrimonio)
+    .sort();
+  if (mesesComPat.length > 0) {
+    const maisRecente = mesesComPat[mesesComPat.length - 1];
+    S.inv_atual = Object.assign({}, S.meses[maisRecente].patrimonio);
+  }
+})();
 
 // MES SELECIONADO
 let selMes = '2026-04'; // mês atual
@@ -1349,7 +1515,7 @@ function addEntrada() {
   const obs = document.getElementById('ent-obs').value;
   if (!valor) { toast('Informe o valor', true); return; }
   getMesData(selMes).entradas.push({ tipo, valor, obs });
-  saveData(S);
+  saveData(S).catch(e=>console.warn("drive save:",e));
   closeModal('modal-entrada');
   toast('Entrada adicionada!');
   renderMensal();
@@ -1357,7 +1523,7 @@ function addEntrada() {
 
 function delEntrada(i) {
   getMesData(selMes).entradas.splice(i, 1);
-  saveData(S); renderMensal();
+  saveData(S).catch(e=>console.warn("drive save:",e)); renderMensal();
 }
 
 function addSaida() {
@@ -1366,7 +1532,7 @@ function addSaida() {
   const obs = document.getElementById('sai-obs').value;
   if (!valor) { toast('Informe o valor', true); return; }
   getMesData(selMes).saidas.push({ categoria, valor, obs });
-  saveData(S);
+  saveData(S).catch(e=>console.warn("drive save:",e));
   closeModal('modal-saida');
   toast('Saída adicionada!');
   renderMensal();
@@ -1374,7 +1540,7 @@ function addSaida() {
 
 function delSaida(i) {
   getMesData(selMes).saidas.splice(i, 1);
-  saveData(S); renderMensal();
+  saveData(S).catch(e=>console.warn("drive save:",e)); renderMensal();
 }
 
 function savePatrimonio() {
@@ -1383,11 +1549,11 @@ function savePatrimonio() {
   const xp = +document.getElementById('pat-xp').value || 0;
   const nu = +document.getElementById('pat-nu').value || 0;
   getMesData(selMes).patrimonio = { cash, espanha, xp, nu };
-  // Atualizar inv_atual se for o mês mais recente com patrimônio registrado
-  const mesesComPatrimonio = Object.keys(S.meses)
+  // Atualizar inv_atual com base no mês mais recente com patrimônio registrado
+  const mesesComPat = Object.keys(S.meses)
     .filter(k => S.meses[k] && S.meses[k].patrimonio)
     .sort();
-  const maisRecente = mesesComPatrimonio[mesesComPatrimonio.length - 1];
+  const maisRecente = mesesComPat[mesesComPat.length - 1];
   if (selMes === maisRecente) {
     S.inv_atual = { cash, espanha, xp, nu };
   }
@@ -1396,12 +1562,10 @@ function savePatrimonio() {
   const hi = S.historico.find(h => h.mes === selMes);
   if (hi) hi.total = tot; else S.historico.push({ mes: selMes, total: tot, guardar: 0 });
   S.historico.sort((a,b) => a.mes.localeCompare(b.mes));
-  saveData(S);
+  saveData(S).catch(e=>console.warn("drive save:",e));
   closeModal('modal-patrimonio');
   toast('Posição registrada!');
   renderMensal();
-  // Atualizar dashboard se estiver visível
-  if (document.getElementById('page-dashboard').classList.contains('active')) renderDashboard();
 }
 
 // ============================================================
@@ -1545,7 +1709,7 @@ function salvarInvSaldo() {
   const hi = S.historico.find(h => h.mes === selMes);
   if (hi) hi.total = tot; else S.historico.push({ mes: selMes, total: tot, guardar: 0 });
   S.historico.sort((a,b) => a.mes.localeCompare(b.mes));
-  saveData(S);
+  saveData(S).catch(e=>console.warn("drive save:",e));
   closeModal('modal-inv-saldo');
   toast('Posição atualizada!');
   renderInvestimentos();
@@ -1608,9 +1772,9 @@ function addC6() {
   const quem = document.getElementById('c6-quem').value;
   if (!desc || !valor) { toast('Preencha descrição e valor', true); return; }
   S.c6.push({ desc, valor, data, quem, mes: k });
-  saveData(S); closeModal('modal-c6'); toast('Gasto adicionado!'); renderC6();
+  saveData(S).catch(e=>console.warn("drive save:",e)); closeModal('modal-c6'); toast('Gasto adicionado!'); renderC6();
 }
-function delC6(i) { S.c6.splice(i,1); saveData(S); renderC6(); }
+function delC6(i) { S.c6.splice(i,1); saveData(S).catch(e=>console.warn("drive save:",e)); renderC6(); }
 
 // ============================================================
 // PLR
@@ -1629,7 +1793,7 @@ function calcPLR() {
   S.plr.meta = +document.getElementById('plr-meta').value || 5300000000;
   S.plr.churn = +document.getElementById('plr-churn').value || 0.30;
   S.plr.mult = +document.getElementById('plr-mult').value || 3;
-  saveData(S);
+  saveData(S).catch(e=>console.warn("drive save:",e));
 
   const sal_medio = ((S.plr.sal_baixo * 9) + (S.plr.sal_alto * 3)) / 12;
   const plr_bruto = sal_medio * S.plr.mult;
@@ -1691,9 +1855,9 @@ function addExtra() {
   const mes = document.getElementById('ext-mes').value;
   if (!desc || !valor) { toast('Preencha descrição e valor', true); return; }
   S.extras.push({ desc, valor, mes });
-  saveData(S); closeModal('modal-extra'); toast('Receita extra adicionada!'); renderExtras();
+  saveData(S).catch(e=>console.warn("drive save:",e)); closeModal('modal-extra'); toast('Receita extra adicionada!'); renderExtras();
 }
-function delExtra(i) { S.extras.splice(i,1); saveData(S); renderExtras(); }
+function delExtra(i) { S.extras.splice(i,1); saveData(S).catch(e=>console.warn("drive save:",e)); renderExtras(); }
 
 // ============================================================
 // CONFIG
@@ -1703,7 +1867,7 @@ function saveConfig() {
   S.config.vt = +document.getElementById('cfg-vt').value || 2139.84;
   S.config.lume = +document.getElementById('cfg-lume').value || 2800;
   S.config.jac = +document.getElementById('cfg-jac').value || 1772;
-  saveData(S);
+  saveData(S).catch(e=>console.warn("drive save:",e));
 }
 
 function renderConfig() {
@@ -1716,8 +1880,8 @@ function renderConfig() {
     <div class="c6-item">
       <div><div style="font-size:13px;font-weight:500">${g.nome}</div><div style="font-size:11px;color:var(--muted)">${g.tipo}</div></div>
       <div style="display:flex;align-items:center;gap:10px">
-        <input type="number" value="${g.valor}" style="width:90px;background:var(--surface2);border:1px solid var(--border2);border-radius:5px;color:var(--text);padding:4px 8px;font-size:12px;font-family:var(--mono)" onchange="S.gastos_fixos[${i}].valor=+this.value;saveData(S)">
-        <button class="btn btn-danger btn-small" onclick="S.gastos_fixos.splice(${i},1);saveData(S);renderConfig()">×</button>
+        <input type="number" value="${g.valor}" style="width:90px;background:var(--surface2);border:1px solid var(--border2);border-radius:5px;color:var(--text);padding:4px 8px;font-size:12px;font-family:var(--mono)" onchange="S.gastos_fixos[${i}].valor=+this.value;saveData(S).catch(e=>console.warn("drive save:",e))">
+        <button class="btn btn-danger btn-small" onclick="S.gastos_fixos.splice(${i},1);saveData(S).catch(e=>console.warn("drive save:",e));renderConfig()">×</button>
       </div>
     </div>
   `).join('');
@@ -1729,7 +1893,7 @@ function addFixo() {
   const tipo = document.getElementById('fixo-tipo').value;
   if (!nome) { toast('Informe o nome', true); return; }
   S.gastos_fixos.push({ id: Date.now(), nome, valor, tipo });
-  saveData(S); closeModal('modal-fixo'); toast('Gasto fixo adicionado!'); renderConfig();
+  saveData(S).catch(e=>console.warn("drive save:",e)); closeModal('modal-fixo'); toast('Gasto fixo adicionado!'); renderConfig();
 }
 
 function limparTudo() {
@@ -1739,14 +1903,27 @@ function limparTudo() {
   showPage('dashboard');
 }
 
-function importarDadosIniciais() {
+async function importarDadosIniciais() {
   if (!confirm('Isso vai restaurar os dados iniciais e sobrescrever os atuais. Continuar?')) return;
-  localStorage.removeItem('cf_data');
   S = initState();
-  saveData(S);
-  toast('Dados iniciais restaurados!');
+  document.getElementById('loading-overlay').style.display = 'flex';
+  try {
+    await saveData(S);
+    toast('Dados iniciais restaurados!');
+  } catch(e) {
+    toast('Erro ao salvar no Drive', true);
+  }
+  document.getElementById('loading-overlay').style.display = 'none';
   showPage('dashboard');
+  renderDashboard();
 }
+
+
+
+
+
+
+
 
 // ============================================================
 // EXPORTAR EXCEL
@@ -1817,13 +1994,9 @@ function toast(msg, isErr = false) {
 // ============================================================
 // INIT
 // ============================================================
-// Show data version
-const verLabel = document.getElementById('data-ver-label');
-if (verLabel) verLabel.textContent = 'v' + DATA_VERSION + ' (' + (localStorage.getItem('cf_data') ? 'dados salvos' : 'padrão') + ')';
-
 document.getElementById('hoje-label').textContent = new Date().toLocaleDateString('pt-BR', { weekday:'short', day:'2-digit', month:'short', year:'numeric' });
 
-renderDashboard();
+// initApp() é chamado pelo fluxo OAuth no topo do script
 </script>
 </body>
 </html>
