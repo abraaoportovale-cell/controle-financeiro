@@ -730,28 +730,48 @@ function silentTokenRefresh() {
       return;
     }
     _tokenRefreshing = true;
-    try {
-      const client = google.accounts.oauth2.initTokenClient({
-        client_id: GOOGLE_CLIENT_ID,
-        scope: DRIVE_SCOPE,
-        prompt: '',
-        callback: (resp) => {
-          _tokenRefreshing = false;
-          if (resp && resp.access_token) {
-            gToken = resp.access_token;
-            localStorage.setItem('gToken', gToken);
-            localStorage.setItem('gTokenTime', Date.now().toString());
-            resolve(gToken);
-          } else {
-            reject(new Error('Token refresh falhou'));
-          }
-        }
-      });
-      client.requestAccessToken();
-    } catch(e) {
+
+    // ✅ Timeout de segurança: se demorar mais de 8s, rejeita
+    const timeout = setTimeout(() => {
       _tokenRefreshing = false;
-      reject(e);
+      reject(new Error('Token refresh timeout'));
+    }, 8000);
+
+    // ✅ Garante que a lib Google está carregada antes de chamar
+    function tryRefresh() {
+      if (typeof google === 'undefined' || !google.accounts || !google.accounts.oauth2) {
+        clearTimeout(timeout);
+        _tokenRefreshing = false;
+        reject(new Error('Google SDK não carregado'));
+        return;
+      }
+      try {
+        const client = google.accounts.oauth2.initTokenClient({
+          client_id: GOOGLE_CLIENT_ID,
+          scope: DRIVE_SCOPE,
+          prompt: '',
+          callback: (resp) => {
+            clearTimeout(timeout);
+            _tokenRefreshing = false;
+            if (resp && resp.access_token) {
+              gToken = resp.access_token;
+              localStorage.setItem('gToken', gToken);
+              localStorage.setItem('gTokenTime', Date.now().toString());
+              resolve(gToken);
+            } else {
+              reject(new Error('Token refresh falhou: ' + (resp && resp.error)));
+            }
+          }
+        });
+        client.requestAccessToken();
+      } catch(e) {
+        clearTimeout(timeout);
+        _tokenRefreshing = false;
+        reject(e);
+      }
     }
+
+    tryRefresh();
   });
 }
 
@@ -951,6 +971,23 @@ async function initApp() {
   renderDashboard();
 }
 
+// Aguarda o SDK do Google carregar (máx 10s)
+function waitForGoogleSDK(timeoutMs = 10000) {
+  return new Promise((resolve, reject) => {
+    if (typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) {
+      resolve(); return;
+    }
+    const start = Date.now();
+    const poll = setInterval(() => {
+      if (typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) {
+        clearInterval(poll); resolve();
+      } else if (Date.now() - start > timeoutMs) {
+        clearInterval(poll); reject(new Error('Google SDK não carregou a tempo'));
+      }
+    }, 100);
+  });
+}
+
 window.addEventListener('load', async () => {
   const savedToken = localStorage.getItem('gToken');
   const savedTokenTime = parseInt(localStorage.getItem('gTokenTime') || '0');
@@ -958,6 +995,7 @@ window.addEventListener('load', async () => {
   const TOKEN_MAX_AGE = 55 * 60 * 1000;
 
   if (savedToken) {
+    // Testa se o token ainda funciona diretamente (não precisa do SDK)
     if (tokenAge < TOKEN_MAX_AGE) {
       const teste = await fetch('https://www.googleapis.com/drive/v3/files?pageSize=1', {
         headers: { Authorization: 'Bearer ' + savedToken }
@@ -972,10 +1010,13 @@ window.addEventListener('load', async () => {
       }
     }
 
+    // Token possivelmente expirado — aguarda SDK e tenta refresh
     gToken = savedToken;
+    document.getElementById('loading-overlay').style.display = 'flex';
+    document.getElementById('loading-msg').textContent = 'Renovando autenticação...';
+
     try {
-      document.getElementById('loading-overlay').style.display = 'flex';
-      document.getElementById('loading-msg').textContent = 'Renovando autenticação...';
+      await waitForGoogleSDK();
       await silentTokenRefresh();
       scheduleTokenRefresh();
       showAuthOverlay(false);
