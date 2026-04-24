@@ -1914,8 +1914,9 @@ async function calcPLR() {
   const plr_real = plr_bruto * (S.plr.ating / 100);
   // 1ª parcela = metade do PLR real
   const plr1 = plr_real / 2;
-  // 2ª parcela = metade abatida pelo churn
-  const plr2 = plr1 * (1 - S.plr.churn);
+  // 2ª parcela = PLR real - churn - 1ª parcela
+  const plr_apos_churn = plr_real * (1 - S.plr.churn);
+  const plr2 = plr_apos_churn - plr1;
 
   document.getElementById('plr-1a').textContent = fmtR(plr1);
   document.getElementById('plr-2a').textContent = fmtR(plr2);
@@ -1928,8 +1929,9 @@ async function calcPLR() {
     <div class="inv-row"><div class="inv-name">% atingimento GRE</div><span style="font-family:var(--mono);color:var(--accent)">${S.plr.ating.toFixed(1)}%</span></div>
     <div class="inv-row"><div class="inv-name">PLR real (após atingimento)</div><span style="font-family:var(--mono);font-weight:600">${fmtR(plr_real)}</span></div>
     <div class="inv-row"><div class="inv-name">% cancelamento (churn)</div><span style="font-family:var(--mono)">${(S.plr.churn*100).toFixed(1)}%</span></div>
+    <div class="inv-row"><div class="inv-name">PLR após churn</div><span style="font-family:var(--mono)">${fmtR(plr_apos_churn)}</span></div>
     <div class="inv-row"><div class="inv-name">1ª parcela (Fevereiro)</div><span class="pos" style="font-family:var(--mono);font-weight:700">${fmtR(plr1)}</span></div>
-    <div class="inv-row"><div class="inv-name">2ª parcela (Junho) — com abate churn</div><span class="neutral" style="font-family:var(--mono);font-weight:700">${fmtR(plr2)}</span></div>
+    <div class="inv-row"><div class="inv-name">2ª parcela = após churn − 1ª parcela</div><span class="neutral" style="font-family:var(--mono);font-weight:700">${fmtR(plr2)}</span></div>
     <hr class="divider">
     <div style="font-size:11px;color:var(--muted)">💡 A 2ª parcela abate o churn da carteira. Meta: R$ 5,3 bilhões.</div>
   `;
