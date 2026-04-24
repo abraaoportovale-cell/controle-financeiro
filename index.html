@@ -218,7 +218,6 @@
   #toast.show { opacity: 1; transform: translateY(0); }
   #toast.error { background: var(--red); color: #fff; }
 
-  /* Save indicator */
   #save-indicator {
     position: fixed; top: 14px; right: 24px;
     font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px;
@@ -659,13 +658,12 @@ const DRIVE_FILENAME   = 'controle-financeiro-data.json';
 const DRIVE_SCOPE      = 'https://www.googleapis.com/auth/drive.file';
 
 // ============================================================
-// AUTH & TOKEN — ROBUSTO
+// AUTH & TOKEN
 // ============================================================
 let gToken = null;
 let gFileId = null;
 let _tokenRefreshTimer = null;
-let _tokenRefreshing = false;        // evita refreshes simultâneos
-let _pendingSaves = [];              // fila de saves aguardando token
+let _tokenRefreshing = false;
 
 function showAuthOverlay(show) {
   document.getElementById('auth-overlay').style.display = show ? 'flex' : 'none';
@@ -680,7 +678,6 @@ function setSaveIndicator(state, msg) {
   }
 }
 
-// Iniciar login Google
 function iniciarLogin() {
   try {
     const client = google.accounts.oauth2.initTokenClient({
@@ -690,7 +687,6 @@ function iniciarLogin() {
         if (resp.error) { toast('Erro ao autenticar: ' + resp.error, true); return; }
         gToken = resp.access_token;
         localStorage.setItem('gToken', gToken);
-        // Armazena tempo de emissão para controle de expiração
         localStorage.setItem('gTokenTime', Date.now().toString());
         scheduleTokenRefresh();
         showAuthOverlay(false);
@@ -700,7 +696,6 @@ function iniciarLogin() {
     });
     client.requestAccessToken({ prompt: 'consent' });
   } catch(e) {
-    // Fallback redirect flow (mobile)
     const params = new URLSearchParams({
       client_id: GOOGLE_CLIENT_ID,
       redirect_uri: window.location.origin + window.location.pathname,
@@ -712,7 +707,6 @@ function iniciarLogin() {
   }
 }
 
-// Verificar token na URL (retorno redirect mobile)
 (function checkRedirectToken() {
   const hash = window.location.hash;
   if (hash && hash.includes('access_token')) {
@@ -727,11 +721,9 @@ function iniciarLogin() {
   }
 })();
 
-// Solicitar novo token silenciosamente
 function silentTokenRefresh() {
   return new Promise((resolve, reject) => {
     if (_tokenRefreshing) {
-      // Já está refrescando, aguarda
       const check = setInterval(() => {
         if (!_tokenRefreshing) { clearInterval(check); resolve(gToken); }
       }, 200);
@@ -763,7 +755,6 @@ function silentTokenRefresh() {
   });
 }
 
-// Agenda próximo refresh (55 min)
 function scheduleTokenRefresh() {
   if (_tokenRefreshTimer) clearTimeout(_tokenRefreshTimer);
   _tokenRefreshTimer = setTimeout(async () => {
@@ -777,13 +768,10 @@ function scheduleTokenRefresh() {
 }
 
 // ============================================================
-// DRIVE HELPERS — COM RETRY AUTOMÁTICO EM 401
+// DRIVE HELPERS
 // ============================================================
 async function driveRequest(method, url, body, isJson = true, retried = false) {
-  if (!gToken) {
-    showAuthOverlay(true);
-    throw new Error('Sem token');
-  }
+  if (!gToken) { showAuthOverlay(true); throw new Error('Sem token'); }
   const headers = { Authorization: 'Bearer ' + gToken };
   if (isJson && body) headers['Content-Type'] = 'application/json';
 
@@ -793,12 +781,11 @@ async function driveRequest(method, url, body, isJson = true, retried = false) {
     body: body ? (isJson ? JSON.stringify(body) : body) : undefined
   });
 
-  // Token expirado — tenta renovar UMA vez
   if (resp.status === 401 && !retried) {
     console.warn('Token expirado, renovando...');
     try {
       await silentTokenRefresh();
-      return driveRequest(method, url, body, isJson, true); // retry
+      return driveRequest(method, url, body, isJson, true);
     } catch(e) {
       gToken = null;
       localStorage.removeItem('gToken');
@@ -834,11 +821,9 @@ async function loadData() {
     );
     if (!data || typeof data !== 'object') return null;
 
-    // Migração de versão (apenas adiciona campos faltantes, NUNCA apaga dados)
     if (!data._version || data._version !== DATA_VERSION) {
       console.warn(`Migrando dados v${data._version || '?'} → v${DATA_VERSION}`);
       const base = initState();
-      // Mescla: dados do Drive têm prioridade, base preenche campos faltantes
       const merged = deepMerge(base, data);
       merged._version = DATA_VERSION;
       await saveData(merged);
@@ -851,11 +836,10 @@ async function loadData() {
   }
 }
 
-// Merge profundo: valores de 'override' prevalecem sobre 'base'
 function deepMerge(base, override) {
   if (override === null || override === undefined) return base;
   if (typeof base !== 'object' || typeof override !== 'object') return override;
-  if (Array.isArray(override)) return override; // arrays: usa o do override
+  if (Array.isArray(override)) return override;
   const result = Object.assign({}, base);
   for (const key of Object.keys(override)) {
     if (key in base && typeof base[key] === 'object' && !Array.isArray(base[key])) {
@@ -867,7 +851,6 @@ function deepMerge(base, override) {
   return result;
 }
 
-// saveData com retry automático e indicador visual
 async function saveData(d) {
   d._version = DATA_VERSION;
   setSaveIndicator('saving', '💾 Salvando...');
@@ -886,7 +869,6 @@ async function _saveDataInternal(d) {
   const blob = new Blob([JSON.stringify(d)], { type: 'application/json' });
 
   if (!gFileId) {
-    // Criar arquivo novo
     const meta = { name: DRIVE_FILENAME };
     const form = new FormData();
     form.append('metadata', new Blob([JSON.stringify(meta)], { type: 'application/json' }));
@@ -897,7 +879,6 @@ async function _saveDataInternal(d) {
       { method: 'POST', headers: { Authorization: 'Bearer ' + gToken }, body: form }
     );
 
-    // Retry em 401
     if (resp.status === 401) {
       await silentTokenRefresh();
       resp = await fetch(
@@ -910,7 +891,6 @@ async function _saveDataInternal(d) {
     const j = await resp.json();
     gFileId = j.id;
   } else {
-    // Atualizar arquivo existente
     let resp = await fetch(
       `https://www.googleapis.com/upload/drive/v3/files/${gFileId}?uploadType=media`,
       {
@@ -920,7 +900,6 @@ async function _saveDataInternal(d) {
       }
     );
 
-    // Retry em 401
     if (resp.status === 401) {
       await silentTokenRefresh();
       resp = await fetch(
@@ -938,7 +917,7 @@ async function _saveDataInternal(d) {
 }
 
 // ============================================================
-// INICIALIZAÇÃO — NUNCA SOBRESCREVE DADOS EXISTENTES
+// INICIALIZAÇÃO
 // ============================================================
 async function initApp() {
   document.getElementById('loading-overlay').style.display = 'flex';
@@ -948,11 +927,9 @@ async function initApp() {
     const saved = await loadData();
 
     if (saved && typeof saved === 'object' && Object.keys(saved).length > 1) {
-      // ✅ Dados encontrados no Drive — usa eles
       S = saved;
       console.log('✅ Dados carregados do Drive');
     } else {
-      // Arquivo não existe ainda — cria com dados iniciais
       console.log('📄 Nenhum arquivo no Drive, criando novo...');
       S = initState();
       try {
@@ -963,25 +940,24 @@ async function initApp() {
     }
   } catch(e) {
     console.error('initApp error:', e);
-    // Em caso de erro, usa estado em memória SEM sobrescrever o Drive
     if (!S) S = initState();
     toast('Aviso: carregando dados locais. Verifique sua conexão.', true);
   }
 
-  syncInvAtual();
+  // ✅ FIX: usa versão async que aguarda o save antes de renderizar
+  await syncInvAtualAsync();
+
   document.getElementById('loading-overlay').style.display = 'none';
   renderDashboard();
 }
 
-// Verificar token ao carregar a página
 window.addEventListener('load', async () => {
   const savedToken = localStorage.getItem('gToken');
   const savedTokenTime = parseInt(localStorage.getItem('gTokenTime') || '0');
-  const tokenAge = Date.now() - savedTokenTime; // ms
-  const TOKEN_MAX_AGE = 55 * 60 * 1000; // 55 min
+  const tokenAge = Date.now() - savedTokenTime;
+  const TOKEN_MAX_AGE = 55 * 60 * 1000;
 
   if (savedToken) {
-    // Se o token tem menos de 55 min, testa diretamente
     if (tokenAge < TOKEN_MAX_AGE) {
       const teste = await fetch('https://www.googleapis.com/drive/v3/files?pageSize=1', {
         headers: { Authorization: 'Bearer ' + savedToken }
@@ -996,8 +972,7 @@ window.addEventListener('load', async () => {
       }
     }
 
-    // Token possivelmente expirado — tenta refresh silencioso
-    gToken = savedToken; // precisa de um token base para o refresh
+    gToken = savedToken;
     try {
       document.getElementById('loading-overlay').style.display = 'flex';
       document.getElementById('loading-msg').textContent = 'Renovando autenticação...';
@@ -1006,7 +981,6 @@ window.addEventListener('load', async () => {
       showAuthOverlay(false);
       await initApp();
     } catch(e) {
-      // Refresh falhou — pede login
       console.warn('Silent refresh falhou, pedindo login:', e);
       localStorage.removeItem('gToken');
       localStorage.removeItem('gTokenTime');
@@ -1094,7 +1068,7 @@ function initState() {
         { categoria: 'Nubank', valor: 1304.29, obs: '5º DU' },
         { categoria: 'XP', valor: 5011.22, obs: '5º DU' },
         { categoria: 'Inglês', valor: 256.00, obs: '5º DU' },
-        { categoria: 'C6 Lucas', valor: 83.00, obs: '5º DU — Lucas precisa me dar 5/6 de 417 de búzios' },
+        { categoria: 'C6 Lucas', valor: 83.00, obs: '5º DU' },
         { categoria: 'IPTU', valor: 86.30, obs: '5º DU' },
         { categoria: 'Itaú', valor: 917.00, obs: 'Vale (dia 20)' },
         { categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
@@ -1118,8 +1092,8 @@ function initState() {
         { categoria: 'Inglês', valor: 256.00, obs: '5º DU' },
         { categoria: 'IPTU', valor: 86.30, obs: '5º DU' },
         { categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
-        { categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20) — Lucas precisa me dar 6/6 de 417 de búzios + 106 que paguei a mais em março' },
-      ], patrimonio: { cash: 400, espanha: 9000, xp: 82187.98, nu: 1541.10 } },
+        { categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
+      ], patrimonio: { cash: 20, espanha: 10000, xp: 82324, nu: 3149.70 } },
 
       '2026-05': { entradas: [
         { tipo: 'Salário (5º DU)', valor: 6894.12, obs: 'Inclui PLR 2ª parcela do PLR' },
@@ -1281,7 +1255,7 @@ function initState() {
     },
     c6: [],
     extras: [],
-    inv_atual: { cash: 400, espanha: 9000, xp: 82187.98, nu: 1541.10 },
+    inv_atual: { cash: 20, espanha: 10000, xp: 82324, nu: 3149.70 },
     plr: { sal_baixo: 6952, sal_alto: 7378, meta: 5300000000, churn: 0.30, mult: 3 },
     historico: [
       { mes: '2025-08', total: 59876.00, guardar: 3470, realizado: true },
@@ -1289,10 +1263,10 @@ function initState() {
       { mes: '2025-10', total: 65851.88, guardar: 4800, realizado: true },
       { mes: '2025-11', total: 77316.00, guardar: 4300, realizado: true },
       { mes: '2025-12', total: 80436.02, guardar: 1300, realizado: true },
-      { mes: '2026-01', total: 78678.03, guardar: 900, realizado: true },
-      { mes: '2026-02', total: 95314.00, guardar: 12200, realizado: true },
-      { mes: '2026-03', total: 94680.15, guardar: 0, realizado: true },
-      { mes: '2026-04', total: 93128.10, guardar: 2600, realizado: true },
+      { mes: '2026-01', total: 95714.26, guardar: 900, realizado: true },
+      { mes: '2026-02', total: 94680.15, guardar: 12200, realizado: true },
+      { mes: '2026-03', total: 93128.10, guardar: 0, realizado: true },
+      { mes: '2026-04', total: 95493.70, guardar: 2600, realizado: true },
       { mes: '2026-05', total: null, guardar: 8794.07, realizado: false },
       { mes: '2026-06', total: null, guardar: 4494.07, realizado: false },
       { mes: '2026-07', total: null, guardar: 4321.07, realizado: false },
@@ -1304,19 +1278,73 @@ function initState() {
   };
 }
 
+// ============================================================
+// ✅ CORREÇÃO PRINCIPAL: syncInvAtual — versão síncrona (sem save)
+// usada apenas durante renders intermediários
+// ============================================================
 function syncInvAtual() {
   if (!S) return;
-  // Pega o mês mais recente (qualquer ano) com patrimônio registrado
   const mesesComPat = Object.keys(S.meses)
     .filter(k => S.meses[k] && S.meses[k].patrimonio)
     .sort();
   if (mesesComPat.length > 0) {
     const maisRecente = mesesComPat[mesesComPat.length - 1];
     S.inv_atual = Object.assign({}, S.meses[maisRecente].patrimonio);
-    // Garante que o histórico reflete o total correto desse mês
     const tot = (S.inv_atual.cash||0) + (S.inv_atual.espanha||0) + (S.inv_atual.xp||0) + (S.inv_atual.nu||0);
     const hi = S.historico.find(h => h.mes === maisRecente);
-    if (hi && hi.total !== tot) hi.total = tot;
+    if (hi) {
+      hi.total = tot;
+      hi.realizado = true;
+    } else {
+      S.historico.push({ mes: maisRecente, total: tot, guardar: 0, realizado: true });
+      S.historico.sort((a,b) => a.mes.localeCompare(b.mes));
+    }
+  }
+}
+
+// ✅ CORREÇÃO PRINCIPAL: versão async — aguarda o save no Drive
+// chamada no initApp() para garantir que o Drive fica consistente
+async function syncInvAtualAsync() {
+  if (!S) return;
+  const mesesComPat = Object.keys(S.meses)
+    .filter(k => S.meses[k] && S.meses[k].patrimonio)
+    .sort();
+  if (mesesComPat.length === 0) return;
+
+  const maisRecente = mesesComPat[mesesComPat.length - 1];
+  const novoInv = Object.assign({}, S.meses[maisRecente].patrimonio);
+  const tot = (novoInv.cash||0) + (novoInv.espanha||0) + (novoInv.xp||0) + (novoInv.nu||0);
+  const hi = S.historico.find(h => h.mes === maisRecente);
+
+  let precisaSalvar = false;
+
+  // Atualiza inv_atual se mudou
+  const totalAtual = (S.inv_atual.cash||0)+(S.inv_atual.espanha||0)+(S.inv_atual.xp||0)+(S.inv_atual.nu||0);
+  if (JSON.stringify(S.inv_atual) !== JSON.stringify(novoInv)) {
+    S.inv_atual = novoInv;
+    precisaSalvar = true;
+  }
+
+  // Atualiza histórico se o total diverge
+  if (hi) {
+    if (hi.total !== tot || !hi.realizado) {
+      hi.total = tot;
+      hi.realizado = true;
+      precisaSalvar = true;
+    }
+  } else {
+    S.historico.push({ mes: maisRecente, total: tot, guardar: 0, realizado: true });
+    S.historico.sort((a,b) => a.mes.localeCompare(b.mes));
+    precisaSalvar = true;
+  }
+
+  if (precisaSalvar) {
+    console.log(`✅ syncInvAtualAsync: atualizando ${maisRecente} → total R$ ${tot.toFixed(2)}`);
+    try {
+      await saveData(S);
+    } catch(e) {
+      console.warn('syncInvAtualAsync: erro ao salvar', e);
+    }
   }
 }
 
@@ -1395,10 +1423,12 @@ document.querySelectorAll('.modal-bg').forEach(m => m.addEventListener('click', 
 // DASHBOARD
 // ============================================================
 function renderDashboard() {
-  syncInvAtual(); // garante que inv_atual reflete sempre o mês mais recente com patrimônio
+  syncInvAtual(); // garante consistência em memória antes de renderizar
   const inv = S.inv_atual;
   const total = (inv.cash || 0) + (inv.espanha || 0) + (inv.xp || 0) + (inv.nu || 0);
   const hist = S.historico;
+  // ✅ FIX: usa inv_atual calculado de meses[].patrimonio para o card principal
+  // e usa histórico apenas para calcular a variação percentual
   const reais = hist.filter(h => h.total != null && h.realizado).sort((a,b) => a.mes.localeCompare(b.mes));
   const last = reais[reais.length - 1];
   const prev = reais[reais.length - 2];
@@ -1557,12 +1587,7 @@ async function addEntrada() {
   getMesData(selMes).entradas.push({ tipo, valor, obs });
   closeModal('modal-entrada');
   renderMensal();
-  try {
-    await saveData(S);
-    toast('Entrada adicionada!');
-  } catch(e) {
-    toast('Erro ao salvar. Verifique sua conexão.', true);
-  }
+  try { await saveData(S); toast('Entrada adicionada!'); } catch(e) { toast('Erro ao salvar. Verifique sua conexão.', true); }
 }
 
 async function delEntrada(i) {
@@ -1579,12 +1604,7 @@ async function addSaida() {
   getMesData(selMes).saidas.push({ categoria, valor, obs });
   closeModal('modal-saida');
   renderMensal();
-  try {
-    await saveData(S);
-    toast('Saída adicionada!');
-  } catch(e) {
-    toast('Erro ao salvar. Verifique sua conexão.', true);
-  }
+  try { await saveData(S); toast('Saída adicionada!'); } catch(e) { toast('Erro ao salvar. Verifique sua conexão.', true); }
 }
 
 async function delSaida(i) {
@@ -1599,8 +1619,8 @@ async function savePatrimonio() {
   const xp = +document.getElementById('pat-xp').value || 0;
   const nu = +document.getElementById('pat-nu').value || 0;
   getMesData(selMes).patrimonio = { cash, espanha, xp, nu };
-  
-  // Sempre recalcula inv_atual a partir do mês mais recente com patrimônio
+
+  // ✅ syncInvAtual garante que inv_atual e histórico ficam consistentes
   syncInvAtual();
 
   const tot = cash + espanha + xp + nu;
@@ -1608,7 +1628,7 @@ async function savePatrimonio() {
   if (hi) { hi.total = tot; hi.realizado = true; }
   else S.historico.push({ mes: selMes, total: tot, guardar: 0, realizado: true });
   S.historico.sort((a,b) => a.mes.localeCompare(b.mes));
-  
+
   closeModal('modal-patrimonio');
   renderMensal();
   try {
@@ -1680,7 +1700,7 @@ function renderProjecao() {
 // INVESTIMENTOS
 // ============================================================
 function renderInvestimentos() {
-  syncInvAtual(); // garante valores atualizados
+  syncInvAtual();
   const inv = S.inv_atual;
   const total = (inv.cash||0)+(inv.espanha||0)+(inv.xp||0)+(inv.nu||0);
 
@@ -1745,12 +1765,7 @@ async function salvarInvSaldo() {
   S.historico.sort((a,b) => a.mes.localeCompare(b.mes));
   closeModal('modal-inv-saldo');
   renderInvestimentos();
-  try {
-    await saveData(S);
-    toast('Posição atualizada!');
-  } catch(e) {
-    toast('Erro ao salvar', true);
-  }
+  try { await saveData(S); toast('Posição atualizada!'); } catch(e) { toast('Erro ao salvar', true); }
 }
 
 // ============================================================
