@@ -476,12 +476,7 @@
     <div class="section">
       <div class="section-title" style="margin-bottom:16px;">Cálculo Detalhado</div>
       <div id="plr-detalhes"></div>
-      <hr class="divider">
-      <div class="section-title" style="margin-bottom:12px;">Outros Bônus e Receitas Extras</div>
-      <div id="extras-list"></div>
-      <div class="btn-row">
-        <button class="btn btn-ghost btn-small" onclick="openModal('modal-extra')">+ Receita Extra</button>
-      </div>
+
     </div>
   </div>
 </div>
@@ -1933,7 +1928,7 @@ async function calcPLR() {
     <div class="inv-row"><div class="inv-name">1ª parcela (Fevereiro)</div><span class="pos" style="font-family:var(--mono);font-weight:700">${fmtR(plr1)}</span></div>
     <div class="inv-row"><div class="inv-name">2ª parcela = após churn − 1ª parcela</div><span class="neutral" style="font-family:var(--mono);font-weight:700">${fmtR(plr2)}</span></div>
     <hr class="divider">
-    <div style="font-size:11px;color:var(--muted)">💡 A 2ª parcela abate o churn da carteira. Meta: R$ 5,3 bilhões.</div>
+    <div style="font-size:11px;color:var(--muted)">💡 A 2ª parcela abate o churn da carteira. Meta: ${(S.plr.meta/1e9).toFixed(1).replace('.',',')} bilhões.</div>
   `;
 
   try { await saveData(S); toast('PLR salvo!'); } catch(e) { /* silencioso */ }
