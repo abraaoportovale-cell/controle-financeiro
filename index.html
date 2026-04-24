@@ -1306,12 +1306,17 @@ function initState() {
 
 function syncInvAtual() {
   if (!S) return;
+  // Pega o mês mais recente (qualquer ano) com patrimônio registrado
   const mesesComPat = Object.keys(S.meses)
     .filter(k => S.meses[k] && S.meses[k].patrimonio)
     .sort();
   if (mesesComPat.length > 0) {
     const maisRecente = mesesComPat[mesesComPat.length - 1];
     S.inv_atual = Object.assign({}, S.meses[maisRecente].patrimonio);
+    // Garante que o histórico reflete o total correto desse mês
+    const tot = (S.inv_atual.cash||0) + (S.inv_atual.espanha||0) + (S.inv_atual.xp||0) + (S.inv_atual.nu||0);
+    const hi = S.historico.find(h => h.mes === maisRecente);
+    if (hi && hi.total !== tot) hi.total = tot;
   }
 }
 
@@ -1390,6 +1395,7 @@ document.querySelectorAll('.modal-bg').forEach(m => m.addEventListener('click', 
 // DASHBOARD
 // ============================================================
 function renderDashboard() {
+  syncInvAtual(); // garante que inv_atual reflete sempre o mês mais recente com patrimônio
   const inv = S.inv_atual;
   const total = (inv.cash || 0) + (inv.espanha || 0) + (inv.xp || 0) + (inv.nu || 0);
   const hist = S.historico;
@@ -1594,13 +1600,8 @@ async function savePatrimonio() {
   const nu = +document.getElementById('pat-nu').value || 0;
   getMesData(selMes).patrimonio = { cash, espanha, xp, nu };
   
-  const mesesComPat = Object.keys(S.meses)
-    .filter(k => S.meses[k] && S.meses[k].patrimonio)
-    .sort();
-  const maisRecente = mesesComPat[mesesComPat.length - 1];
-  if (selMes >= maisRecente) {
-    S.inv_atual = { cash, espanha, xp, nu };
-  }
+  // Sempre recalcula inv_atual a partir do mês mais recente com patrimônio
+  syncInvAtual();
 
   const tot = cash + espanha + xp + nu;
   const hi = S.historico.find(h => h.mes === selMes);
@@ -1679,6 +1680,7 @@ function renderProjecao() {
 // INVESTIMENTOS
 // ============================================================
 function renderInvestimentos() {
+  syncInvAtual(); // garante valores atualizados
   const inv = S.inv_atual;
   const total = (inv.cash||0)+(inv.espanha||0)+(inv.xp||0)+(inv.nu||0);
 
