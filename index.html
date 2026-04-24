@@ -1780,7 +1780,8 @@ function renderProjecao() {
       <td style="font-weight:600">${fmtR(total_ent)}</td>
       <td class="neg">${fmtR(r.gastos)}</td>
       <td class="pos">${fmtR(r.guardar)}</td>
-      <td>${r.pat ? fmtR(r.pat) : '-'}</td><td>-</td>
+      <td>${r.pat ? fmtR(r.pat) : '-'}</td>
+      <td class="${(() => { const prev = clt_data[clt_data.indexOf(r)-1]; if (!r.pat || !prev || !prev.pat) return ''; return r.pat >= prev.pat ? 'pos' : 'neg'; })()}">${(() => { const prev = clt_data[clt_data.indexOf(r)-1]; if (!r.pat || !prev || !prev.pat) return '-'; const v = (r.pat - prev.pat) / prev.pat; return (v >= 0 ? '+' : '') + (v*100).toFixed(2) + '%'; })()}</td>
     </tr>`;
   }).join('');
 
