@@ -467,6 +467,7 @@
         <div class="form-group"><label>Meta de vendas (R$)</label><input type="number" id="plr-meta" value="5300000000"></div>
         <div class="form-group"><label>% churn (ex: 0.30 = 30%)</label><input type="number" id="plr-churn" value="0.30" step="0.01" placeholder="ex: 0.30"></div>
         <div class="form-group"><label>Multiplicador PLR</label><input type="number" id="plr-mult" value="3" step="0.5"></div>
+        <div class="form-group"><label>% Atingimento GRE (ex: 99.8)</label><input type="number" id="plr-ating" value="100" step="0.1" placeholder="ex: 99.8"></div>
       </div>
       <div class="btn-row" style="margin-top:14px">
         <button class="btn btn-primary" onclick="calcPLR()">💾 Salvar / Recalcular</button>
@@ -1319,7 +1320,7 @@ function initState() {
     c6: [],
     extras: [],
     inv_atual: { cash: 20, espanha: 10000, xp: 82324, nu: 3149.70 },
-    plr: { sal_baixo: 6952, sal_alto: 7378, meta: 5300000000, churn: 0.30, mult: 3 },
+    plr: { sal_baixo: 6952, sal_alto: 7378, meta: 5300000000, churn: 0.30, mult: 3, ating: 100 },
     historico: [
       { mes: '2025-08', total: 59876.00, guardar: 3470, realizado: true },
       { mes: '2025-09', total: 61788.00, guardar: 2100, realizado: true },
@@ -1891,6 +1892,7 @@ function loadPLRInputs() {
   document.getElementById('plr-meta').value = S.plr.meta;
   document.getElementById('plr-churn').value = S.plr.churn;
   document.getElementById('plr-mult').value = S.plr.mult;
+  document.getElementById('plr-ating').value = S.plr.ating != null ? S.plr.ating : 100;
 }
 
 async function calcPLR() {
@@ -1903,11 +1905,15 @@ async function calcPLR() {
   S.plr.churn = churnInput;
   document.getElementById('plr-churn').value = churnInput; // normaliza o campo
   S.plr.mult = +document.getElementById('plr-mult').value || 3;
+  S.plr.ating = +document.getElementById('plr-ating').value;
+  if (S.plr.ating == null || isNaN(S.plr.ating)) S.plr.ating = 100;
 
   const sal_medio = ((S.plr.sal_baixo * 9) + (S.plr.sal_alto * 3)) / 12;
   const plr_bruto = sal_medio * S.plr.mult;
-  // 1ª parcela = metade do PLR bruto
-  const plr1 = plr_bruto / 2;
+  // Aplica % de atingimento GRE sobre o bruto
+  const plr_real = plr_bruto * (S.plr.ating / 100);
+  // 1ª parcela = metade do PLR real
+  const plr1 = plr_real / 2;
   // 2ª parcela = metade abatida pelo churn
   const plr2 = plr1 * (1 - S.plr.churn);
 
@@ -1918,7 +1924,9 @@ async function calcPLR() {
   document.getElementById('plr-detalhes').innerHTML = `
     <div class="inv-row"><div class="inv-name">Salário médio anual</div><span style="font-family:var(--mono)">${fmtR(sal_medio)}</span></div>
     <div class="inv-row"><div class="inv-name">Multiplicador PLR</div><span style="font-family:var(--mono)">${S.plr.mult}x</span></div>
-    <div class="inv-row"><div class="inv-name">PLR bruto estimado</div><span style="font-family:var(--mono)">${fmtR(plr_bruto)}</span></div>
+    <div class="inv-row"><div class="inv-name">PLR bruto (3x salário médio)</div><span style="font-family:var(--mono)">${fmtR(plr_bruto)}</span></div>
+    <div class="inv-row"><div class="inv-name">% atingimento GRE</div><span style="font-family:var(--mono);color:var(--accent)">${S.plr.ating.toFixed(1)}%</span></div>
+    <div class="inv-row"><div class="inv-name">PLR real (após atingimento)</div><span style="font-family:var(--mono);font-weight:600">${fmtR(plr_real)}</span></div>
     <div class="inv-row"><div class="inv-name">% cancelamento (churn)</div><span style="font-family:var(--mono)">${(S.plr.churn*100).toFixed(1)}%</span></div>
     <div class="inv-row"><div class="inv-name">1ª parcela (Fevereiro)</div><span class="pos" style="font-family:var(--mono);font-weight:700">${fmtR(plr1)}</span></div>
     <div class="inv-row"><div class="inv-name">2ª parcela (Junho) — com abate churn</div><span class="neutral" style="font-family:var(--mono);font-weight:700">${fmtR(plr2)}</span></div>
