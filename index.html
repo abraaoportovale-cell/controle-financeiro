@@ -558,6 +558,17 @@
   </div>
 </div>
 
+<div class="modal-bg" id="modal-editar">
+  <div class="modal">
+    <h3 id="modal-editar-title">Editar</h3>
+    <div class="form-grid" id="modal-editar-fields"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="salvarEdicao()">Salvar</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-editar')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-bg" id="modal-patrimonio">
   <div class="modal">
     <h3>📈 Registrar Posição Atual</h3>
@@ -1039,7 +1050,15 @@ window.addEventListener('load', async () => {
 // ESTADO GLOBAL
 // ============================================================
 let S = null;
-let selMes = '2026-04';
+function calcSelMes() {
+  const hoje = new Date();
+  const dia = hoje.getDate();
+  let mes = hoje.getMonth();
+  let ano = hoje.getFullYear();
+  if (dia >= 21) { mes += 1; if (mes > 11) { mes = 0; ano += 1; } }
+  return ano + '-' + String(mes + 1).padStart(2,'0');
+}
+let selMes = calcSelMes();
 
 function initState() {
   return {
@@ -1573,6 +1592,7 @@ function renderMensal() {
         </div>
         <div style="display:flex;align-items:center;gap:10px">
           <span class="pos" style="font-family:var(--mono)">${fmtR(e.valor)}</span>
+          <button class="btn btn-ghost btn-small" onclick="editEntrada(${i})" style="padding:5px 9px">✎</button>
           <button class="btn btn-danger btn-small" onclick="delEntrada(${i})">×</button>
         </div>
       </div>
@@ -1590,6 +1610,7 @@ function renderMensal() {
         </div>
         <div style="display:flex;align-items:center;gap:10px">
           <span class="neg" style="font-family:var(--mono)">${fmtR(e.valor)}</span>
+          <button class="btn btn-ghost btn-small" onclick="editSaida(${i})" style="padding:5px 9px">✎</button>
           <button class="btn btn-danger btn-small" onclick="delSaida(${i})">×</button>
         </div>
       </div>
@@ -1652,6 +1673,54 @@ async function delSaida(i) {
   getMesData(selMes).saidas.splice(i, 1);
   renderMensal();
   try { await saveData(S); } catch(e) { toast('Erro ao salvar', true); }
+}
+
+let _editTipo = null;
+let _editIdx = null;
+const TIPOS_ENTRADA = ['Salario (5 DU)','VT (Vale Transporte)','Vale (Adiant. 40% - dia 20)','Comissao','Lume+CS','JAC','PLR','13 Salario','Outro'];
+const CATS_SAIDA = ['Acidente','Luz','Habitacao','Nubank','XP','Ingles','C6 Lucas','IPTU','Santander','Itau','Condominio','Espanha','Lazer/Ferias','Alimentacao','Transporte','Outro'];
+
+function editEntrada(i) {
+  _editTipo = 'entrada'; _editIdx = i;
+  const e = getMesData(selMes).entradas[i];
+  document.getElementById('modal-editar-title').textContent = 'Editar Entrada';
+  const tipos = ['Salário (5º dia útil)','VT (Vale Transporte)','Vale (Adiant. 40% — dia 20)','Comissão','Lume+CS','JAC','PLR','13º Salário','Outro'];
+  document.getElementById('modal-editar-fields').innerHTML =
+    '<div class="form-group"><label>Tipo</label><select id="ed-tipo">' +
+    tipos.map(t => '<option ' + (t===e.tipo?'selected':'') + '>' + t + '</option>').join('') +
+    '</select></div>' +
+    '<div class="form-group"><label>Valor (R$)</label><input type="number" id="ed-valor" value="' + e.valor + '"></div>' +
+    '<div class="form-group full-width"><label>Observação</label><input type="text" id="ed-obs" value="' + (e.obs||'') + '"></div>';
+  openModal('modal-editar');
+}
+
+function editSaida(i) {
+  _editTipo = 'saida'; _editIdx = i;
+  const e = getMesData(selMes).saidas[i];
+  document.getElementById('modal-editar-title').textContent = 'Editar Saída';
+  const cats = ['Acidente','Luz','Habitação','Nubank','XP','Inglês','C6 Lucas','IPTU','Santander','Itaú','Condomínio','Espanha','Lazer/Férias','Alimentação','Transporte','Outro'];
+  document.getElementById('modal-editar-fields').innerHTML =
+    '<div class="form-group"><label>Categoria</label><select id="ed-cat">' +
+    cats.map(c => '<option ' + (c===e.categoria?'selected':'') + '>' + c + '</option>').join('') +
+    '</select></div>' +
+    '<div class="form-group"><label>Valor (R$)</label><input type="number" id="ed-valor" value="' + e.valor + '"></div>' +
+    '<div class="form-group full-width"><label>Observação</label><input type="text" id="ed-obs" value="' + (e.obs||'') + '"></div>';
+  openModal('modal-editar');
+}
+
+async function salvarEdicao() {
+  const valor = +document.getElementById('ed-valor').value;
+  const obs = document.getElementById('ed-obs').value;
+  if (!valor) { toast('Informe o valor', true); return; }
+  const md = getMesData(selMes);
+  if (_editTipo === 'entrada') {
+    md.entradas[_editIdx] = { tipo: document.getElementById('ed-tipo').value, valor, obs };
+  } else {
+    md.saidas[_editIdx] = { categoria: document.getElementById('ed-cat').value, valor, obs };
+  }
+  closeModal('modal-editar');
+  renderMensal();
+  try { await saveData(S); toast('Lançamento atualizado!'); } catch(e) { toast('Erro ao salvar', true); }
 }
 
 async function savePatrimonio() {
