@@ -233,6 +233,129 @@
   .flex-end { display: flex; justify-content: flex-end; }
   .gap-10 { gap: 10px; }
   .chip { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 20px; font-size: 11px; background: var(--surface2); border: 1px solid var(--border2); color: var(--muted); margin: 2px; }
+
+  /* ================================================================
+     VIAGENS — estilos
+  ================================================================ */
+  .viagens-page-header {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;
+  }
+  .viagens-page-header h2 { font-size: 18px; font-weight: 700; margin: 0; }
+
+  .viagens-resumo {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .viagens-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+  }
+
+  .viagem-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .viagem-card:hover {
+    border-color: var(--border2);
+    box-shadow: 0 4px 24px rgba(0,0,0,.4);
+  }
+
+  .viagem-card-header {
+    display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px;
+  }
+  .viagem-card-titulo { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.3; }
+  .viagem-card-mes { font-size: 11px; color: var(--muted); margin-top: 3px; font-family: var(--mono); }
+
+  .vbadge {
+    font-size: 10px; padding: 3px 9px; border-radius: 20px; font-weight: 700;
+    white-space: nowrap; flex-shrink: 0; margin-left: 10px;
+  }
+  .vbadge-planejando { background: rgba(79,142,247,.15); color: var(--accent); }
+  .vbadge-confirmada { background: rgba(41,217,142,.15); color: var(--green); }
+  .vbadge-realizada  { background: rgba(107,116,148,.15); color: var(--muted); }
+  .vbadge-cancelada  { background: rgba(240,92,110,.15); color: var(--red); }
+
+  .viagem-progress-wrap { margin: 12px 0; }
+  .viagem-progress-label {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--muted); margin-bottom: 5px;
+  }
+  .viagem-progress-bar {
+    height: 5px; border-radius: 4px; background: var(--border2); overflow: hidden;
+  }
+  .viagem-progress-fill { height: 100%; border-radius: 4px; transition: width .4s; }
+  .vpfill-ok   { background: var(--green); }
+  .vpfill-warn { background: var(--yellow); }
+  .vpfill-over { background: var(--red); }
+
+  .viagem-itens {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; margin: 12px 0;
+  }
+  .viagem-item-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 5px 0; border-bottom: 1px solid var(--border);
+    font-size: 12px; color: var(--muted);
+  }
+  .viagem-item-row:last-child { border-bottom: none; }
+  .viagem-item-row span:last-child { color: var(--text); font-family: var(--mono); font-weight: 600; font-size: 12px; }
+
+  .viagem-totals {
+    border-top: 1px solid var(--border2);
+    padding-top: 12px;
+    margin-top: 8px;
+  }
+  .viagem-total-row {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 13px; font-weight: 600; padding: 3px 0;
+  }
+  .viagem-total-row.sub { font-size: 11px; font-weight: 400; color: var(--muted); }
+  .vtotal-ok   { color: var(--green); font-family: var(--mono); }
+  .vtotal-over { color: var(--red);   font-family: var(--mono); }
+  .vtotal-neu  { color: var(--text);  font-family: var(--mono); }
+
+  .viagem-obs {
+    font-size: 11px; color: var(--muted); font-style: italic;
+    margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);
+    line-height: 1.5;
+  }
+
+  .viagem-card-actions { display: flex; gap: 8px; margin-top: 14px; }
+  .vbtn-edit, .vbtn-del {
+    flex: 1; padding: 7px; border-radius: 7px; border: none; cursor: pointer;
+    font-size: 12px; font-weight: 600; font-family: var(--sans); transition: opacity .15s;
+  }
+  .vbtn-edit { background: var(--surface2); color: var(--text); border: 1px solid var(--border2); }
+  .vbtn-del  { background: rgba(240,92,110,.1); color: var(--red); border: 1px solid rgba(240,92,110,.2); }
+  .vbtn-edit:hover, .vbtn-del:hover { opacity: .75; }
+
+  .viagens-empty {
+    grid-column: 1/-1; text-align: center;
+    padding: 60px 20px; color: var(--muted); font-size: 14px; line-height: 1.8;
+  }
+  .viagens-empty-icon { font-size: 40px; margin-bottom: 12px; }
+
+  /* Modal viagem */
+  .modal-viagem {
+    max-width: 560px; width: 95vw;
+    max-height: 90vh; overflow-y: auto;
+  }
+  .vform-section {
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
+    color: var(--muted); margin: 18px 0 10px; padding-bottom: 5px;
+    border-bottom: 1px solid var(--border);
+  }
+  .vform-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 520px) {
+    .vform-grid-2 { grid-template-columns: 1fr; }
+    .viagens-grid { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
@@ -264,6 +387,11 @@
     <div class="nav-item" onclick="showPage('plr')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
       PLR & Bônus
+    </div>
+    <!-- ✈️ ABA VIAGENS -->
+    <div class="nav-item" onclick="showPage('viagens')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+      Viagens
     </div>
     <div class="nav-item" onclick="showPage('config')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -476,9 +604,23 @@
     <div class="section">
       <div class="section-title" style="margin-bottom:16px;">Cálculo Detalhado</div>
       <div id="plr-detalhes"></div>
-
     </div>
   </div>
+</div>
+
+<!-- PAGE: VIAGENS ✈️ -->
+<div class="page" id="page-viagens">
+  <div class="viagens-page-header">
+    <h2>✈️ Viagens</h2>
+    <button class="btn btn-primary" onclick="abrirModalViagem()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Nova Viagem
+    </button>
+  </div>
+  <!-- Cards de resumo -->
+  <div class="viagens-resumo" id="viagens-resumo-cards"></div>
+  <!-- Grid de cards -->
+  <div class="viagens-grid" id="viagens-lista"></div>
 </div>
 
 <!-- PAGE: CONFIG -->
@@ -509,7 +651,7 @@
 </div><!-- /main -->
 </div><!-- /app -->
 
-<!-- MODALS -->
+<!-- MODALS existentes -->
 <div class="modal-bg" id="modal-entrada">
   <div class="modal">
     <h3>+ Nova Entrada</h3>
@@ -630,6 +772,83 @@
   </div>
 </div>
 
+<!-- MODAL VIAGEM ✈️ -->
+<div class="modal-bg" id="modal-viagem">
+  <div class="modal modal-viagem">
+    <h3 id="modal-viagem-titulo">✈️ Nova Viagem</h3>
+
+    <div class="form-grid" style="grid-template-columns:1fr;">
+      <div class="form-group">
+        <label>Título da Viagem</label>
+        <input type="text" id="vi-titulo" placeholder="Ex: Cidade do México 2026">
+      </div>
+    </div>
+
+    <div class="vform-grid-2" style="margin-top:12px;">
+      <div class="form-group">
+        <label>Mês / Ano</label>
+        <input type="month" id="vi-mes">
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="vi-status">
+          <option value="planejando">🗓 Planejando</option>
+          <option value="confirmada">✅ Confirmada</option>
+          <option value="realizada">🏁 Realizada</option>
+          <option value="cancelada">❌ Cancelada</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="vform-section">💰 Orçamento & Gastos</div>
+
+    <div class="vform-grid-2">
+      <div class="form-group">
+        <label>Budget Total (R$)</label>
+        <input type="number" step="0.01" id="vi-budget" placeholder="0,00">
+      </div>
+      <div class="form-group">
+        <label>Passagens (R$)</label>
+        <input type="number" step="0.01" id="vi-passagens" placeholder="0,00">
+      </div>
+      <div class="form-group">
+        <label>Hospedagem (R$)</label>
+        <input type="number" step="0.01" id="vi-hospedagem" placeholder="0,00">
+      </div>
+      <div class="form-group">
+        <label>Transporte local (R$)</label>
+        <input type="number" step="0.01" id="vi-transporte" placeholder="0,00">
+      </div>
+      <div class="form-group">
+        <label>Alimentação (R$)</label>
+        <input type="number" step="0.01" id="vi-alimentacao" placeholder="0,00">
+      </div>
+      <div class="form-group">
+        <label>Lazer / Passeios (R$)</label>
+        <input type="number" step="0.01" id="vi-lazer" placeholder="0,00">
+      </div>
+      <div class="form-group">
+        <label>Seguro Viagem (R$)</label>
+        <input type="number" step="0.01" id="vi-seguro" placeholder="0,00">
+      </div>
+      <div class="form-group">
+        <label>Outros (R$)</label>
+        <input type="number" step="0.01" id="vi-outros" placeholder="0,00">
+      </div>
+    </div>
+
+    <div class="vform-section">📝 Observações</div>
+    <div class="form-group">
+      <textarea id="vi-obs" rows="2" placeholder="Código da reserva, links, notas importantes..."></textarea>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="salvarViagem()">💾 Salvar</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-viagem')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 <div id="save-indicator"></div>
 
@@ -740,29 +959,20 @@ function silentTokenRefresh() {
       return;
     }
     _tokenRefreshing = true;
-
-    // ✅ Timeout de segurança: se demorar mais de 8s, rejeita
     const timeout = setTimeout(() => {
       _tokenRefreshing = false;
       reject(new Error('Token refresh timeout'));
     }, 8000);
-
-    // ✅ Garante que a lib Google está carregada antes de chamar
     function tryRefresh() {
       if (typeof google === 'undefined' || !google.accounts || !google.accounts.oauth2) {
-        clearTimeout(timeout);
-        _tokenRefreshing = false;
-        reject(new Error('Google SDK não carregado'));
-        return;
+        clearTimeout(timeout); _tokenRefreshing = false;
+        reject(new Error('Google SDK não carregado')); return;
       }
       try {
         const client = google.accounts.oauth2.initTokenClient({
-          client_id: GOOGLE_CLIENT_ID,
-          scope: DRIVE_SCOPE,
-          prompt: '',
+          client_id: GOOGLE_CLIENT_ID, scope: DRIVE_SCOPE, prompt: '',
           callback: (resp) => {
-            clearTimeout(timeout);
-            _tokenRefreshing = false;
+            clearTimeout(timeout); _tokenRefreshing = false;
             if (resp && resp.access_token) {
               gToken = resp.access_token;
               localStorage.setItem('gToken', gToken);
@@ -774,13 +984,8 @@ function silentTokenRefresh() {
           }
         });
         client.requestAccessToken();
-      } catch(e) {
-        clearTimeout(timeout);
-        _tokenRefreshing = false;
-        reject(e);
-      }
+      } catch(e) { clearTimeout(timeout); _tokenRefreshing = false; reject(e); }
     }
-
     tryRefresh();
   });
 }
@@ -788,12 +993,8 @@ function silentTokenRefresh() {
 function scheduleTokenRefresh() {
   if (_tokenRefreshTimer) clearTimeout(_tokenRefreshTimer);
   _tokenRefreshTimer = setTimeout(async () => {
-    try {
-      await silentTokenRefresh();
-      scheduleTokenRefresh();
-    } catch(e) {
-      console.warn('Auto refresh falhou:', e);
-    }
+    try { await silentTokenRefresh(); scheduleTokenRefresh(); }
+    catch(e) { console.warn('Auto refresh falhou:', e); }
   }, 55 * 60 * 1000);
 }
 
@@ -804,40 +1005,18 @@ async function driveRequest(method, url, body, isJson = true, retried = false) {
   if (!gToken) { showAuthOverlay(true); throw new Error('Sem token'); }
   const headers = { Authorization: 'Bearer ' + gToken };
   if (isJson && body) headers['Content-Type'] = 'application/json';
-
-  const resp = await fetch(url, {
-    method,
-    headers,
-    body: body ? (isJson ? JSON.stringify(body) : body) : undefined
-  });
-
+  const resp = await fetch(url, { method, headers, body: body ? (isJson ? JSON.stringify(body) : body) : undefined });
   if (resp.status === 401 && !retried) {
-    console.warn('Token expirado, renovando...');
-    try {
-      await silentTokenRefresh();
-      return driveRequest(method, url, body, isJson, true);
-    } catch(e) {
-      gToken = null;
-      localStorage.removeItem('gToken');
-      showAuthOverlay(true);
-      throw new Error('Autenticação expirada');
-    }
+    try { await silentTokenRefresh(); return driveRequest(method, url, body, isJson, true); }
+    catch(e) { gToken = null; localStorage.removeItem('gToken'); showAuthOverlay(true); throw new Error('Autenticação expirada'); }
   }
-
-  if (!resp.ok) {
-    const errText = await resp.text().catch(() => '');
-    throw new Error(`Drive error ${resp.status}: ${errText}`);
-  }
-
+  if (!resp.ok) { const errText = await resp.text().catch(() => ''); throw new Error(`Drive error ${resp.status}: ${errText}`); }
   const text = await resp.text();
   try { return JSON.parse(text); } catch { return text; }
 }
 
 async function findFile() {
-  const r = await driveRequest('GET',
-    `https://www.googleapis.com/drive/v3/files?q=name%3D'${DRIVE_FILENAME}'%20and%20trashed%3Dfalse&fields=files(id)`,
-    null
-  );
+  const r = await driveRequest('GET', `https://www.googleapis.com/drive/v3/files?q=name%3D'${DRIVE_FILENAME}'%20and%20trashed%3Dfalse&fields=files(id)`, null);
   return r && r.files && r.files.length ? r.files[0].id : null;
 }
 
@@ -845,14 +1024,9 @@ async function loadData() {
   try {
     gFileId = await findFile();
     if (!gFileId) return null;
-    const data = await driveRequest('GET',
-      `https://www.googleapis.com/drive/v3/files/${gFileId}?alt=media`,
-      null
-    );
+    const data = await driveRequest('GET', `https://www.googleapis.com/drive/v3/files/${gFileId}?alt=media`, null);
     if (!data || typeof data !== 'object') return null;
-
     if (!data._version || data._version !== DATA_VERSION) {
-      console.warn(`Migrando dados v${data._version || '?'} → v${DATA_VERSION}`);
       const base = initState();
       const merged = deepMerge(base, data);
       merged._version = DATA_VERSION;
@@ -860,10 +1034,7 @@ async function loadData() {
       return merged;
     }
     return data;
-  } catch(e) {
-    console.error('loadData error:', e);
-    return null;
-  }
+  } catch(e) { console.error('loadData error:', e); return null; }
 }
 
 function deepMerge(base, override) {
@@ -874,9 +1045,7 @@ function deepMerge(base, override) {
   for (const key of Object.keys(override)) {
     if (key in base && typeof base[key] === 'object' && !Array.isArray(base[key])) {
       result[key] = deepMerge(base[key], override[key]);
-    } else {
-      result[key] = override[key];
-    }
+    } else { result[key] = override[key]; }
   }
   return result;
 }
@@ -884,64 +1053,24 @@ function deepMerge(base, override) {
 async function saveData(d) {
   d._version = DATA_VERSION;
   setSaveIndicator('saving', '💾 Salvando...');
-  try {
-    await _saveDataInternal(d);
-    setSaveIndicator('saved', '✓ Salvo');
-  } catch(e) {
-    console.error('saveData error:', e);
-    setSaveIndicator('error', '✗ Erro ao salvar');
-    toast('Erro ao salvar no Drive. Tente novamente.', true);
-    throw e;
-  }
+  try { await _saveDataInternal(d); setSaveIndicator('saved', '✓ Salvo'); }
+  catch(e) { console.error('saveData error:', e); setSaveIndicator('error', '✗ Erro ao salvar'); toast('Erro ao salvar no Drive. Tente novamente.', true); throw e; }
 }
 
 async function _saveDataInternal(d) {
   const blob = new Blob([JSON.stringify(d)], { type: 'application/json' });
-
   if (!gFileId) {
     const meta = { name: DRIVE_FILENAME };
     const form = new FormData();
     form.append('metadata', new Blob([JSON.stringify(meta)], { type: 'application/json' }));
     form.append('file', blob);
-
-    let resp = await fetch(
-      'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id',
-      { method: 'POST', headers: { Authorization: 'Bearer ' + gToken }, body: form }
-    );
-
-    if (resp.status === 401) {
-      await silentTokenRefresh();
-      resp = await fetch(
-        'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id',
-        { method: 'POST', headers: { Authorization: 'Bearer ' + gToken }, body: form }
-      );
-    }
-
+    let resp = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id', { method: 'POST', headers: { Authorization: 'Bearer ' + gToken }, body: form });
+    if (resp.status === 401) { await silentTokenRefresh(); resp = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id', { method: 'POST', headers: { Authorization: 'Bearer ' + gToken }, body: form }); }
     if (!resp.ok) throw new Error('Falha ao criar arquivo no Drive: ' + resp.status);
-    const j = await resp.json();
-    gFileId = j.id;
+    const j = await resp.json(); gFileId = j.id;
   } else {
-    let resp = await fetch(
-      `https://www.googleapis.com/upload/drive/v3/files/${gFileId}?uploadType=media`,
-      {
-        method: 'PATCH',
-        headers: { Authorization: 'Bearer ' + gToken, 'Content-Type': 'application/json' },
-        body: JSON.stringify(d)
-      }
-    );
-
-    if (resp.status === 401) {
-      await silentTokenRefresh();
-      resp = await fetch(
-        `https://www.googleapis.com/upload/drive/v3/files/${gFileId}?uploadType=media`,
-        {
-          method: 'PATCH',
-          headers: { Authorization: 'Bearer ' + gToken, 'Content-Type': 'application/json' },
-          body: JSON.stringify(d)
-        }
-      );
-    }
-
+    let resp = await fetch(`https://www.googleapis.com/upload/drive/v3/files/${gFileId}?uploadType=media`, { method: 'PATCH', headers: { Authorization: 'Bearer ' + gToken, 'Content-Type': 'application/json' }, body: JSON.stringify(d) });
+    if (resp.status === 401) { await silentTokenRefresh(); resp = await fetch(`https://www.googleapis.com/upload/drive/v3/files/${gFileId}?uploadType=media`, { method: 'PATCH', headers: { Authorization: 'Bearer ' + gToken, 'Content-Type': 'application/json' }, body: JSON.stringify(d) }); }
     if (!resp.ok) throw new Error('Falha ao atualizar arquivo no Drive: ' + resp.status);
   }
 }
@@ -952,48 +1081,32 @@ async function _saveDataInternal(d) {
 async function initApp() {
   document.getElementById('loading-overlay').style.display = 'flex';
   document.getElementById('loading-msg').textContent = 'Carregando seus dados...';
-
   try {
     const saved = await loadData();
-
     if (saved && typeof saved === 'object' && Object.keys(saved).length > 1) {
       S = saved;
-      console.log('✅ Dados carregados do Drive');
+      if (!S.viagens) S.viagens = []; // garante campo viagens em dados antigos
     } else {
-      console.log('📄 Nenhum arquivo no Drive, criando novo...');
       S = initState();
-      try {
-        await saveData(S);
-      } catch(e) {
-        console.warn('Não foi possível criar arquivo inicial:', e);
-      }
+      try { await saveData(S); } catch(e) { console.warn('Não foi possível criar arquivo inicial:', e); }
     }
   } catch(e) {
     console.error('initApp error:', e);
     if (!S) S = initState();
     toast('Aviso: carregando dados locais. Verifique sua conexão.', true);
   }
-
-  // ✅ FIX: usa versão async que aguarda o save antes de renderizar
   await syncInvAtualAsync();
-
   document.getElementById('loading-overlay').style.display = 'none';
   renderDashboard();
 }
 
-// Aguarda o SDK do Google carregar (máx 10s)
 function waitForGoogleSDK(timeoutMs = 10000) {
   return new Promise((resolve, reject) => {
-    if (typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) {
-      resolve(); return;
-    }
+    if (typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) { resolve(); return; }
     const start = Date.now();
     const poll = setInterval(() => {
-      if (typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) {
-        clearInterval(poll); resolve();
-      } else if (Date.now() - start > timeoutMs) {
-        clearInterval(poll); reject(new Error('Google SDK não carregou a tempo'));
-      }
+      if (typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) { clearInterval(poll); resolve(); }
+      else if (Date.now() - start > timeoutMs) { clearInterval(poll); reject(new Error('Google SDK não carregou a tempo')); }
     }, 100);
   });
 }
@@ -1003,45 +1116,22 @@ window.addEventListener('load', async () => {
   const savedTokenTime = parseInt(localStorage.getItem('gTokenTime') || '0');
   const tokenAge = Date.now() - savedTokenTime;
   const TOKEN_MAX_AGE = 55 * 60 * 1000;
-
   if (savedToken) {
-    // Testa se o token ainda funciona diretamente (não precisa do SDK)
     if (tokenAge < TOKEN_MAX_AGE) {
-      const teste = await fetch('https://www.googleapis.com/drive/v3/files?pageSize=1', {
-        headers: { Authorization: 'Bearer ' + savedToken }
-      }).catch(() => null);
-
-      if (teste && teste.ok) {
-        gToken = savedToken;
-        scheduleTokenRefresh();
-        showAuthOverlay(false);
-        await initApp();
-        return;
-      }
+      const teste = await fetch('https://www.googleapis.com/drive/v3/files?pageSize=1', { headers: { Authorization: 'Bearer ' + savedToken } }).catch(() => null);
+      if (teste && teste.ok) { gToken = savedToken; scheduleTokenRefresh(); showAuthOverlay(false); await initApp(); return; }
     }
-
-    // Token possivelmente expirado — aguarda SDK e tenta refresh
     gToken = savedToken;
     document.getElementById('loading-overlay').style.display = 'flex';
     document.getElementById('loading-msg').textContent = 'Renovando autenticação...';
-
     try {
-      await waitForGoogleSDK();
-      await silentTokenRefresh();
-      scheduleTokenRefresh();
-      showAuthOverlay(false);
-      await initApp();
+      await waitForGoogleSDK(); await silentTokenRefresh(); scheduleTokenRefresh(); showAuthOverlay(false); await initApp();
     } catch(e) {
-      console.warn('Silent refresh falhou, pedindo login:', e);
-      localStorage.removeItem('gToken');
-      localStorage.removeItem('gTokenTime');
-      gToken = null;
-      document.getElementById('loading-overlay').style.display = 'none';
-      showAuthOverlay(true);
+      localStorage.removeItem('gToken'); localStorage.removeItem('gTokenTime'); gToken = null;
+      document.getElementById('loading-overlay').style.display = 'none'; showAuthOverlay(true);
     }
   } else {
-    document.getElementById('loading-overlay').style.display = 'none';
-    showAuthOverlay(true);
+    document.getElementById('loading-overlay').style.display = 'none'; showAuthOverlay(true);
   }
 });
 
@@ -1050,10 +1140,8 @@ window.addEventListener('load', async () => {
 // ============================================================
 let S = null;
 function calcSelMes() {
-  const hoje = new Date();
-  const dia = hoje.getDate();
-  let mes = hoje.getMonth();
-  let ano = hoje.getFullYear();
+  const hoje = new Date(); const dia = hoje.getDate();
+  let mes = hoje.getMonth(); let ano = hoje.getFullYear();
   if (dia >= 21) { mes += 1; if (mes > 11) { mes = 0; ano += 1; } }
   return ano + '-' + String(mes + 1).padStart(2,'0');
 }
@@ -1071,245 +1159,145 @@ function initState() {
       { id: 10, nome: 'Condomínio', valor: 460, tipo: 'Vale' },
       { id: 11, nome: 'Espanha', valor: 1000, tipo: 'Vale' },
     ],
+    viagens: [],
     meses: {
       '2026-01': { entradas: [
-        { tipo: 'Salário (5º DU)', valor: 1051.12 },
-        { tipo: 'VT (Vale Transporte)', valor: 264.00 },
-        { tipo: 'Comissão', valor: 734.00 },
-        { tipo: 'Lume+CS', valor: 3600.00 },
-        { tipo: 'JAC', valor: 1856.00 },
-        { tipo: 'PLR (1ª parcela — fev/26)', valor: 13945.00, obs: 'Embutido no subtotal 5ºDU' },
+        { tipo: 'Salário (5º DU)', valor: 1051.12 },{ tipo: 'VT (Vale Transporte)', valor: 264.00 },
+        { tipo: 'Comissão', valor: 734.00 },{ tipo: 'Lume+CS', valor: 3600.00 },
+        { tipo: 'JAC', valor: 1856.00 },{ tipo: 'PLR (1ª parcela — fev/26)', valor: 13945.00, obs: 'Embutido no subtotal 5ºDU' },
         { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 2139.84 },
       ], saidas: [
-        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },
-        { categoria: 'Luz', valor: 60.00, obs: '5º DU' },
-        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },
-        { categoria: 'Nubank', valor: 960.00, obs: '5º DU' },
-        { categoria: 'XP', valor: 4348.00, obs: '5º DU — META 300' },
-        { categoria: 'Inglês', valor: 800.00, obs: '5º DU — Pai da Poli + mal-comida' },
-        { categoria: 'C6 Lucas', valor: 250.00, obs: '5º DU' },
-        { categoria: 'IPTU', valor: 86.93, obs: '5º DU — parcela 1/10' },
-        { categoria: 'Santander', valor: 1155.00, obs: '5º DU' },
-        { categoria: 'Itaú', valor: 1519.00, obs: 'Vale (dia 20)' },
+        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },{ categoria: 'Luz', valor: 60.00, obs: '5º DU' },
+        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },{ categoria: 'Nubank', valor: 960.00, obs: '5º DU' },
+        { categoria: 'XP', valor: 4348.00, obs: '5º DU — META 300' },{ categoria: 'Inglês', valor: 800.00, obs: '5º DU — Pai da Poli + mal-comida' },
+        { categoria: 'C6 Lucas', valor: 250.00, obs: '5º DU' },{ categoria: 'IPTU', valor: 86.93, obs: '5º DU — parcela 1/10' },
+        { categoria: 'Santander', valor: 1155.00, obs: '5º DU' },{ categoria: 'Itaú', valor: 1519.00, obs: 'Vale (dia 20)' },
         { categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
       ], patrimonio: { cash: 400, espanha: 9000, xp: 84773.16, nu: 1541.1 } },
-
       '2026-02': { entradas: [
-        { tipo: 'Salário (5º DU)', valor: 1542.12 },
-        { tipo: 'VT (Vale Transporte)', valor: 264.00 },
-        { tipo: 'Comissão', valor: 95.00 },
-        { tipo: 'Lume+CS', valor: 2200.00 },
-        { tipo: 'JAC', valor: 1896.00 },
-        { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 2139.84, obs: '2000 pra Espanha (fev e mar)' },
+        { tipo: 'Salário (5º DU)', valor: 1542.12 },{ tipo: 'VT (Vale Transporte)', valor: 264.00 },
+        { tipo: 'Comissão', valor: 95.00 },{ tipo: 'Lume+CS', valor: 2200.00 },
+        { tipo: 'JAC', valor: 1896.00 },{ tipo: 'Vale (Adiant. 40% — dia 20)', valor: 2139.84, obs: '2000 pra Espanha (fev e mar)' },
       ], saidas: [
-        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },
-        { categoria: 'Luz', valor: 270.00, obs: '5º DU — 3 meses atrasada' },
-        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },
-        { categoria: 'Nubank', valor: 1612.00, obs: '5º DU' },
-        { categoria: 'XP', valor: 4416.00, obs: '5º DU — meta' },
-        { categoria: 'C6 Lucas', valor: 505.02, obs: '5º DU' },
-        { categoria: 'Santander', valor: 994.00, obs: '5º DU' },
-        { categoria: 'Itaú', valor: 1214.00, obs: 'Vale (dia 20)' },
-        { categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
-        { categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },
+        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },{ categoria: 'Luz', valor: 270.00, obs: '5º DU — 3 meses atrasada' },
+        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },{ categoria: 'Nubank', valor: 1612.00, obs: '5º DU' },
+        { categoria: 'XP', valor: 4416.00, obs: '5º DU — meta' },{ categoria: 'C6 Lucas', valor: 505.02, obs: '5º DU' },
+        { categoria: 'Santander', valor: 994.00, obs: '5º DU' },{ categoria: 'Itaú', valor: 1214.00, obs: 'Vale (dia 20)' },
+        { categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },{ categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },
       ], patrimonio: { cash: 400, espanha: 9000, xp: 83739.15, nu: 1541.0 } },
-
       '2026-03': { entradas: [
-        { tipo: 'Salário (5º DU)', valor: 1542.12 },
-        { tipo: 'VT (Vale Transporte)', valor: 264.00 },
-        { tipo: 'Comissão', valor: 748.00 },
-        { tipo: 'Lume+CS', valor: 4900.00 },
-        { tipo: 'JAC', valor: 1713.00 },
-        { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 2139.84 },
+        { tipo: 'Salário (5º DU)', valor: 1542.12 },{ tipo: 'VT (Vale Transporte)', valor: 264.00 },
+        { tipo: 'Comissão', valor: 748.00 },{ tipo: 'Lume+CS', valor: 4900.00 },
+        { tipo: 'JAC', valor: 1713.00 },{ tipo: 'Vale (Adiant. 40% — dia 20)', valor: 2139.84 },
       ], saidas: [
-        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },
-        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },
-        { categoria: 'Nubank', valor: 1304.29, obs: '5º DU' },
-        { categoria: 'XP', valor: 5011.22, obs: '5º DU' },
-        { categoria: 'Inglês', valor: 256.00, obs: '5º DU' },
-        { categoria: 'C6 Lucas', valor: 83.00, obs: '5º DU' },
-        { categoria: 'IPTU', valor: 86.30, obs: '5º DU' },
-        { categoria: 'Itaú', valor: 917.00, obs: 'Vale (dia 20)' },
-        { categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
-        { categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },
+        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },{ categoria: 'Habitação', valor: 650.00, obs: '5º DU' },
+        { categoria: 'Nubank', valor: 1304.29, obs: '5º DU' },{ categoria: 'XP', valor: 5011.22, obs: '5º DU' },
+        { categoria: 'Inglês', valor: 256.00, obs: '5º DU' },{ categoria: 'C6 Lucas', valor: 83.00, obs: '5º DU' },
+        { categoria: 'IPTU', valor: 86.30, obs: '5º DU' },{ categoria: 'Itaú', valor: 917.00, obs: 'Vale (dia 20)' },
+        { categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },{ categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },
         { categoria: 'Espanha (RGB)', valor: 800.00, obs: 'Vale (dia 20)' },
       ], patrimonio: { cash: 400, espanha: 9000, xp: 82187.98, nu: 1541.10 } },
-
       '2026-04': { entradas: [
-        { tipo: 'Salário (5º DU)', valor: 2594.12 },
-        { tipo: 'VT (Vale Transporte)', valor: 264.00 },
-        { tipo: 'Comissão', valor: 761.00 },
-        { tipo: 'Lume+CS', valor: 2800.00 },
-        { tipo: 'JAC', valor: 1772.00 },
-        { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 3360.34, obs: 'ativa (denner)' },
+        { tipo: 'Salário (5º DU)', valor: 2594.12 },{ tipo: 'VT (Vale Transporte)', valor: 264.00 },
+        { tipo: 'Comissão', valor: 761.00 },{ tipo: 'Lume+CS', valor: 2800.00 },
+        { tipo: 'JAC', valor: 1772.00 },{ tipo: 'Vale (Adiant. 40% — dia 20)', valor: 3360.34, obs: 'ativa (denner)' },
       ], saidas: [
-        { categoria: 'Acidente', valor: 334.00, obs: '5º DU' },
-        { categoria: 'Luz', valor: 95.00, obs: '5º DU' },
-        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },
-        { categoria: 'Nubank', valor: 1760.06, obs: '5º DU' },
-        { categoria: 'XP', valor: 4100.00, obs: '5º DU' },
-        { categoria: 'Inglês', valor: 256.00, obs: '5º DU' },
-        { categoria: 'IPTU', valor: 86.30, obs: '5º DU' },
-        { categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
+        { categoria: 'Acidente', valor: 334.00, obs: '5º DU' },{ categoria: 'Luz', valor: 95.00, obs: '5º DU' },
+        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },{ categoria: 'Nubank', valor: 1760.06, obs: '5º DU' },
+        { categoria: 'XP', valor: 4100.00, obs: '5º DU' },{ categoria: 'Inglês', valor: 256.00, obs: '5º DU' },
+        { categoria: 'IPTU', valor: 86.30, obs: '5º DU' },{ categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
         { categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
       ], patrimonio: { cash: 20, espanha: 10000, xp: 82324, nu: 3149.70 } },
-
       '2026-05': { entradas: [
         { tipo: 'Salário (5º DU)', valor: 6894.12, obs: 'Inclui PLR 2ª parcela do PLR' },
-        { tipo: 'VT (Vale Transporte)', valor: 264.00 },
-        { tipo: 'Comissão', valor: 761.00 },
-        { tipo: 'Lume+CS', valor: 2800.00 },
-        { tipo: 'JAC', valor: 1772.00 },
+        { tipo: 'VT (Vale Transporte)', valor: 264.00 },{ tipo: 'Comissão', valor: 761.00 },
+        { tipo: 'Lume+CS', valor: 2800.00 },{ tipo: 'JAC', valor: 1772.00 },
         { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 2560.34 },
       ], saidas: [
-        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },
-        { categoria: 'Luz', valor: 95.00, obs: '5º DU' },
-        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },
-        { categoria: 'Nubank', valor: 398.00, obs: '5º DU' },
-        { categoria: 'XP', valor: 3000.00, obs: '5º DU' },
-        { categoria: 'Inglês', valor: 256.00, obs: '5º DU' },
-        { categoria: 'C6 Lucas', valor: 500.00, obs: '5º DU' },
-        { categoria: 'IPTU', valor: 86.30, obs: '5º DU' },
-        { categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
-        { categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },
+        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },{ categoria: 'Luz', valor: 95.00, obs: '5º DU' },
+        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },{ categoria: 'Nubank', valor: 398.00, obs: '5º DU' },
+        { categoria: 'XP', valor: 3000.00, obs: '5º DU' },{ categoria: 'Inglês', valor: 256.00, obs: '5º DU' },
+        { categoria: 'C6 Lucas', valor: 500.00, obs: '5º DU' },{ categoria: 'IPTU', valor: 86.30, obs: '5º DU' },
+        { categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },{ categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },
         { categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
       ], patrimonio: null },
-
       '2026-06': { entradas: [
-        { tipo: 'Salário (5º DU)', valor: 2594.12 },
-        { tipo: 'VT (Vale Transporte)', valor: 264.00 },
-        { tipo: 'Comissão', valor: 761.00 },
-        { tipo: 'Lume+CS', valor: 2800.00 },
-        { tipo: 'JAC', valor: 1772.00 },
-        { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 2560.34 },
+        { tipo: 'Salário (5º DU)', valor: 2594.12 },{ tipo: 'VT (Vale Transporte)', valor: 264.00 },
+        { tipo: 'Comissão', valor: 761.00 },{ tipo: 'Lume+CS', valor: 2800.00 },
+        { tipo: 'JAC', valor: 1772.00 },{ tipo: 'Vale (Adiant. 40% — dia 20)', valor: 2560.34 },
       ], saidas: [
-        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },
-        { categoria: 'Luz', valor: 95.00, obs: '5º DU' },
-        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },
-        { categoria: 'Nubank', valor: 398.00, obs: '5º DU' },
-        { categoria: 'XP', valor: 3000.00, obs: '5º DU' },
-        { categoria: 'Inglês', valor: 256.00, obs: '5º DU' },
-        { categoria: 'C6 Lucas', valor: 500.00, obs: '5º DU' },
-        { categoria: 'IPTU', valor: 86.30, obs: '5º DU' },
-        { categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
-        { categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },
+        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },{ categoria: 'Luz', valor: 95.00, obs: '5º DU' },
+        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },{ categoria: 'Nubank', valor: 398.00, obs: '5º DU' },
+        { categoria: 'XP', valor: 3000.00, obs: '5º DU' },{ categoria: 'Inglês', valor: 256.00, obs: '5º DU' },
+        { categoria: 'C6 Lucas', valor: 500.00, obs: '5º DU' },{ categoria: 'IPTU', valor: 86.30, obs: '5º DU' },
+        { categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },{ categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },
         { categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
       ], patrimonio: null },
-
       '2026-07': { entradas: [
-        { tipo: 'Salário (5º DU)', valor: 2594.12 },
-        { tipo: 'VT (Vale Transporte)', valor: 264.00 },
-        { tipo: 'Comissão', valor: 190.00 },
-        { tipo: 'Lume+CS', valor: 2800.00 },
-        { tipo: 'JAC', valor: 1772.00 },
-        { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 2560.34 },
+        { tipo: 'Salário (5º DU)', valor: 2594.12 },{ tipo: 'VT (Vale Transporte)', valor: 264.00 },
+        { tipo: 'Comissão', valor: 190.00 },{ tipo: 'Lume+CS', valor: 2800.00 },
+        { tipo: 'JAC', valor: 1772.00 },{ tipo: 'Vale (Adiant. 40% — dia 20)', valor: 2560.34 },
       ], saidas: [
-        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },
-        { categoria: 'Luz', valor: 95.00, obs: '5º DU' },
-        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },
-        { categoria: 'XP', valor: 3000.00, obs: '5º DU' },
-        { categoria: 'Inglês', valor: 256.00, obs: '5º DU' },
-        { categoria: 'C6 Lucas', valor: 500.00, obs: '5º DU' },
-        { categoria: 'IPTU', valor: 86.30, obs: '5º DU' },
-        { categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
-        { categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },
-        { categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
+        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },{ categoria: 'Luz', valor: 95.00, obs: '5º DU' },
+        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },{ categoria: 'XP', valor: 3000.00, obs: '5º DU' },
+        { categoria: 'Inglês', valor: 256.00, obs: '5º DU' },{ categoria: 'C6 Lucas', valor: 500.00, obs: '5º DU' },
+        { categoria: 'IPTU', valor: 86.30, obs: '5º DU' },{ categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
+        { categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },{ categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
       ], patrimonio: null },
-
       '2026-08': { entradas: [
-        { tipo: 'Salário (5º DU)', valor: 2594.12 },
-        { tipo: 'VT (Vale Transporte)', valor: 264.00 },
-        { tipo: 'Comissão', valor: 190.00 },
-        { tipo: 'Lume+CS', valor: 2800.00 },
-        { tipo: 'JAC', valor: 1772.00 },
-        { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 2560.34 },
+        { tipo: 'Salário (5º DU)', valor: 2594.12 },{ tipo: 'VT (Vale Transporte)', valor: 264.00 },
+        { tipo: 'Comissão', valor: 190.00 },{ tipo: 'Lume+CS', valor: 2800.00 },
+        { tipo: 'JAC', valor: 1772.00 },{ tipo: 'Vale (Adiant. 40% — dia 20)', valor: 2560.34 },
       ], saidas: [
-        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },
-        { categoria: 'Luz', valor: 95.00, obs: '5º DU' },
-        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },
-        { categoria: 'XP', valor: 3000.00, obs: '5º DU' },
-        { categoria: 'Inglês', valor: 256.00, obs: '5º DU' },
-        { categoria: 'C6 Lucas', valor: 500.00, obs: '5º DU' },
-        { categoria: 'IPTU', valor: 86.30, obs: '5º DU' },
-        { categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
-        { categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },
-        { categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
+        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },{ categoria: 'Luz', valor: 95.00, obs: '5º DU' },
+        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },{ categoria: 'XP', valor: 3000.00, obs: '5º DU' },
+        { categoria: 'Inglês', valor: 256.00, obs: '5º DU' },{ categoria: 'C6 Lucas', valor: 500.00, obs: '5º DU' },
+        { categoria: 'IPTU', valor: 86.30, obs: '5º DU' },{ categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
+        { categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },{ categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
       ], patrimonio: null },
-
       '2026-09': { entradas: [
-        { tipo: 'Salário (5º DU)', valor: 2594.12 },
-        { tipo: 'VT (Vale Transporte)', valor: 264.00 },
-        { tipo: 'Lume+CS', valor: 2800.00 },
-        { tipo: 'JAC', valor: 1772.00 },
+        { tipo: 'Salário (5º DU)', valor: 2594.12 },{ tipo: 'VT (Vale Transporte)', valor: 264.00 },
+        { tipo: 'Lume+CS', valor: 2800.00 },{ tipo: 'JAC', valor: 1772.00 },
         { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 4355.83, obs: 'VALE maior — 13º antecipado' },
       ], saidas: [
-        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },
-        { categoria: 'Luz', valor: 95.00, obs: '5º DU' },
-        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },
-        { categoria: 'XP', valor: 3000.00, obs: '5º DU' },
-        { categoria: 'Inglês', valor: 256.00, obs: '5º DU' },
-        { categoria: 'C6 Lucas', valor: 500.00, obs: '5º DU' },
-        { categoria: 'IPTU', valor: 86.30, obs: '5º DU' },
-        { categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
-        { categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },
-        { categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
+        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },{ categoria: 'Luz', valor: 95.00, obs: '5º DU' },
+        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },{ categoria: 'XP', valor: 3000.00, obs: '5º DU' },
+        { categoria: 'Inglês', valor: 256.00, obs: '5º DU' },{ categoria: 'C6 Lucas', valor: 500.00, obs: '5º DU' },
+        { categoria: 'IPTU', valor: 86.30, obs: '5º DU' },{ categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
+        { categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },{ categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
       ], patrimonio: null },
-
       '2026-10': { entradas: [
-        { tipo: 'Salário (5º DU)', valor: 2594.12 },
-        { tipo: 'VT (Vale Transporte)', valor: 264.00 },
-        { tipo: 'Lume+CS', valor: 2800.00 },
-        { tipo: 'JAC', valor: 1772.00 },
+        { tipo: 'Salário (5º DU)', valor: 2594.12 },{ tipo: 'VT (Vale Transporte)', valor: 264.00 },
+        { tipo: 'Lume+CS', valor: 2800.00 },{ tipo: 'JAC', valor: 1772.00 },
         { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 5829.22, obs: 'Férias + 13º' },
       ], saidas: [
-        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },
-        { categoria: 'Luz', valor: 95.00, obs: '5º DU' },
-        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },
-        { categoria: 'XP', valor: 3000.00, obs: '5º DU' },
-        { categoria: 'Inglês', valor: 256.00, obs: '5º DU' },
-        { categoria: 'C6 Lucas', valor: 500.00, obs: '5º DU' },
-        { categoria: 'IPTU', valor: 86.30, obs: '5º DU' },
-        { categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
-        { categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },
-        { categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
+        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },{ categoria: 'Luz', valor: 95.00, obs: '5º DU' },
+        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },{ categoria: 'XP', valor: 3000.00, obs: '5º DU' },
+        { categoria: 'Inglês', valor: 256.00, obs: '5º DU' },{ categoria: 'C6 Lucas', valor: 500.00, obs: '5º DU' },
+        { categoria: 'IPTU', valor: 86.30, obs: '5º DU' },{ categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
+        { categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },{ categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
       ], patrimonio: null },
-
       '2026-11': { entradas: [
-        { tipo: 'Salário (5º DU)', valor: 2594.12 },
-        { tipo: 'VT (Vale Transporte)', valor: 264.00 },
-        { tipo: 'Lume+CS', valor: 2800.00 },
-        { tipo: 'JAC', valor: 1772.00 },
+        { tipo: 'Salário (5º DU)', valor: 2594.12 },{ tipo: 'VT (Vale Transporte)', valor: 264.00 },
+        { tipo: 'Lume+CS', valor: 2800.00 },{ tipo: 'JAC', valor: 1772.00 },
         { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 6951.00, obs: '13º salário' },
       ], saidas: [
-        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },
-        { categoria: 'Luz', valor: 95.00, obs: '5º DU' },
-        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },
-        { categoria: 'XP', valor: 3000.00, obs: '5º DU' },
-        { categoria: 'Inglês', valor: 256.00, obs: '5º DU' },
-        { categoria: 'C6 Lucas', valor: 500.00, obs: '5º DU' },
-        { categoria: 'IPTU', valor: 86.30, obs: '5º DU' },
-        { categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
-        { categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },
-        { categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
+        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },{ categoria: 'Luz', valor: 95.00, obs: '5º DU' },
+        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },{ categoria: 'XP', valor: 3000.00, obs: '5º DU' },
+        { categoria: 'Inglês', valor: 256.00, obs: '5º DU' },{ categoria: 'C6 Lucas', valor: 500.00, obs: '5º DU' },
+        { categoria: 'IPTU', valor: 86.30, obs: '5º DU' },{ categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
+        { categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },{ categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
       ], patrimonio: null },
-
       '2026-12': { entradas: [
-        { tipo: 'Salário (5º DU)', valor: 2594.12 },
-        { tipo: 'VT (Vale Transporte)', valor: 264.00 },
-        { tipo: 'Lume+CS', valor: 2800.00 },
-        { tipo: 'JAC', valor: 1772.00 },
+        { tipo: 'Salário (5º DU)', valor: 2594.12 },{ tipo: 'VT (Vale Transporte)', valor: 264.00 },
+        { tipo: 'Lume+CS', valor: 2800.00 },{ tipo: 'JAC', valor: 1772.00 },
         { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 6951.00, obs: '13º salário' },
       ], saidas: [
-        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },
-        { categoria: 'Luz', valor: 95.00, obs: '5º DU' },
-        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },
-        { categoria: 'XP', valor: 3000.00, obs: '5º DU' },
-        { categoria: 'Inglês', valor: 256.00, obs: '5º DU' },
-        { categoria: 'C6 Lucas', valor: 500.00, obs: '5º DU' },
-        { categoria: 'IPTU', valor: 86.30, obs: '5º DU' },
-        { categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
-        { categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },
-        { categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
+        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },{ categoria: 'Luz', valor: 95.00, obs: '5º DU' },
+        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },{ categoria: 'XP', valor: 3000.00, obs: '5º DU' },
+        { categoria: 'Inglês', valor: 256.00, obs: '5º DU' },{ categoria: 'C6 Lucas', valor: 500.00, obs: '5º DU' },
+        { categoria: 'IPTU', valor: 86.30, obs: '5º DU' },{ categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
+        { categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },{ categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
       ], patrimonio: null },
     },
     c6: [],
@@ -1338,73 +1326,34 @@ function initState() {
 }
 
 // ============================================================
-// ✅ CORREÇÃO PRINCIPAL: syncInvAtual — versão síncrona (sem save)
-// usada apenas durante renders intermediários
+// SYNC INV ATUAL
 // ============================================================
 function syncInvAtual() {
   if (!S) return;
-  const mesesComPat = Object.keys(S.meses)
-    .filter(k => S.meses[k] && S.meses[k].patrimonio)
-    .sort();
+  const mesesComPat = Object.keys(S.meses).filter(k => S.meses[k] && S.meses[k].patrimonio).sort();
   if (mesesComPat.length > 0) {
     const maisRecente = mesesComPat[mesesComPat.length - 1];
     S.inv_atual = Object.assign({}, S.meses[maisRecente].patrimonio);
-    const tot = (S.inv_atual.cash||0) + (S.inv_atual.espanha||0) + (S.inv_atual.xp||0) + (S.inv_atual.nu||0);
+    const tot = (S.inv_atual.cash||0)+(S.inv_atual.espanha||0)+(S.inv_atual.xp||0)+(S.inv_atual.nu||0);
     const hi = S.historico.find(h => h.mes === maisRecente);
-    if (hi) {
-      hi.total = tot;
-      hi.realizado = true;
-    } else {
-      S.historico.push({ mes: maisRecente, total: tot, guardar: 0, realizado: true });
-      S.historico.sort((a,b) => a.mes.localeCompare(b.mes));
-    }
+    if (hi) { hi.total = tot; hi.realizado = true; }
+    else { S.historico.push({ mes: maisRecente, total: tot, guardar: 0, realizado: true }); S.historico.sort((a,b) => a.mes.localeCompare(b.mes)); }
   }
 }
 
-// ✅ CORREÇÃO PRINCIPAL: versão async — aguarda o save no Drive
-// chamada no initApp() para garantir que o Drive fica consistente
 async function syncInvAtualAsync() {
   if (!S) return;
-  const mesesComPat = Object.keys(S.meses)
-    .filter(k => S.meses[k] && S.meses[k].patrimonio)
-    .sort();
+  const mesesComPat = Object.keys(S.meses).filter(k => S.meses[k] && S.meses[k].patrimonio).sort();
   if (mesesComPat.length === 0) return;
-
   const maisRecente = mesesComPat[mesesComPat.length - 1];
   const novoInv = Object.assign({}, S.meses[maisRecente].patrimonio);
-  const tot = (novoInv.cash||0) + (novoInv.espanha||0) + (novoInv.xp||0) + (novoInv.nu||0);
+  const tot = (novoInv.cash||0)+(novoInv.espanha||0)+(novoInv.xp||0)+(novoInv.nu||0);
   const hi = S.historico.find(h => h.mes === maisRecente);
-
   let precisaSalvar = false;
-
-  // Atualiza inv_atual se mudou
-  const totalAtual = (S.inv_atual.cash||0)+(S.inv_atual.espanha||0)+(S.inv_atual.xp||0)+(S.inv_atual.nu||0);
-  if (JSON.stringify(S.inv_atual) !== JSON.stringify(novoInv)) {
-    S.inv_atual = novoInv;
-    precisaSalvar = true;
-  }
-
-  // Atualiza histórico se o total diverge
-  if (hi) {
-    if (hi.total !== tot || !hi.realizado) {
-      hi.total = tot;
-      hi.realizado = true;
-      precisaSalvar = true;
-    }
-  } else {
-    S.historico.push({ mes: maisRecente, total: tot, guardar: 0, realizado: true });
-    S.historico.sort((a,b) => a.mes.localeCompare(b.mes));
-    precisaSalvar = true;
-  }
-
-  if (precisaSalvar) {
-    console.log(`✅ syncInvAtualAsync: atualizando ${maisRecente} → total R$ ${tot.toFixed(2)}`);
-    try {
-      await saveData(S);
-    } catch(e) {
-      console.warn('syncInvAtualAsync: erro ao salvar', e);
-    }
-  }
+  if (JSON.stringify(S.inv_atual) !== JSON.stringify(novoInv)) { S.inv_atual = novoInv; precisaSalvar = true; }
+  if (hi) { if (hi.total !== tot || !hi.realizado) { hi.total = tot; hi.realizado = true; precisaSalvar = true; } }
+  else { S.historico.push({ mes: maisRecente, total: tot, guardar: 0, realizado: true }); S.historico.sort((a,b) => a.mes.localeCompare(b.mes)); precisaSalvar = true; }
+  if (precisaSalvar) { try { await saveData(S); } catch(e) { console.warn('syncInvAtualAsync: erro ao salvar', e); } }
 }
 
 function getMesData(key) {
@@ -1425,12 +1374,13 @@ function fmtPct(v) {
 // NAVEGAÇÃO
 // ============================================================
 const pageInfos = {
-  dashboard: { title: 'Dashboard', sub: 'Visão geral do seu patrimônio' },
-  mensal: { title: 'Lançamentos Mensais', sub: 'Entradas e saídas por mês' },
-  projecao: { title: 'Projeção 2026', sub: 'Cenários CLT e PJ' },
-  investimentos: { title: 'Investimentos', sub: 'Carteira e evolução patrimonial' },
-  plr: { title: 'PLR & Bônus', sub: 'Calculadora e projeção de PLR' },
-  config: { title: 'Configurações', sub: 'Parâmetros e gastos fixos' },
+  dashboard:    { title: 'Dashboard',            sub: 'Visão geral do seu patrimônio' },
+  mensal:       { title: 'Lançamentos Mensais',  sub: 'Entradas e saídas por mês' },
+  projecao:     { title: 'Projeção 2026',         sub: 'Cenários CLT e PJ' },
+  investimentos:{ title: 'Investimentos',         sub: 'Carteira e evolução patrimonial' },
+  plr:          { title: 'PLR & Bônus',           sub: 'Calculadora e projeção de PLR' },
+  viagens:      { title: 'Viagens',               sub: 'Planejamento e controle de gastos em viagens' },
+  config:       { title: 'Configurações',         sub: 'Parâmetros e gastos fixos' },
 };
 
 function showPage(id) {
@@ -1440,12 +1390,13 @@ function showPage(id) {
   document.querySelector(`[onclick="showPage('${id}')"]`).classList.add('active');
   document.getElementById('topbar-title').textContent = pageInfos[id].title;
   document.getElementById('topbar-sub').textContent = pageInfos[id].sub;
-  if (id === 'dashboard') renderDashboard();
-  if (id === 'mensal') renderMensal();
-  if (id === 'projecao') renderProjecao();
+  if (id === 'dashboard')     renderDashboard();
+  if (id === 'mensal')        renderMensal();
+  if (id === 'projecao')      renderProjecao();
   if (id === 'investimentos') renderInvestimentos();
-  if (id === 'plr') { loadPLRInputs(); calcPLR(); renderExtras(); }
-  if (id === 'config') renderConfig();
+  if (id === 'plr')           { loadPLRInputs(); calcPLR(); renderExtras(); }
+  if (id === 'viagens')       renderViagens();
+  if (id === 'config')        renderConfig();
 }
 
 function showTab(tabGroupId, tabId) {
@@ -1482,12 +1433,10 @@ document.querySelectorAll('.modal-bg').forEach(m => m.addEventListener('click', 
 // DASHBOARD
 // ============================================================
 function renderDashboard() {
-  syncInvAtual(); // garante consistência em memória antes de renderizar
+  syncInvAtual();
   const inv = S.inv_atual;
-  const total = (inv.cash || 0) + (inv.espanha || 0) + (inv.xp || 0) + (inv.nu || 0);
+  const total = (inv.cash||0)+(inv.espanha||0)+(inv.xp||0)+(inv.nu||0);
   const hist = S.historico;
-  // ✅ FIX: usa inv_atual calculado de meses[].patrimonio para o card principal
-  // e usa histórico apenas para calcular a variação percentual
   const reais = hist.filter(h => h.total != null && h.realizado).sort((a,b) => a.mes.localeCompare(b.mes));
   const last = reais[reais.length - 1];
   const prev = reais[reais.length - 2];
@@ -1499,26 +1448,24 @@ function renderDashboard() {
     <div class="card"><div class="card-label">Meta Anual Guardar</div><div class="card-value" style="font-size:16px">R$ 100k+</div><div class="card-sub">crescimento consistente</div></div>
     <div class="card yellow"><div class="card-label">Salário Base</div><div class="card-value">${fmtR(S.config.salario)}</div><div class="card-sub">+ VT + comissões</div></div>
   `;
-
   document.getElementById('patrimonio-total').textContent = fmtR(total);
   const items = [
-    { nome: 'Cash', tipo: 'Reserva líquida', val: inv.cash },
-    { nome: 'Espanha', tipo: 'RGB — Fundo de investimento', val: inv.espanha },
-    { nome: 'XP Invest', tipo: 'Tesouro + RF + Fundos', val: inv.xp },
-    { nome: 'Nubank', tipo: 'Conta corrente', val: inv.nu },
+    { nome: 'Cash',     tipo: 'Reserva líquida',            val: inv.cash },
+    { nome: 'Espanha',  tipo: 'RGB — Fundo de investimento', val: inv.espanha },
+    { nome: 'XP Invest',tipo: 'Tesouro + RF + Fundos',      val: inv.xp },
+    { nome: 'Nubank',   tipo: 'Conta corrente',             val: inv.nu },
   ];
   document.getElementById('inv-breakdown').innerHTML = items.map(i => `
     <div class="inv-row">
       <div><div class="inv-name">${i.nome}</div><div class="inv-type">${i.tipo}</div></div>
       <div>
-        <div class="inv-value ${i.nome === 'XP Invest' ? 'pos' : ''}">${fmtR(i.val)}</div>
+        <div class="inv-value ${i.nome==='XP Invest'?'pos':''}">${fmtR(i.val)}</div>
         <div style="font-size:11px;color:var(--muted);text-align:right">${total ? ((i.val/total)*100).toFixed(1) : 0}%</div>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 
   const sel = document.getElementById('dash-mes-sel');
-  sel.innerHTML = Object.keys(S.meses).sort().reverse().map(k => `<option value="${k}" ${k === selMes ? 'selected' : ''}>${mesLabel(k)}</option>`).join('');
+  sel.innerHTML = Object.keys(S.meses).sort().reverse().map(k => `<option value="${k}" ${k===selMes?'selected':''}>${mesLabel(k)}</option>`).join('');
   renderDashMes();
   renderHistorico();
 }
@@ -1526,32 +1473,32 @@ function renderDashboard() {
 function renderDashMes() {
   const k = document.getElementById('dash-mes-sel').value;
   const md = getMesData(k);
-  const entTotal = md.entradas.reduce((s, e) => s + (+e.valor || 0), 0);
-  const saiTotal = md.saidas.reduce((s, e) => s + (+e.valor || 0), 0);
+  const entTotal = md.entradas.reduce((s,e) => s+(+e.valor||0), 0);
+  const saiTotal = md.saidas.reduce((s,e) => s+(+e.valor||0), 0);
   const sobra = entTotal - saiTotal;
   document.getElementById('dash-mes-content').innerHTML = `
     <div class="inv-row"><div class="inv-name">Total Entradas</div><span class="pos" style="font-family:var(--mono)">${fmtR(entTotal)}</span></div>
     <div class="inv-row"><div class="inv-name">Total Saídas</div><span class="neg" style="font-family:var(--mono)">${fmtR(saiTotal)}</span></div>
-    <div class="inv-row" style="font-weight:700"><div class="inv-name">Sobra / Guardado</div><span class="${sobra >= 0 ? 'pos' : 'neg'}" style="font-family:var(--mono)">${fmtR(sobra)}</span></div>
+    <div class="inv-row" style="font-weight:700"><div class="inv-name">Sobra / Guardado</div><span class="${sobra>=0?'pos':'neg'}" style="font-family:var(--mono)">${fmtR(sobra)}</span></div>
     ${md.patrimonio ? `
       <hr class="divider">
       <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Posição registrada no mês</div>
-      ${['cash','espanha','xp','nu'].map(k2 => `<div class="inv-row"><div class="inv-name" style="font-size:12px">${k2.toUpperCase()}</div><span style="font-family:var(--mono);font-size:13px">${fmtR(md.patrimonio[k2])}</span></div>`).join('')}
+      ${['cash','espanha','xp','nu'].map(k2=>`<div class="inv-row"><div class="inv-name" style="font-size:12px">${k2.toUpperCase()}</div><span style="font-family:var(--mono);font-size:13px">${fmtR(md.patrimonio[k2])}</span></div>`).join('')}
     ` : '<div style="font-size:12px;color:var(--muted);margin-top:12px">Posição de investimento não registrada para este mês.</div>'}
   `;
 }
 
 function renderHistorico() {
   const rows = S.historico.slice().sort((a,b) => a.mes.localeCompare(b.mes));
-  document.getElementById('historico-tbody').innerHTML = rows.map((r, i) => {
+  document.getElementById('historico-tbody').innerHTML = rows.map((r,i) => {
     const prev = rows[i-1];
-    const v = (prev && prev.total && r.total) ? (r.total - prev.total) / prev.total : null;
+    const v = (prev && prev.total && r.total) ? (r.total-prev.total)/prev.total : null;
     const isProj = !r.realizado;
-    return `<tr style="${isProj ? 'color:var(--accent);opacity:0.75' : ''}">
-      <td class="label" style="${isProj ? 'color:var(--accent)' : ''}">${mesLabel(r.mes)}${isProj ? ' <span class="badge badge-blue" style="font-size:10px">proj.</span>' : ''}</td>
+    return `<tr style="${isProj?'color:var(--accent);opacity:0.75':''}">
+      <td class="label" style="${isProj?'color:var(--accent)':''}">${mesLabel(r.mes)}${isProj?' <span class="badge badge-blue" style="font-size:10px">proj.</span>':''}</td>
       <td>${r.total ? fmtR(r.total) : '<span style="color:var(--muted)">—</span>'}</td>
-      <td class="${v === null ? '' : v >= 0 ? 'pos' : 'neg'}">${v === null ? '-' : fmtPct(v)}</td>
-      <td class="${r.guardar > 0 ? 'pos' : ''}">${fmtR(r.guardar)}</td>
+      <td class="${v===null?'':v>=0?'pos':'neg'}">${v===null?'-':fmtPct(v)}</td>
+      <td class="${r.guardar>0?'pos':''}">${fmtR(r.guardar)}</td>
     </tr>`;
   }).join('');
 }
@@ -1560,12 +1507,11 @@ function renderHistorico() {
 // MENSAL
 // ============================================================
 function buildMesSel(containerId, onChange) {
-  const c = document.getElementById(containerId);
-  c.innerHTML = '';
-  for (let m = 1; m <= 12; m++) {
+  const c = document.getElementById(containerId); c.innerHTML = '';
+  for (let m=1; m<=12; m++) {
     const k = `${ANO}-${String(m).padStart(2,'0')}`;
     const b = document.createElement('button');
-    b.className = 'month-btn' + (k === selMes ? ' active' : '');
+    b.className = 'month-btn'+(k===selMes?' active':'');
     b.textContent = MESES[m-1];
     b.onclick = () => { selMes = k; onChange(); };
     c.appendChild(b);
@@ -1575,66 +1521,31 @@ function buildMesSel(containerId, onChange) {
 function renderMensal() {
   buildMesSel('month-selector-mensal', renderMensal);
   const md = getMesData(selMes);
-  const [, m] = selMes.split('-');
-  const label = MESES[+m - 1] + ' ' + ANO;
+  const [,m] = selMes.split('-');
+  const label = MESES[+m-1]+' '+ANO;
   document.getElementById('sel-mes-label').textContent = label;
   document.getElementById('sel-mes-label2').textContent = label;
-
-  const entTotal = md.entradas.reduce((s, e) => s + (+e.valor || 0), 0);
-  document.getElementById('entradas-list').innerHTML = md.entradas.length === 0
+  const entTotal = md.entradas.reduce((s,e) => s+(+e.valor||0), 0);
+  document.getElementById('entradas-list').innerHTML = md.entradas.length===0
     ? '<div style="color:var(--muted);font-size:13px;padding:8px 0">Nenhuma entrada registrada.</div>'
-    : md.entradas.map((e, i) => `
-      <div class="c6-item">
-        <div>
-          <div style="font-size:13px;font-weight:500">${e.tipo}</div>
-          ${e.obs ? `<div style="font-size:11px;color:var(--muted)">${e.obs}</div>` : ''}
-        </div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <span class="pos" style="font-family:var(--mono)">${fmtR(e.valor)}</span>
-          <button class="btn btn-ghost btn-small" onclick="editEntrada(${i})" style="padding:5px 9px">✎</button>
-          <button class="btn btn-danger btn-small" onclick="delEntrada(${i})">×</button>
-        </div>
-      </div>
-    `).join('');
+    : md.entradas.map((e,i) => `<div class="c6-item"><div><div style="font-size:13px;font-weight:500">${e.tipo}</div>${e.obs?`<div style="font-size:11px;color:var(--muted)">${e.obs}</div>`:''}</div><div style="display:flex;align-items:center;gap:10px"><span class="pos" style="font-family:var(--mono)">${fmtR(e.valor)}</span><button class="btn btn-ghost btn-small" onclick="editEntrada(${i})" style="padding:5px 9px">✎</button><button class="btn btn-danger btn-small" onclick="delEntrada(${i})">×</button></div></div>`).join('');
   document.getElementById('total-entradas').textContent = fmtR(entTotal);
-
-  const saiTotal = md.saidas.reduce((s, e) => s + (+e.valor || 0), 0);
-  document.getElementById('saidas-list').innerHTML = md.saidas.length === 0
+  const saiTotal = md.saidas.reduce((s,e) => s+(+e.valor||0), 0);
+  document.getElementById('saidas-list').innerHTML = md.saidas.length===0
     ? '<div style="color:var(--muted);font-size:13px;padding:8px 0">Nenhuma saída registrada.</div>'
-    : md.saidas.map((e, i) => `
-      <div class="c6-item">
-        <div>
-          <div style="font-size:13px;font-weight:500">${e.categoria}</div>
-          ${e.obs ? `<div style="font-size:11px;color:var(--muted)">${e.obs}</div>` : ''}
-        </div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <span class="neg" style="font-family:var(--mono)">${fmtR(e.valor)}</span>
-          <button class="btn btn-ghost btn-small" onclick="editSaida(${i})" style="padding:5px 9px">✎</button>
-          <button class="btn btn-danger btn-small" onclick="delSaida(${i})">×</button>
-        </div>
-      </div>
-    `).join('');
+    : md.saidas.map((e,i) => `<div class="c6-item"><div><div style="font-size:13px;font-weight:500">${e.categoria}</div>${e.obs?`<div style="font-size:11px;color:var(--muted)">${e.obs}</div>`:''}</div><div style="display:flex;align-items:center;gap:10px"><span class="neg" style="font-family:var(--mono)">${fmtR(e.valor)}</span><button class="btn btn-ghost btn-small" onclick="editSaida(${i})" style="padding:5px 9px">✎</button><button class="btn btn-danger btn-small" onclick="delSaida(${i})">×</button></div></div>`).join('');
   document.getElementById('total-saidas').textContent = fmtR(saiTotal);
-
   const sobra = entTotal - saiTotal;
-  const pct_gasto = entTotal > 0 ? (saiTotal / entTotal) * 100 : 0;
+  const pct_gasto = entTotal>0 ? (saiTotal/entTotal)*100 : 0;
   document.getElementById('resumo-cards').innerHTML = `
     <div class="card green"><div class="card-label">Entradas</div><div class="card-value">${fmtR(entTotal)}</div></div>
     <div class="card red"><div class="card-label">Saídas</div><div class="card-value">${fmtR(saiTotal)}</div></div>
-    <div class="card ${sobra >= 0 ? 'green' : 'red'}"><div class="card-label">Sobra</div><div class="card-value">${fmtR(sobra)}</div><div class="card-sub">${pct_gasto.toFixed(1)}% gasto da renda</div></div>
+    <div class="card ${sobra>=0?'green':'red'}"><div class="card-label">Sobra</div><div class="card-value">${fmtR(sobra)}</div><div class="card-sub">${pct_gasto.toFixed(1)}% gasto da renda</div></div>
   `;
-
   const pat = md.patrimonio;
   if (pat) {
     const tot = (pat.cash||0)+(pat.espanha||0)+(pat.xp||0)+(pat.nu||0);
-    document.getElementById('posicao-inv-mes').innerHTML = `
-      <div class="cards">
-        <div class="card"><div class="card-label">Cash</div><div class="card-value" style="font-size:17px">${fmtR(pat.cash)}</div></div>
-        <div class="card"><div class="card-label">Espanha</div><div class="card-value" style="font-size:17px">${fmtR(pat.espanha)}</div></div>
-        <div class="card blue"><div class="card-label">XP Invest</div><div class="card-value" style="font-size:17px">${fmtR(pat.xp)}</div></div>
-        <div class="card"><div class="card-label">Nubank</div><div class="card-value" style="font-size:17px">${fmtR(pat.nu)}</div></div>
-        <div class="card green"><div class="card-label">Total</div><div class="card-value" style="font-size:17px">${fmtR(tot)}</div></div>
-      </div>`;
+    document.getElementById('posicao-inv-mes').innerHTML = `<div class="cards"><div class="card"><div class="card-label">Cash</div><div class="card-value" style="font-size:17px">${fmtR(pat.cash)}</div></div><div class="card"><div class="card-label">Espanha</div><div class="card-value" style="font-size:17px">${fmtR(pat.espanha)}</div></div><div class="card blue"><div class="card-label">XP Invest</div><div class="card-value" style="font-size:17px">${fmtR(pat.xp)}</div></div><div class="card"><div class="card-label">Nubank</div><div class="card-value" style="font-size:17px">${fmtR(pat.nu)}</div></div><div class="card green"><div class="card-label">Total</div><div class="card-value" style="font-size:17px">${fmtR(tot)}</div></div></div>`;
   } else {
     document.getElementById('posicao-inv-mes').innerHTML = '<div style="color:var(--muted);font-size:13px">Clique em "Registrar Posição" para registrar os valores de investimento deste mês.</div>';
   }
@@ -1646,14 +1557,12 @@ async function addEntrada() {
   const obs = document.getElementById('ent-obs').value;
   if (!valor) { toast('Informe o valor', true); return; }
   getMesData(selMes).entradas.push({ tipo, valor, obs });
-  closeModal('modal-entrada');
-  renderMensal();
+  closeModal('modal-entrada'); renderMensal();
   try { await saveData(S); toast('Entrada adicionada!'); } catch(e) { toast('Erro ao salvar. Verifique sua conexão.', true); }
 }
 
 async function delEntrada(i) {
-  getMesData(selMes).entradas.splice(i, 1);
-  renderMensal();
+  getMesData(selMes).entradas.splice(i,1); renderMensal();
   try { await saveData(S); } catch(e) { toast('Erro ao salvar', true); }
 }
 
@@ -1663,21 +1572,16 @@ async function addSaida() {
   const obs = document.getElementById('sai-obs').value;
   if (!valor) { toast('Informe o valor', true); return; }
   getMesData(selMes).saidas.push({ categoria, valor, obs });
-  closeModal('modal-saida');
-  renderMensal();
+  closeModal('modal-saida'); renderMensal();
   try { await saveData(S); toast('Saída adicionada!'); } catch(e) { toast('Erro ao salvar. Verifique sua conexão.', true); }
 }
 
 async function delSaida(i) {
-  getMesData(selMes).saidas.splice(i, 1);
-  renderMensal();
+  getMesData(selMes).saidas.splice(i,1); renderMensal();
   try { await saveData(S); } catch(e) { toast('Erro ao salvar', true); }
 }
 
-let _editTipo = null;
-let _editIdx = null;
-const TIPOS_ENTRADA = ['Salario (5 DU)','VT (Vale Transporte)','Vale (Adiant. 40% - dia 20)','Comissao','Lume+CS','JAC','PLR','13 Salario','Outro'];
-const CATS_SAIDA = ['Acidente','Luz','Habitacao','Nubank','XP','Ingles','C6 Lucas','IPTU','Santander','Itau','Condominio','Espanha','Lazer/Ferias','Alimentacao','Transporte','Outro'];
+let _editTipo = null; let _editIdx = null;
 
 function editEntrada(i) {
   _editTipo = 'entrada'; _editIdx = i;
@@ -1685,11 +1589,9 @@ function editEntrada(i) {
   document.getElementById('modal-editar-title').textContent = 'Editar Entrada';
   const tipos = ['Salário (5º dia útil)','VT (Vale Transporte)','Vale (Adiant. 40% — dia 20)','Comissão','Lume+CS','JAC','PLR','13º Salário','Outro'];
   document.getElementById('modal-editar-fields').innerHTML =
-    '<div class="form-group"><label>Tipo</label><select id="ed-tipo">' +
-    tipos.map(t => '<option ' + (t===e.tipo?'selected':'') + '>' + t + '</option>').join('') +
-    '</select></div>' +
-    '<div class="form-group"><label>Valor (R$)</label><input type="number" id="ed-valor" value="' + e.valor + '"></div>' +
-    '<div class="form-group full-width"><label>Observação</label><input type="text" id="ed-obs" value="' + (e.obs||'') + '"></div>';
+    '<div class="form-group"><label>Tipo</label><select id="ed-tipo">'+tipos.map(t=>'<option '+(t===e.tipo?'selected':'')+'>'+t+'</option>').join('')+'</select></div>'+
+    '<div class="form-group"><label>Valor (R$)</label><input type="number" id="ed-valor" value="'+e.valor+'"></div>'+
+    '<div class="form-group full-width"><label>Observação</label><input type="text" id="ed-obs" value="'+(e.obs||'')+'"></div>';
   openModal('modal-editar');
 }
 
@@ -1699,11 +1601,9 @@ function editSaida(i) {
   document.getElementById('modal-editar-title').textContent = 'Editar Saída';
   const cats = ['Acidente','Luz','Habitação','Nubank','XP','Inglês','C6 Lucas','IPTU','Santander','Itaú','Condomínio','Espanha','Lazer/Férias','Alimentação','Transporte','Outro'];
   document.getElementById('modal-editar-fields').innerHTML =
-    '<div class="form-group"><label>Categoria</label><select id="ed-cat">' +
-    cats.map(c => '<option ' + (c===e.categoria?'selected':'') + '>' + c + '</option>').join('') +
-    '</select></div>' +
-    '<div class="form-group"><label>Valor (R$)</label><input type="number" id="ed-valor" value="' + e.valor + '"></div>' +
-    '<div class="form-group full-width"><label>Observação</label><input type="text" id="ed-obs" value="' + (e.obs||'') + '"></div>';
+    '<div class="form-group"><label>Categoria</label><select id="ed-cat">'+cats.map(c=>'<option '+(c===e.categoria?'selected':'')+'>'+c+'</option>').join('')+'</select></div>'+
+    '<div class="form-group"><label>Valor (R$)</label><input type="number" id="ed-valor" value="'+e.valor+'"></div>'+
+    '<div class="form-group full-width"><label>Observação</label><input type="text" id="ed-obs" value="'+(e.obs||'')+'"></div>';
   openModal('modal-editar');
 }
 
@@ -1712,40 +1612,26 @@ async function salvarEdicao() {
   const obs = document.getElementById('ed-obs').value;
   if (!valor) { toast('Informe o valor', true); return; }
   const md = getMesData(selMes);
-  if (_editTipo === 'entrada') {
-    md.entradas[_editIdx] = { tipo: document.getElementById('ed-tipo').value, valor, obs };
-  } else {
-    md.saidas[_editIdx] = { categoria: document.getElementById('ed-cat').value, valor, obs };
-  }
-  closeModal('modal-editar');
-  renderMensal();
+  if (_editTipo==='entrada') { md.entradas[_editIdx] = { tipo: document.getElementById('ed-tipo').value, valor, obs }; }
+  else { md.saidas[_editIdx] = { categoria: document.getElementById('ed-cat').value, valor, obs }; }
+  closeModal('modal-editar'); renderMensal();
   try { await saveData(S); toast('Lançamento atualizado!'); } catch(e) { toast('Erro ao salvar', true); }
 }
 
 async function savePatrimonio() {
-  const cash = +document.getElementById('pat-cash').value || 0;
-  const espanha = +document.getElementById('pat-espanha').value || 0;
-  const xp = +document.getElementById('pat-xp').value || 0;
-  const nu = +document.getElementById('pat-nu').value || 0;
+  const cash = +document.getElementById('pat-cash').value||0;
+  const espanha = +document.getElementById('pat-espanha').value||0;
+  const xp = +document.getElementById('pat-xp').value||0;
+  const nu = +document.getElementById('pat-nu').value||0;
   getMesData(selMes).patrimonio = { cash, espanha, xp, nu };
-
-  // ✅ syncInvAtual garante que inv_atual e histórico ficam consistentes
   syncInvAtual();
-
-  const tot = cash + espanha + xp + nu;
-  const hi = S.historico.find(h => h.mes === selMes);
+  const tot = cash+espanha+xp+nu;
+  const hi = S.historico.find(h => h.mes===selMes);
   if (hi) { hi.total = tot; hi.realizado = true; }
   else S.historico.push({ mes: selMes, total: tot, guardar: 0, realizado: true });
   S.historico.sort((a,b) => a.mes.localeCompare(b.mes));
-
-  closeModal('modal-patrimonio');
-  renderMensal();
-  try {
-    await saveData(S);
-    toast('Posição registrada!');
-  } catch(e) {
-    toast('Erro ao salvar. Verifique sua conexão.', true);
-  }
+  closeModal('modal-patrimonio'); renderMensal();
+  try { await saveData(S); toast('Posição registrada!'); } catch(e) { toast('Erro ao salvar. Verifique sua conexão.', true); }
 }
 
 // ============================================================
@@ -1753,57 +1639,37 @@ async function savePatrimonio() {
 // ============================================================
 function renderProjecao() {
   const clt_data = [
-    { mes: 'Jan', sal: 1712.12, vt: 264, vale: 3995, com: 1445, lume: 1700, jac: 1854.5, gastos: 7141.77, guardar: 900, pat: 78678.03 },
-    { mes: 'Fev', sal: 1051.12, vt: 264, vale: 2139.84, com: 734, lume: 3600, jac: 1856, extra: 10566.57, gastos: 9511.68, guardar: 12200, pat: 95314 },
-    { mes: 'Mar', sal: 1542.12, vt: 264, vale: 2139.84, com: 95, lume: 2200, jac: 1896, gastos: 9423.77, guardar: 0, pat: 94680.15 },
-    { mes: 'Abr', sal: 1542.12, vt: 264, vale: 2139.84, com: 748, lume: 4900, jac: 1713, gastos: 8870.56, guardar: 2600, pat: 93128.1 },
-    { mes: 'Mai', sal: 2594.12, vt: 264, vale: 3360.34, com: 761, lume: 2800, jac: 1772, gastos: 7800.11, guardar: 1962.01, pat: 93128.1 },
-    { mes: 'Jun', sal: 6894.12, vt: 264, vale: 2560.34, com: 761, lume: 2800, jac: 1772, extra: 4226.63, gastos: 5748.05, guardar: 8794.07, pat: null },
-    { mes: 'Jul', sal: 2594.12, vt: 264, vale: 2560.34, com: 761, lume: 2800, jac: 1772, gastos: 5748.05, guardar: 4494.07, pat: null },
-    { mes: 'Ago', sal: 2594.12, vt: 264, vale: 2560.34, com: 190, lume: 2800, jac: 1772, gastos: 5350.05, guardar: 4321.07, pat: null },
-    { mes: 'Set', sal: 2594.12, vt: 264, vale: 2560.34, com: 190, lume: 2800, jac: 1772, gastos: 5350.05, guardar: 4321.07, pat: null },
-    { mes: 'Out', sal: 2594.12, vt: 264, vale: 4355.83, com: 0, lume: 2800, jac: 1772, gastos: 5350.05, guardar: 4131.07, pat: null, obs:'Férias' },
-    { mes: 'Nov', sal: 2594.12, vt: 264, vale: 5829.22, com: 0, lume: 2800, jac: 1772, gastos: 5350.05, guardar: 4131.07, pat: null, obs:'13º' },
-    { mes: 'Dez', sal: 2594.12, vt: 264, vale: 6951, com: 0, lume: 2800, jac: 1772, gastos: 5350.05, guardar: 4131.07, pat: null, obs:'13º' },
+    { mes:'Jan', sal:1712.12, vt:264, vale:3995, com:1445, lume:1700, jac:1854.5, gastos:7141.77, guardar:900, pat:78678.03 },
+    { mes:'Fev', sal:1051.12, vt:264, vale:2139.84, com:734, lume:3600, jac:1856, extra:10566.57, gastos:9511.68, guardar:12200, pat:95314 },
+    { mes:'Mar', sal:1542.12, vt:264, vale:2139.84, com:95, lume:2200, jac:1896, gastos:9423.77, guardar:0, pat:94680.15 },
+    { mes:'Abr', sal:1542.12, vt:264, vale:2139.84, com:748, lume:4900, jac:1713, gastos:8870.56, guardar:2600, pat:93128.1 },
+    { mes:'Mai', sal:2594.12, vt:264, vale:3360.34, com:761, lume:2800, jac:1772, gastos:7800.11, guardar:1962.01, pat:93128.1 },
+    { mes:'Jun', sal:6894.12, vt:264, vale:2560.34, com:761, lume:2800, jac:1772, extra:4226.63, gastos:5748.05, guardar:8794.07, pat:null },
+    { mes:'Jul', sal:2594.12, vt:264, vale:2560.34, com:761, lume:2800, jac:1772, gastos:5748.05, guardar:4494.07, pat:null },
+    { mes:'Ago', sal:2594.12, vt:264, vale:2560.34, com:190, lume:2800, jac:1772, gastos:5350.05, guardar:4321.07, pat:null },
+    { mes:'Set', sal:2594.12, vt:264, vale:2560.34, com:190, lume:2800, jac:1772, gastos:5350.05, guardar:4321.07, pat:null },
+    { mes:'Out', sal:2594.12, vt:264, vale:4355.83, com:0, lume:2800, jac:1772, gastos:5350.05, guardar:4131.07, pat:null, obs:'Férias' },
+    { mes:'Nov', sal:2594.12, vt:264, vale:5829.22, com:0, lume:2800, jac:1772, gastos:5350.05, guardar:4131.07, pat:null, obs:'13º' },
+    { mes:'Dez', sal:2594.12, vt:264, vale:6951, com:0, lume:2800, jac:1772, gastos:5350.05, guardar:4131.07, pat:null, obs:'13º' },
   ];
   const realizados = ['Jan','Fev','Mar','Abr'];
-
   document.getElementById('tbody-projecao-clt').innerHTML = clt_data.map(r => {
     const isReal = realizados.includes(r.mes);
-    const total_ent = r.sal + r.vt + (r.vale||0) + r.com + r.lume + r.jac + (r.extra || 0);
+    const total_ent = r.sal+r.vt+(r.vale||0)+r.com+r.lume+r.jac+(r.extra||0);
     const color = isReal ? '' : 'color:var(--accent)';
-    return `<tr style="${color}">
-      <td class="label" style="color:inherit">${r.mes}${r.obs ? ` <span class="badge badge-yellow" style="font-size:10px">${r.obs}</span>` : ''}${isReal ? ' <span class="badge badge-green" style="font-size:10px">✓</span>' : ''}</td>
-      <td>${fmtR(r.sal)}</td><td>${fmtR(r.vt)}</td><td>${fmtR(r.vale||0)}</td>
-      <td>${fmtR(r.com)}</td><td>${fmtR(r.lume)}</td><td>${fmtR(r.jac)}</td>
-      <td style="font-weight:600">${fmtR(total_ent)}</td>
-      <td class="neg">${fmtR(r.gastos)}</td>
-      <td class="pos">${fmtR(r.guardar)}</td>
-      <td>${r.pat ? fmtR(r.pat) : '-'}</td>
-      <td class="${(() => { const prev = clt_data[clt_data.indexOf(r)-1]; if (!r.pat || !prev || !prev.pat) return ''; return r.pat >= prev.pat ? 'pos' : 'neg'; })()}">${(() => { const prev = clt_data[clt_data.indexOf(r)-1]; if (!r.pat || !prev || !prev.pat) return '-'; const v = (r.pat - prev.pat) / prev.pat; return (v >= 0 ? '+' : '') + (v*100).toFixed(2) + '%'; })()}</td>
-    </tr>`;
+    return `<tr style="${color}"><td class="label" style="color:inherit">${r.mes}${r.obs?` <span class="badge badge-yellow" style="font-size:10px">${r.obs}</span>`:''}${isReal?' <span class="badge badge-green" style="font-size:10px">✓</span>':''}</td><td>${fmtR(r.sal)}</td><td>${fmtR(r.vt)}</td><td>${fmtR(r.vale||0)}</td><td>${fmtR(r.com)}</td><td>${fmtR(r.lume)}</td><td>${fmtR(r.jac)}</td><td style="font-weight:600">${fmtR(total_ent)}</td><td class="neg">${fmtR(r.gastos)}</td><td class="pos">${fmtR(r.guardar)}</td><td>${r.pat?fmtR(r.pat):'-'}</td><td class="${(()=>{const prev=clt_data[clt_data.indexOf(r)-1];if(!r.pat||!prev||!prev.pat)return '';return r.pat>=prev.pat?'pos':'neg';})()}">${(()=>{const prev=clt_data[clt_data.indexOf(r)-1];if(!r.pat||!prev||!prev.pat)return '-';const v=(r.pat-prev.pat)/prev.pat;return (v>=0?'+':'')+(v*100).toFixed(2)+'%';})()}</td></tr>`;
   }).join('');
-
   const pj_data = [
-    { mes: 'Mai', sal: 13650, add: 800, com: 761, gastos: 11803.3, guardar: 10429.7, pat: 104432.8 },
-    { mes: 'Jun', sal: 13650, add: 4300, com: 761, gastos: 10229.3, guardar: 15503.7, pat: 119936.5, obs:'PLR' },
-    { mes: 'Jul', sal: 13650, add: 0, com: 761, gastos: 10229.3, guardar: 11203.7, pat: 131140.2 },
-    { mes: 'Ago', sal: 13650, add: 0, com: 190, gastos: 9831.3, guardar: 11030.7, pat: 142170.9 },
-    { mes: 'Set', sal: 13650, add: 0, com: 190, gastos: 9667.3, guardar: 11194.7, pat: 153365.6 },
-    { mes: 'Out', sal: 13650, add: 0, com: 0, gastos: 9667.3, guardar: 11004.7, pat: 164370.3, obs:'Férias' },
-    { mes: 'Nov', sal: 13650, add: 0, com: 0, gastos: 9667.3, guardar: 11004.7, pat: 175375 },
-    { mes: 'Dez', sal: 13650, add: 0, com: 0, gastos: 9667.3, guardar: 11004.7, pat: 186379.7 },
+    { mes:'Mai', sal:13650, add:800, com:761, gastos:11803.3, guardar:10429.7, pat:104432.8 },
+    { mes:'Jun', sal:13650, add:4300, com:761, gastos:10229.3, guardar:15503.7, pat:119936.5, obs:'PLR' },
+    { mes:'Jul', sal:13650, add:0, com:761, gastos:10229.3, guardar:11203.7, pat:131140.2 },
+    { mes:'Ago', sal:13650, add:0, com:190, gastos:9831.3, guardar:11030.7, pat:142170.9 },
+    { mes:'Set', sal:13650, add:0, com:190, gastos:9667.3, guardar:11194.7, pat:153365.6 },
+    { mes:'Out', sal:13650, add:0, com:0, gastos:9667.3, guardar:11004.7, pat:164370.3, obs:'Férias' },
+    { mes:'Nov', sal:13650, add:0, com:0, gastos:9667.3, guardar:11004.7, pat:175375 },
+    { mes:'Dez', sal:13650, add:0, com:0, gastos:9667.3, guardar:11004.7, pat:186379.7 },
   ];
-  document.getElementById('tbody-projecao-pj').innerHTML = pj_data.map(r => `
-    <tr style="color:var(--accent)">
-      <td class="label" style="color:var(--accent)">${r.mes}${r.obs ? ` <span class="badge badge-yellow" style="font-size:10px">${r.obs}</span>` : ''}</td>
-      <td>${fmtR(r.sal)}</td><td>${fmtR(r.add)}</td><td>${fmtR(r.com)}</td>
-      <td style="font-weight:600">${fmtR(r.sal + r.add + r.com)}</td>
-      <td class="neg">${fmtR(r.gastos)}</td>
-      <td class="pos">${fmtR(r.guardar)}</td>
-      <td>${fmtR(r.pat)}</td>
-    </tr>
-  `).join('');
+  document.getElementById('tbody-projecao-pj').innerHTML = pj_data.map(r => `<tr style="color:var(--accent)"><td class="label" style="color:var(--accent)">${r.mes}${r.obs?` <span class="badge badge-yellow" style="font-size:10px">${r.obs}</span>`:''}</td><td>${fmtR(r.sal)}</td><td>${fmtR(r.add)}</td><td>${fmtR(r.com)}</td><td style="font-weight:600">${fmtR(r.sal+r.add+r.com)}</td><td class="neg">${fmtR(r.gastos)}</td><td class="pos">${fmtR(r.guardar)}</td><td>${fmtR(r.pat)}</td></tr>`).join('');
 }
 
 // ============================================================
@@ -1813,7 +1679,6 @@ function renderInvestimentos() {
   syncInvAtual();
   const inv = S.inv_atual;
   const total = (inv.cash||0)+(inv.espanha||0)+(inv.xp||0)+(inv.nu||0);
-
   document.getElementById('inv-cards').innerHTML = `
     <div class="card blue"><div class="card-label">Total Patrimônio</div><div class="card-value">${fmtR(total)}</div></div>
     <div class="card"><div class="card-label">Cash</div><div class="card-value" style="font-size:17px">${fmtR(inv.cash)}</div></div>
@@ -1821,7 +1686,6 @@ function renderInvestimentos() {
     <div class="card green"><div class="card-label">XP Invest</div><div class="card-value" style="font-size:17px">${fmtR(inv.xp)}</div></div>
     <div class="card"><div class="card-label">Nubank</div><div class="card-value" style="font-size:17px">${fmtR(inv.nu)}</div></div>
   `;
-
   document.getElementById('saldos-conta').innerHTML = `
     <div class="inv-row"><div><div class="inv-name">Cash</div><div class="inv-type">Reserva líquida</div></div><span class="inv-value">${fmtR(inv.cash)}</span></div>
     <div class="inv-row"><div><div class="inv-name">Espanha (RGB)</div><div class="inv-type">Fundo de investimento</div></div><span class="inv-value">${fmtR(inv.espanha)}</span></div>
@@ -1829,7 +1693,6 @@ function renderInvestimentos() {
     <div class="inv-row"><div><div class="inv-name">Nubank</div><div class="inv-type">Conta corrente / reserva</div></div><span class="inv-value">${fmtR(inv.nu)}</span></div>
     <div class="inv-row" style="font-weight:700"><div><div class="inv-name">TOTAL</div></div><span class="inv-value pos">${fmtR(total)}</span></div>
   `;
-
   document.getElementById('xp-detalhada').innerHTML = `
     <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Posição em 18/04/2026 — R$ 82.187,98 total</div>
     <div class="inv-row"><div class="inv-name">Tesouro Selic LFT (mar/27, mar/28, mar/29)</div><div class="inv-type">41% — Pós-fixado</div><span style="font-family:var(--mono);color:var(--green)">R$ 33.686,31</span></div>
@@ -1845,36 +1708,25 @@ function renderInvestimentos() {
     <div class="inv-row"><div class="inv-name">CDB Picpay Prefixado jan/27</div><div class="inv-type">+14,11% a.a.</div><span style="font-family:var(--mono)">R$ 1.030,85</span></div>
     <div style="font-size:11px;color:var(--muted);margin-top:8px">⚠️ Atualize a posição XP manualmente clicando em "Atualizar" nas contas.</div>
   `;
-
   const hist = S.historico.slice().sort((a,b) => a.mes.localeCompare(b.mes));
   document.getElementById('tbody-inv-hist').innerHTML = hist.map(r => {
-    const md = S.meses[r.mes];
-    const pat = md && md.patrimonio;
-    return `<tr>
-      <td class="label">${mesLabel(r.mes)}</td>
-      <td>${pat ? fmtR(pat.cash) : '-'}</td>
-      <td>${pat ? fmtR(pat.espanha) : '-'}</td>
-      <td>${pat ? fmtR(pat.xp) : '-'}</td>
-      <td>${pat ? fmtR(pat.nu) : '-'}</td>
-      <td style="font-weight:600">${fmtR(r.total)}</td>
-      <td>-</td>
-    </tr>`;
+    const md = S.meses[r.mes]; const pat = md && md.patrimonio;
+    return `<tr><td class="label">${mesLabel(r.mes)}</td><td>${pat?fmtR(pat.cash):'-'}</td><td>${pat?fmtR(pat.espanha):'-'}</td><td>${pat?fmtR(pat.xp):'-'}</td><td>${pat?fmtR(pat.nu):'-'}</td><td style="font-weight:600">${fmtR(r.total)}</td><td>-</td></tr>`;
   }).join('');
 }
 
 async function salvarInvSaldo() {
   S.inv_atual = {
-    cash: +document.getElementById('is-cash').value || S.inv_atual.cash,
-    espanha: +document.getElementById('is-esp').value || S.inv_atual.espanha,
-    xp: +document.getElementById('is-xp').value || S.inv_atual.xp,
-    nu: +document.getElementById('is-nu').value || S.inv_atual.nu,
+    cash: +document.getElementById('is-cash').value||S.inv_atual.cash,
+    espanha: +document.getElementById('is-esp').value||S.inv_atual.espanha,
+    xp: +document.getElementById('is-xp').value||S.inv_atual.xp,
+    nu: +document.getElementById('is-nu').value||S.inv_atual.nu,
   };
   const tot = Object.values(S.inv_atual).reduce((s,v)=>s+v,0);
-  const hi = S.historico.find(h => h.mes === selMes);
-  if (hi) hi.total = tot; else S.historico.push({ mes: selMes, total: tot, guardar: 0, realizado: true });
+  const hi = S.historico.find(h => h.mes===selMes);
+  if (hi) hi.total=tot; else S.historico.push({ mes:selMes, total:tot, guardar:0, realizado:true });
   S.historico.sort((a,b) => a.mes.localeCompare(b.mes));
-  closeModal('modal-inv-saldo');
-  renderInvestimentos();
+  closeModal('modal-inv-saldo'); renderInvestimentos();
   try { await saveData(S); toast('Posição atualizada!'); } catch(e) { toast('Erro ao salvar', true); }
 }
 
@@ -1887,36 +1739,29 @@ function loadPLRInputs() {
   document.getElementById('plr-meta').value = S.plr.meta;
   document.getElementById('plr-churn').value = S.plr.churn;
   document.getElementById('plr-mult').value = S.plr.mult;
-  document.getElementById('plr-ating').value = S.plr.ating != null ? S.plr.ating : 100;
+  document.getElementById('plr-ating').value = S.plr.ating!=null ? S.plr.ating : 100;
 }
 
 async function calcPLR() {
-  S.plr.sal_baixo = +document.getElementById('plr-sal-baixo').value || 6952;
-  S.plr.sal_alto = +document.getElementById('plr-sal-alto').value || 7378;
-  S.plr.meta = +document.getElementById('plr-meta').value || 5300000000;
-  // Garante que churn é sempre decimal (ex: 0.30), não percentual (30)
-  let churnInput = +document.getElementById('plr-churn').value || 0.30;
-  if (churnInput > 1) churnInput = churnInput / 100; // converte 30 → 0.30
-  S.plr.churn = churnInput;
-  document.getElementById('plr-churn').value = churnInput; // normaliza o campo
-  S.plr.mult = +document.getElementById('plr-mult').value || 3;
-  S.plr.ating = +document.getElementById('plr-ating').value;
-  if (S.plr.ating == null || isNaN(S.plr.ating)) S.plr.ating = 100;
-
-  const sal_medio = ((S.plr.sal_baixo * 9) + (S.plr.sal_alto * 3)) / 12;
-  const plr_bruto = sal_medio * S.plr.mult;
-  // Aplica % de atingimento GRE sobre o bruto
-  const plr_real = plr_bruto * (S.plr.ating / 100);
-  // 1ª parcela = metade do PLR real
-  const plr1 = plr_real / 2;
-  // 2ª parcela = PLR real - churn - 1ª parcela
-  const plr_apos_churn = plr_real * (1 - S.plr.churn);
-  const plr2 = plr_apos_churn - plr1;
-
-  document.getElementById('plr-1a').textContent = fmtR(plr1);
-  document.getElementById('plr-2a').textContent = fmtR(plr2);
-  document.getElementById('plr-total').textContent = fmtR(plr1 + plr2);
-
+  S.plr.sal_baixo = +document.getElementById('plr-sal-baixo').value||6952;
+  S.plr.sal_alto  = +document.getElementById('plr-sal-alto').value||7378;
+  S.plr.meta      = +document.getElementById('plr-meta').value||5300000000;
+  let churnInput  = +document.getElementById('plr-churn').value||0.30;
+  if (churnInput>1) churnInput=churnInput/100;
+  S.plr.churn     = churnInput;
+  document.getElementById('plr-churn').value = churnInput;
+  S.plr.mult      = +document.getElementById('plr-mult').value||3;
+  S.plr.ating     = +document.getElementById('plr-ating').value;
+  if (S.plr.ating==null||isNaN(S.plr.ating)) S.plr.ating=100;
+  const sal_medio   = ((S.plr.sal_baixo*9)+(S.plr.sal_alto*3))/12;
+  const plr_bruto   = sal_medio*S.plr.mult;
+  const plr_real    = plr_bruto*(S.plr.ating/100);
+  const plr1        = plr_real/2;
+  const plr_apos_churn = plr_real*(1-S.plr.churn);
+  const plr2        = plr_apos_churn-plr1;
+  document.getElementById('plr-1a').textContent    = fmtR(plr1);
+  document.getElementById('plr-2a').textContent    = fmtR(plr2);
+  document.getElementById('plr-total').textContent = fmtR(plr1+plr2);
   document.getElementById('plr-detalhes').innerHTML = `
     <div class="inv-row"><div class="inv-name">Salário médio anual</div><span style="font-family:var(--mono)">${fmtR(sal_medio)}</span></div>
     <div class="inv-row"><div class="inv-name">Multiplicador PLR</div><span style="font-family:var(--mono)">${S.plr.mult}x</span></div>
@@ -1930,30 +1775,19 @@ async function calcPLR() {
     <hr class="divider">
     <div style="font-size:11px;color:var(--muted)">💡 A 2ª parcela abate o churn da carteira. Meta: ${(S.plr.meta/1e9).toFixed(1).replace('.',',')} bilhões.</div>
   `;
-
   try { await saveData(S); toast('PLR salvo!'); } catch(e) { /* silencioso */ }
 }
 
 function renderExtras() {
-  document.getElementById('extras-list').innerHTML = S.extras.length === 0
+  const el = document.getElementById('extras-list');
+  if (!el) return;
+  el.innerHTML = S.extras.length===0
     ? '<div style="color:var(--muted);font-size:13px">Nenhuma receita extra registrada.</div>'
-    : S.extras.map((e, i) => `
-      <div class="c6-item">
-        <div><div style="font-size:13px;font-weight:500">${e.desc}</div><div style="font-size:11px;color:var(--muted)">${mesLabel(e.mes)}</div></div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <span class="pos" style="font-family:var(--mono)">${fmtR(e.valor)}</span>
-          <button class="btn btn-danger btn-small" onclick="delExtra(${i})">×</button>
-        </div>
-      </div>
-    `).join('');
-
+    : S.extras.map((e,i) => `<div class="c6-item"><div><div style="font-size:13px;font-weight:500">${e.desc}</div><div style="font-size:11px;color:var(--muted)">${mesLabel(e.mes)}</div></div><div style="display:flex;align-items:center;gap:10px"><span class="pos" style="font-family:var(--mono)">${fmtR(e.valor)}</span><button class="btn btn-danger btn-small" onclick="delExtra(${i})">×</button></div></div>`).join('');
   const sel = document.getElementById('ext-mes');
   if (sel) {
     sel.innerHTML = '';
-    for (let m = 1; m <= 12; m++) {
-      const k = `${ANO}-${String(m).padStart(2,'0')}`;
-      sel.innerHTML += `<option value="${k}">${MESES[m-1]}</option>`;
-    }
+    for (let m=1;m<=12;m++) { const k=`${ANO}-${String(m).padStart(2,'0')}`; sel.innerHTML+=`<option value="${k}">${MESES[m-1]}</option>`; }
   }
 }
 
@@ -1961,42 +1795,192 @@ async function addExtra() {
   const desc = document.getElementById('ext-desc').value.trim();
   const valor = +document.getElementById('ext-val').value;
   const mes = document.getElementById('ext-mes').value;
-  if (!desc || !valor) { toast('Preencha descrição e valor', true); return; }
+  if (!desc||!valor) { toast('Preencha descrição e valor', true); return; }
   S.extras.push({ desc, valor, mes });
-  closeModal('modal-extra');
-  renderExtras();
+  closeModal('modal-extra'); renderExtras();
   try { await saveData(S); toast('Receita extra adicionada!'); } catch(e) { toast('Erro ao salvar', true); }
 }
 
 async function delExtra(i) {
-  S.extras.splice(i,1);
-  renderExtras();
+  S.extras.splice(i,1); renderExtras();
   try { await saveData(S); } catch(e) { toast('Erro ao salvar', true); }
+}
+
+// ============================================================
+// ✈️ VIAGENS
+// ============================================================
+let _viagemEditIdx = null;
+
+function abrirModalViagem(idx) {
+  _viagemEditIdx = (idx !== undefined) ? idx : null;
+  if (!S.viagens) S.viagens = [];
+  const v = (_viagemEditIdx !== null) ? S.viagens[_viagemEditIdx] : {};
+  document.getElementById('modal-viagem-titulo').textContent = (_viagemEditIdx !== null) ? '✏️ Editar Viagem' : '✈️ Nova Viagem';
+  document.getElementById('vi-titulo').value      = v.titulo      || '';
+  document.getElementById('vi-mes').value         = v.mes         || '';
+  document.getElementById('vi-status').value      = v.status      || 'planejando';
+  document.getElementById('vi-budget').value      = v.budget      || '';
+  document.getElementById('vi-passagens').value   = v.passagens   || '';
+  document.getElementById('vi-hospedagem').value  = v.hospedagem  || '';
+  document.getElementById('vi-transporte').value  = v.transporte  || '';
+  document.getElementById('vi-alimentacao').value = v.alimentacao || '';
+  document.getElementById('vi-lazer').value       = v.lazer       || '';
+  document.getElementById('vi-seguro').value      = v.seguro      || '';
+  document.getElementById('vi-outros').value      = v.outros      || '';
+  document.getElementById('vi-obs').value         = v.obs         || '';
+  openModal('modal-viagem');
+}
+
+async function salvarViagem() {
+  const titulo = document.getElementById('vi-titulo').value.trim();
+  if (!titulo) { toast('Informe o título da viagem', true); return; }
+  if (!S.viagens) S.viagens = [];
+  const viagem = {
+    titulo,
+    mes:         document.getElementById('vi-mes').value,
+    status:      document.getElementById('vi-status').value,
+    budget:      parseFloat(document.getElementById('vi-budget').value)      || 0,
+    passagens:   parseFloat(document.getElementById('vi-passagens').value)   || 0,
+    hospedagem:  parseFloat(document.getElementById('vi-hospedagem').value)  || 0,
+    transporte:  parseFloat(document.getElementById('vi-transporte').value)  || 0,
+    alimentacao: parseFloat(document.getElementById('vi-alimentacao').value) || 0,
+    lazer:       parseFloat(document.getElementById('vi-lazer').value)       || 0,
+    seguro:      parseFloat(document.getElementById('vi-seguro').value)      || 0,
+    outros:      parseFloat(document.getElementById('vi-outros').value)      || 0,
+    obs:         document.getElementById('vi-obs').value.trim(),
+  };
+  if (_viagemEditIdx !== null) { S.viagens[_viagemEditIdx] = viagem; }
+  else { S.viagens.push(viagem); }
+  closeModal('modal-viagem');
+  renderViagens();
+  try { await saveData(S); toast('Viagem salva!'); }
+  catch(e) { toast('Erro ao salvar', true); }
+}
+
+async function deletarViagem(idx) {
+  if (!confirm('Remover esta viagem?')) return;
+  S.viagens.splice(idx, 1);
+  renderViagens();
+  try { await saveData(S); toast('Viagem removida.'); }
+  catch(e) { toast('Erro ao salvar', true); }
+}
+
+function fmtMesViagem(mes) {
+  if (!mes) return '—';
+  const [y,m] = mes.split('-');
+  return MESES[parseInt(m)-1]+'/'+y;
+}
+
+function renderViagens() {
+  if (!S.viagens) S.viagens = [];
+
+  // ---- Cards de resumo ----
+  const total_viagens   = S.viagens.length;
+  const confirmadas     = S.viagens.filter(v => v.status==='confirmada').length;
+  const total_gasto     = S.viagens.reduce((s,v) => s+(v.passagens||0)+(v.hospedagem||0)+(v.transporte||0)+(v.alimentacao||0)+(v.lazer||0)+(v.seguro||0)+(v.outros||0), 0);
+  const total_budget    = S.viagens.reduce((s,v) => s+(v.budget||0), 0);
+  document.getElementById('viagens-resumo-cards').innerHTML = `
+    <div class="card blue"><div class="card-label">Total de Viagens</div><div class="card-value" style="font-size:20px">${total_viagens}</div><div class="card-sub">cadastradas</div></div>
+    <div class="card green"><div class="card-label">Confirmadas</div><div class="card-value" style="font-size:20px">${confirmadas}</div><div class="card-sub">prontas para ir</div></div>
+    <div class="card yellow"><div class="card-label">Total Budget</div><div class="card-value" style="font-size:16px">${fmtR(total_budget)}</div><div class="card-sub">soma de todas as viagens</div></div>
+    <div class="card ${total_gasto>total_budget&&total_budget>0?'red':''}"><div class="card-label">Total Gasto</div><div class="card-value" style="font-size:16px">${fmtR(total_gasto)}</div><div class="card-sub">${total_budget>0?((total_gasto/total_budget)*100).toFixed(0)+'% do budget':''}</div></div>
+  `;
+
+  // ---- Grid de cards ----
+  const lista = document.getElementById('viagens-lista');
+  if (S.viagens.length === 0) {
+    lista.innerHTML = `<div class="viagens-empty"><div class="viagens-empty-icon">✈️</div><strong>Nenhuma viagem cadastrada ainda.</strong><br>Clique em <strong>+ Nova Viagem</strong> para começar a planejar.</div>`;
+    return;
+  }
+
+  const badgeClass = { planejando:'vbadge-planejando', confirmada:'vbadge-confirmada', realizada:'vbadge-realizada', cancelada:'vbadge-cancelada' };
+  const badgeLabel = { planejando:'🗓 Planejando', confirmada:'✅ Confirmada', realizada:'🏁 Realizada', cancelada:'❌ Cancelada' };
+
+  const ordenadas = S.viagens.map((v,i) => ({...v, _idx:i})).sort((a,b) => (b.mes||'').localeCompare(a.mes||''));
+
+  lista.innerHTML = ordenadas.map(v => {
+    const total = (v.passagens||0)+(v.hospedagem||0)+(v.transporte||0)+(v.alimentacao||0)+(v.lazer||0)+(v.seguro||0)+(v.outros||0);
+    const budget = v.budget || 0;
+    const pct    = budget>0 ? Math.min((total/budget)*100, 100) : 0;
+    const sobra  = budget - total;
+    const over   = budget>0 && total>budget;
+    const fillCls = pct<70 ? 'vpfill-ok' : pct<95 ? 'vpfill-warn' : 'vpfill-over';
+
+    const itens = [
+      ['✈️ Passagens',    v.passagens],
+      ['🏨 Hospedagem',   v.hospedagem],
+      ['🚌 Transporte',   v.transporte],
+      ['🍽️ Alimentação',  v.alimentacao],
+      ['🎭 Lazer',        v.lazer],
+      ['🛡️ Seguro',       v.seguro],
+      ['📦 Outros',       v.outros],
+    ].filter(([,val]) => val>0);
+
+    return `
+    <div class="viagem-card">
+      <div class="viagem-card-header">
+        <div>
+          <div class="viagem-card-titulo">${v.titulo}</div>
+          <div class="viagem-card-mes">${fmtMesViagem(v.mes)}</div>
+        </div>
+        <span class="vbadge ${badgeClass[v.status]||''}">${badgeLabel[v.status]||v.status}</span>
+      </div>
+
+      ${budget>0 ? `
+      <div class="viagem-progress-wrap">
+        <div class="viagem-progress-label"><span>Gasto vs Budget</span><span>${pct.toFixed(0)}% — ${fmtR(total)} de ${fmtR(budget)}</span></div>
+        <div class="viagem-progress-bar"><div class="viagem-progress-fill ${fillCls}" style="width:${pct}%"></div></div>
+      </div>` : ''}
+
+      ${itens.length>0 ? `
+      <div class="viagem-itens">
+        ${itens.map(([label,val]) => `<div class="viagem-item-row"><span>${label}</span><span>${fmtR(val)}</span></div>`).join('')}
+      </div>` : `<div style="font-size:12px;color:var(--muted);padding:10px 0">Nenhum valor lançado ainda.</div>`}
+
+      <div class="viagem-totals">
+        <div class="viagem-total-row">
+          <span>Total Gastos</span>
+          <span class="${over?'vtotal-over':'vtotal-neu'}">${fmtR(total)}</span>
+        </div>
+        ${budget>0 ? `
+        <div class="viagem-total-row sub">
+          <span>${over?'⚠️ Excedeu em':'💚 Disponível'}</span>
+          <span class="${over?'vtotal-over':'vtotal-ok'}">${fmtR(Math.abs(sobra))}</span>
+        </div>` : ''}
+      </div>
+
+      ${v.obs ? `<div class="viagem-obs">📝 ${v.obs}</div>` : ''}
+
+      <div class="viagem-card-actions">
+        <button class="vbtn-edit" onclick="abrirModalViagem(${v._idx})">✏️ Editar</button>
+        <button class="vbtn-del"  onclick="deletarViagem(${v._idx})">🗑 Remover</button>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 // ============================================================
 // CONFIG
 // ============================================================
 async function saveConfig() {
-  S.config.salario = +document.getElementById('cfg-salario').value || 8471;
-  S.config.vt = +document.getElementById('cfg-vt').value || 264;
-  S.config.lume = +document.getElementById('cfg-lume').value || 2800;
-  S.config.jac = +document.getElementById('cfg-jac').value || 1772;
+  S.config.salario = +document.getElementById('cfg-salario').value||8471;
+  S.config.vt      = +document.getElementById('cfg-vt').value||264;
+  S.config.lume    = +document.getElementById('cfg-lume').value||2800;
+  S.config.jac     = +document.getElementById('cfg-jac').value||1772;
   try { await saveData(S); } catch(e) { toast('Erro ao salvar', true); }
 }
 
 function renderConfig() {
-  document.getElementById('cfg-salario').value = S.config.salario;
-  document.getElementById('cfg-vt').value = S.config.vt;
-  document.getElementById('cfg-lume').value = S.config.lume;
-  document.getElementById('cfg-jac').value = S.config.jac;
-  document.getElementById('data-ver-label').textContent = 'v' + DATA_VERSION;
-
-  document.getElementById('gastos-fixos-list').innerHTML = S.gastos_fixos.map((g, i) => `
+  document.getElementById('cfg-salario').value   = S.config.salario;
+  document.getElementById('cfg-vt').value        = S.config.vt;
+  document.getElementById('cfg-lume').value      = S.config.lume;
+  document.getElementById('cfg-jac').value       = S.config.jac;
+  document.getElementById('data-ver-label').textContent = 'v'+DATA_VERSION;
+  document.getElementById('gastos-fixos-list').innerHTML = S.gastos_fixos.map((g,i) => `
     <div class="c6-item">
       <div><div style="font-size:13px;font-weight:500">${g.nome}</div><div style="font-size:11px;color:var(--muted)">${g.tipo}</div></div>
       <div style="display:flex;align-items:center;gap:10px">
-        <input type="number" value="${g.valor}" 
+        <input type="number" value="${g.valor}"
           style="width:90px;background:var(--surface2);border:1px solid var(--border2);border-radius:5px;color:var(--text);padding:4px 8px;font-size:12px;font-family:var(--mono)"
           onchange="S.gastos_fixos[${i}].valor=+this.value; saveData(S).catch(e=>console.warn(e))">
         <button class="btn btn-danger btn-small" onclick="S.gastos_fixos.splice(${i},1);saveData(S).catch(e=>console.warn(e));renderConfig()">×</button>
@@ -2010,15 +1994,13 @@ async function addFixo() {
   const valor = +document.getElementById('fixo-val').value;
   const tipo = document.getElementById('fixo-tipo').value;
   if (!nome) { toast('Informe o nome', true); return; }
-  S.gastos_fixos.push({ id: Date.now(), nome, valor, tipo });
-  closeModal('modal-fixo');
-  renderConfig();
+  S.gastos_fixos.push({ id:Date.now(), nome, valor, tipo });
+  closeModal('modal-fixo'); renderConfig();
   try { await saveData(S); toast('Gasto fixo adicionado!'); } catch(e) { toast('Erro ao salvar', true); }
 }
 
 async function limparTudo() {
-  S = initState();
-  toast('Dados limpos!');
+  S = initState(); toast('Dados limpos!');
   try { await saveData(S); } catch(e) { toast('Erro ao salvar', true); }
   showPage('dashboard');
 }
@@ -2027,12 +2009,8 @@ async function importarDadosIniciais() {
   if (!confirm('Isso vai restaurar os dados iniciais e sobrescrever os atuais. Continuar?')) return;
   S = initState();
   document.getElementById('loading-overlay').style.display = 'flex';
-  try {
-    await saveData(S);
-    toast('Dados iniciais restaurados!');
-  } catch(e) {
-    toast('Erro ao salvar no Drive', true);
-  }
+  try { await saveData(S); toast('Dados iniciais restaurados!'); }
+  catch(e) { toast('Erro ao salvar no Drive', true); }
   document.getElementById('loading-overlay').style.display = 'none';
   showPage('dashboard');
 }
@@ -2043,7 +2021,7 @@ async function importarDadosIniciais() {
 function exportarExcel() {
   const wb = XLSX.utils.book_new();
   const lRows = [['Mês','Tipo/Categoria','Valor','Observação','Direção']];
-  Object.entries(S.meses).sort().forEach(([mes, md]) => {
+  Object.entries(S.meses).sort().forEach(([mes,md]) => {
     md.entradas.forEach(e => lRows.push([mesLabel(mes), e.tipo, e.valor, e.obs, 'Entrada']));
     md.saidas.forEach(s => lRows.push([mesLabel(mes), s.categoria, s.valor, s.obs, 'Saída']));
   });
@@ -2052,11 +2030,20 @@ function exportarExcel() {
   S.historico.forEach(h => hRows.push([mesLabel(h.mes), h.total, h.guardar]));
   XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(hRows), 'Histórico');
   const iRows = [['Conta','Valor Atual'],
-    ['Cash', S.inv_atual.cash], ['Espanha', S.inv_atual.espanha],
-    ['XP Invest', S.inv_atual.xp], ['Nubank', S.inv_atual.nu],
-    ['TOTAL', S.inv_atual.cash+S.inv_atual.espanha+S.inv_atual.xp+S.inv_atual.nu],
+    ['Cash',S.inv_atual.cash],['Espanha',S.inv_atual.espanha],
+    ['XP Invest',S.inv_atual.xp],['Nubank',S.inv_atual.nu],
+    ['TOTAL',S.inv_atual.cash+S.inv_atual.espanha+S.inv_atual.xp+S.inv_atual.nu],
   ];
   XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(iRows), 'Investimentos');
+  // Aba viagens no Excel
+  if (S.viagens && S.viagens.length>0) {
+    const vRows = [['Título','Mês','Status','Budget','Passagens','Hospedagem','Transporte','Alimentação','Lazer','Seguro','Outros','Total Gasto','Saldo','Observação']];
+    S.viagens.forEach(v => {
+      const tot = (v.passagens||0)+(v.hospedagem||0)+(v.transporte||0)+(v.alimentacao||0)+(v.lazer||0)+(v.seguro||0)+(v.outros||0);
+      vRows.push([v.titulo, fmtMesViagem(v.mes), v.status, v.budget||0, v.passagens||0, v.hospedagem||0, v.transporte||0, v.alimentacao||0, v.lazer||0, v.seguro||0, v.outros||0, tot, (v.budget||0)-tot, v.obs||'']);
+    });
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(vRows), 'Viagens');
+  }
   XLSX.writeFile(wb, `controle-financeiro-${new Date().toISOString().split('T')[0]}.xlsx`);
   toast('Excel exportado!');
 }
@@ -2066,15 +2053,14 @@ function exportarExcel() {
 // ============================================================
 function mesLabel(k) {
   if (!k) return '';
-  const [ano, m] = k.split('-');
-  return MESES[+m - 1] + '/' + ano;
+  const [ano,m] = k.split('-');
+  return MESES[+m-1]+'/'+ano;
 }
 
-function toast(msg, isErr = false) {
+function toast(msg, isErr=false) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'show' + (isErr ? ' error' : '');
-  setTimeout(() => t.className = '', 2600);
+  t.textContent = msg; t.className = 'show'+(isErr?' error':'');
+  setTimeout(() => t.className='', 2600);
 }
 
 document.getElementById('hoje-label').textContent = new Date().toLocaleDateString('pt-BR', { weekday:'short', day:'2-digit', month:'short', year:'numeric' });
