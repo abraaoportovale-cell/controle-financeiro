@@ -191,6 +191,40 @@
   .c6-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); }
   .c6-item:last-child { border-bottom: none; }
 
+  /* ================================================================
+     ETAPAS (5º Dia Útil / Vale dia 20) — Lançamentos
+  ================================================================ */
+  .etapa-block { margin-bottom: 22px; }
+  .etapa-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-bottom: 8px; margin-bottom: 10px; border-bottom: 1px solid var(--border2);
+  }
+  .etapa-titulo { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--text); display: flex; align-items: center; gap: 6px; }
+  .etapa-titulo .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+  .dot-5du { background: var(--accent); }
+  .dot-vale { background: var(--accent2); }
+  .etapa-sobra { font-family: var(--mono); font-size: 13px; font-weight: 700; }
+
+  .lanc-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 0; border-bottom: 1px solid var(--border);
+    transition: background .2s, opacity .2s;
+    border-radius: 6px;
+  }
+  .lanc-item:last-child { border-bottom: none; }
+  .lanc-item.paga { background: rgba(41,217,142,.10); }
+  .lanc-left { display:flex; align-items:center; gap:10px; min-width:0; }
+  .lanc-check {
+    width: 17px; height: 17px; flex-shrink: 0; cursor: pointer; accent-color: var(--green);
+  }
+  .lanc-nome { font-size: 13px; font-weight: 500; }
+  .lanc-obs { font-size: 11px; color: var(--muted); }
+
+  .etapa-empty { color: var(--muted); font-size: 12px; padding: 8px 0; }
+  .etapa-divider-row { display:grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 22px; }
+  @media (max-width: 900px) { .etapa-divider-row { grid-template-columns: 1fr; } }
+  .etapa-col-title { font-size: 11px; font-weight: 700; text-transform:uppercase; letter-spacing:.5px; color: var(--muted); margin-bottom: 8px; }
+
   .tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
   .tab {
     padding: 10px 18px; font-size: 13px; font-weight: 500; cursor: pointer;
@@ -456,32 +490,71 @@
 <!-- PAGE: MENSAL -->
 <div class="page" id="page-mensal">
   <div class="month-selector" id="month-selector-mensal"></div>
-  <div class="two-col">
-    <div class="section">
-      <div class="section-header">
-        <div class="section-title">💚 Entradas — <span id="sel-mes-label">Jan</span></div>
-        <button class="btn btn-small btn-ghost" onclick="openModal('modal-entrada')">+ Adicionar</button>
-      </div>
-      <div id="entradas-list"></div>
-      <hr class="divider">
-      <div style="display:flex;justify-content:space-between;font-weight:600;">
-        <span>Total Entradas</span>
-        <span style="font-family:var(--mono);color:var(--green);" id="total-entradas">R$ 0</span>
+
+  <!-- BLOCO 5º DIA ÚTIL -->
+  <div class="section etapa-block">
+    <div class="etapa-header">
+      <div class="etapa-titulo"><span class="dot dot-5du"></span>5º Dia Útil — <span id="sel-mes-label">Jan</span></div>
+      <div style="display:flex;align-items:center;gap:14px;">
+        <span class="etapa-sobra" id="sobra-5du">R$ 0</span>
+        <button class="btn btn-small btn-ghost" onclick="openModal('modal-entrada','5DU')">+ Entrada</button>
+        <button class="btn btn-small btn-ghost" onclick="openModal('modal-saida','5DU')">+ Saída</button>
       </div>
     </div>
-    <div class="section">
-      <div class="section-header">
-        <div class="section-title">❤️ Saídas — <span id="sel-mes-label2">Jan</span></div>
-        <button class="btn btn-small btn-ghost" onclick="openModal('modal-saida')">+ Adicionar</button>
+    <div class="etapa-divider-row">
+      <div>
+        <div class="etapa-col-title">💚 Entradas</div>
+        <div id="entradas-list-5du"></div>
+        <hr class="divider">
+        <div style="display:flex;justify-content:space-between;font-weight:600;">
+          <span>Total Entradas</span>
+          <span style="font-family:var(--mono);color:var(--green);" id="total-entradas-5du">R$ 0</span>
+        </div>
       </div>
-      <div id="saidas-list"></div>
-      <hr class="divider">
-      <div style="display:flex;justify-content:space-between;font-weight:600;">
-        <span>Total Saídas</span>
-        <span style="font-family:var(--mono);color:var(--red);" id="total-saidas">R$ 0</span>
+      <div>
+        <div class="etapa-col-title">❤️ Saídas</div>
+        <div id="saidas-list-5du"></div>
+        <hr class="divider">
+        <div style="display:flex;justify-content:space-between;font-weight:600;">
+          <span>Total Saídas</span>
+          <span style="font-family:var(--mono);color:var(--red);" id="total-saidas-5du">R$ 0</span>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- BLOCO VALE (DIA 20) -->
+  <div class="section etapa-block">
+    <div class="etapa-header">
+      <div class="etapa-titulo"><span class="dot dot-vale"></span>Vale — Dia 20 — <span id="sel-mes-label2">Jan</span></div>
+      <div style="display:flex;align-items:center;gap:14px;">
+        <span class="etapa-sobra" id="sobra-vale">R$ 0</span>
+        <button class="btn btn-small btn-ghost" onclick="openModal('modal-entrada','VALE')">+ Entrada</button>
+        <button class="btn btn-small btn-ghost" onclick="openModal('modal-saida','VALE')">+ Saída</button>
+      </div>
+    </div>
+    <div class="etapa-divider-row">
+      <div>
+        <div class="etapa-col-title">💚 Entradas</div>
+        <div id="entradas-list-vale"></div>
+        <hr class="divider">
+        <div style="display:flex;justify-content:space-between;font-weight:600;">
+          <span>Total Entradas</span>
+          <span style="font-family:var(--mono);color:var(--green);" id="total-entradas-vale">R$ 0</span>
+        </div>
+      </div>
+      <div>
+        <div class="etapa-col-title">❤️ Saídas</div>
+        <div id="saidas-list-vale"></div>
+        <hr class="divider">
+        <div style="display:flex;justify-content:space-between;font-weight:600;">
+          <span>Total Saídas</span>
+          <span style="font-family:var(--mono);color:var(--red);" id="total-saidas-vale">R$ 0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="section" id="resumo-mes">
     <div class="section-title" style="margin-bottom:16px;">📊 Resumo do Mês</div>
     <div class="cards" id="resumo-cards"></div>
@@ -657,6 +730,13 @@
     <h3>+ Nova Entrada</h3>
     <div class="form-grid">
       <div class="form-group">
+        <label>Etapa</label>
+        <select id="ent-etapa">
+          <option value="5DU">5º Dia Útil</option>
+          <option value="VALE">Vale (dia 20)</option>
+        </select>
+      </div>
+      <div class="form-group">
         <label>Tipo</label>
         <select id="ent-tipo">
           <option>Salário (5º dia útil)</option><option>VT (Vale Transporte)</option>
@@ -679,6 +759,13 @@
   <div class="modal">
     <h3>+ Nova Saída</h3>
     <div class="form-grid">
+      <div class="form-group">
+        <label>Etapa</label>
+        <select id="sai-etapa">
+          <option value="5DU">5º Dia Útil</option>
+          <option value="VALE">Vale (dia 20)</option>
+        </select>
+      </div>
       <div class="form-group">
         <label>Categoria</label>
         <select id="sai-categoria">
@@ -1408,7 +1495,7 @@ function showTab(tabGroupId, tabId) {
 // ============================================================
 // MODALS
 // ============================================================
-function openModal(id) {
+function openModal(id, etapaPreSel) {
   document.getElementById(id).classList.add('open');
   if (id === 'modal-patrimonio') {
     const md = getMesData(selMes);
@@ -1425,6 +1512,8 @@ function openModal(id) {
     document.getElementById('is-xp').value = S.inv_atual.xp || '';
     document.getElementById('is-nu').value = S.inv_atual.nu || '';
   }
+  if (id === 'modal-entrada') { document.getElementById('ent-etapa').value = etapaPreSel || '5DU'; }
+  if (id === 'modal-saida') { document.getElementById('sai-etapa').value = etapaPreSel || '5DU'; }
 }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 document.querySelectorAll('.modal-bg').forEach(m => m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); }));
@@ -1518,6 +1607,23 @@ function buildMesSel(containerId, onChange) {
   }
 }
 
+// Classifica um lançamento em '5DU' ou 'VALE'.
+// Usa o campo explícito `etapa` se existir (lançamentos novos sempre terão isso).
+// Para dados antigos (sem o campo), deduz pelo texto:
+//  - Saídas antigas sempre têm a obs "5º DU" ou "Vale (dia 20)" → usa a obs.
+//  - Entradas antigas usam o `tipo`: "Vale (Adiant...)" é Vale; "VT (Vale Transporte)" continua 5DU
+//    apesar de ter a palavra "vale" no nome, pois é pago junto do salário.
+// Sem nenhuma pista, cai em 5DU por padrão.
+function getEtapa(item) {
+  if (item.etapa === '5DU' || item.etapa === 'VALE') return item.etapa;
+  const obs = (item.obs || '').toLowerCase();
+  if (obs.includes('vale (dia 20)') || obs.includes('vale(dia 20)')) return 'VALE';
+  if (obs.includes('5º du') || obs.includes('5 du') || obs.includes('5ºdu')) return '5DU';
+  const tipo = (item.tipo || '').toLowerCase();
+  if (tipo.startsWith('vale (adiant')) return 'VALE';
+  return '5DU';
+}
+
 function renderMensal() {
   buildMesSel('month-selector-mensal', renderMensal);
   const md = getMesData(selMes);
@@ -1525,16 +1631,74 @@ function renderMensal() {
   const label = MESES[+m-1]+' '+ANO;
   document.getElementById('sel-mes-label').textContent = label;
   document.getElementById('sel-mes-label2').textContent = label;
+
+  const entradas5du = []; const entradasVale = [];
+  md.entradas.forEach((e,i) => (getEtapa(e)==='VALE' ? entradasVale : entradas5du).push({...e, _idx:i}));
+  const saidas5du = []; const saidasVale = [];
+  md.saidas.forEach((e,i) => (getEtapa(e)==='VALE' ? saidasVale : saidas5du).push({...e, _idx:i}));
+
+  function rowEntrada(e) {
+    return `<div class="lanc-item">
+      <div class="lanc-left">
+        <div><div class="lanc-nome">${e.tipo}</div>${e.obs?`<div class="lanc-obs">${e.obs}</div>`:''}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span class="pos" style="font-family:var(--mono)">${fmtR(e.valor)}</span>
+        <button class="btn btn-ghost btn-small" onclick="editEntrada(${e._idx})" style="padding:5px 9px">✎</button>
+        <button class="btn btn-danger btn-small" onclick="delEntrada(${e._idx})">×</button>
+      </div>
+    </div>`;
+  }
+  function rowSaida(e) {
+    const paga = !!e.pago;
+    return `<div class="lanc-item ${paga?'paga':''}">
+      <div class="lanc-left">
+        <input type="checkbox" class="lanc-check" ${paga?'checked':''} onchange="togglePagoSaida(${e._idx})" title="Marcar como pago">
+        <div><div class="lanc-nome">${e.categoria}</div>${e.obs?`<div class="lanc-obs">${e.obs}</div>`:''}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span class="neg" style="font-family:var(--mono)">${fmtR(e.valor)}</span>
+        <button class="btn btn-ghost btn-small" onclick="editSaida(${e._idx})" style="padding:5px 9px">✎</button>
+        <button class="btn btn-danger btn-small" onclick="delSaida(${e._idx})">×</button>
+      </div>
+    </div>`;
+  }
+
+  // --- 5º Dia Útil ---
+  document.getElementById('entradas-list-5du').innerHTML = entradas5du.length===0
+    ? '<div class="etapa-empty">Nenhuma entrada nesta etapa.</div>'
+    : entradas5du.map(rowEntrada).join('');
+  document.getElementById('saidas-list-5du').innerHTML = saidas5du.length===0
+    ? '<div class="etapa-empty">Nenhuma saída nesta etapa.</div>'
+    : saidas5du.map(rowSaida).join('');
+  const ent5duTotal = entradas5du.reduce((s,e)=>s+(+e.valor||0),0);
+  const sai5duTotal = saidas5du.reduce((s,e)=>s+(+e.valor||0),0);
+  const sobra5du = ent5duTotal - sai5duTotal;
+  document.getElementById('total-entradas-5du').textContent = fmtR(ent5duTotal);
+  document.getElementById('total-saidas-5du').textContent = fmtR(sai5duTotal);
+  const sobra5duEl = document.getElementById('sobra-5du');
+  sobra5duEl.textContent = 'Sobra: ' + fmtR(sobra5du);
+  sobra5duEl.style.color = sobra5du>=0 ? 'var(--green)' : 'var(--red)';
+
+  // --- Vale (dia 20) ---
+  document.getElementById('entradas-list-vale').innerHTML = entradasVale.length===0
+    ? '<div class="etapa-empty">Nenhuma entrada nesta etapa.</div>'
+    : entradasVale.map(rowEntrada).join('');
+  document.getElementById('saidas-list-vale').innerHTML = saidasVale.length===0
+    ? '<div class="etapa-empty">Nenhuma saída nesta etapa.</div>'
+    : saidasVale.map(rowSaida).join('');
+  const entValeTotal = entradasVale.reduce((s,e)=>s+(+e.valor||0),0);
+  const saiValeTotal = saidasVale.reduce((s,e)=>s+(+e.valor||0),0);
+  const sobraVale = entValeTotal - saiValeTotal;
+  document.getElementById('total-entradas-vale').textContent = fmtR(entValeTotal);
+  document.getElementById('total-saidas-vale').textContent = fmtR(saiValeTotal);
+  const sobraValeEl = document.getElementById('sobra-vale');
+  sobraValeEl.textContent = 'Sobra: ' + fmtR(sobraVale);
+  sobraValeEl.style.color = sobraVale>=0 ? 'var(--green)' : 'var(--red)';
+
+  // --- Resumo geral do mês (mantém comportamento já existente) ---
   const entTotal = md.entradas.reduce((s,e) => s+(+e.valor||0), 0);
-  document.getElementById('entradas-list').innerHTML = md.entradas.length===0
-    ? '<div style="color:var(--muted);font-size:13px;padding:8px 0">Nenhuma entrada registrada.</div>'
-    : md.entradas.map((e,i) => `<div class="c6-item"><div><div style="font-size:13px;font-weight:500">${e.tipo}</div>${e.obs?`<div style="font-size:11px;color:var(--muted)">${e.obs}</div>`:''}</div><div style="display:flex;align-items:center;gap:10px"><span class="pos" style="font-family:var(--mono)">${fmtR(e.valor)}</span><button class="btn btn-ghost btn-small" onclick="editEntrada(${i})" style="padding:5px 9px">✎</button><button class="btn btn-danger btn-small" onclick="delEntrada(${i})">×</button></div></div>`).join('');
-  document.getElementById('total-entradas').textContent = fmtR(entTotal);
   const saiTotal = md.saidas.reduce((s,e) => s+(+e.valor||0), 0);
-  document.getElementById('saidas-list').innerHTML = md.saidas.length===0
-    ? '<div style="color:var(--muted);font-size:13px;padding:8px 0">Nenhuma saída registrada.</div>'
-    : md.saidas.map((e,i) => `<div class="c6-item"><div><div style="font-size:13px;font-weight:500">${e.categoria}</div>${e.obs?`<div style="font-size:11px;color:var(--muted)">${e.obs}</div>`:''}</div><div style="display:flex;align-items:center;gap:10px"><span class="neg" style="font-family:var(--mono)">${fmtR(e.valor)}</span><button class="btn btn-ghost btn-small" onclick="editSaida(${i})" style="padding:5px 9px">✎</button><button class="btn btn-danger btn-small" onclick="delSaida(${i})">×</button></div></div>`).join('');
-  document.getElementById('total-saidas').textContent = fmtR(saiTotal);
   const sobra = entTotal - saiTotal;
   const pct_gasto = entTotal>0 ? (saiTotal/entTotal)*100 : 0;
   document.getElementById('resumo-cards').innerHTML = `
@@ -1551,12 +1715,20 @@ function renderMensal() {
   }
 }
 
+async function togglePagoSaida(i) {
+  const md = getMesData(selMes);
+  md.saidas[i].pago = !md.saidas[i].pago;
+  renderMensal();
+  try { await saveData(S); } catch(e) { toast('Erro ao salvar', true); }
+}
+
 async function addEntrada() {
+  const etapa = document.getElementById('ent-etapa').value;
   const tipo = document.getElementById('ent-tipo').value;
   const valor = +document.getElementById('ent-valor').value;
   const obs = document.getElementById('ent-obs').value;
   if (!valor) { toast('Informe o valor', true); return; }
-  getMesData(selMes).entradas.push({ tipo, valor, obs });
+  getMesData(selMes).entradas.push({ tipo, valor, obs, etapa });
   closeModal('modal-entrada'); renderMensal();
   try { await saveData(S); toast('Entrada adicionada!'); } catch(e) { toast('Erro ao salvar. Verifique sua conexão.', true); }
 }
@@ -1567,11 +1739,12 @@ async function delEntrada(i) {
 }
 
 async function addSaida() {
+  const etapa = document.getElementById('sai-etapa').value;
   const categoria = document.getElementById('sai-categoria').value;
   const valor = +document.getElementById('sai-valor').value;
   const obs = document.getElementById('sai-obs').value;
   if (!valor) { toast('Informe o valor', true); return; }
-  getMesData(selMes).saidas.push({ categoria, valor, obs });
+  getMesData(selMes).saidas.push({ categoria, valor, obs, etapa, pago: false });
   closeModal('modal-saida'); renderMensal();
   try { await saveData(S); toast('Saída adicionada!'); } catch(e) { toast('Erro ao salvar. Verifique sua conexão.', true); }
 }
@@ -1588,7 +1761,12 @@ function editEntrada(i) {
   const e = getMesData(selMes).entradas[i];
   document.getElementById('modal-editar-title').textContent = 'Editar Entrada';
   const tipos = ['Salário (5º dia útil)','VT (Vale Transporte)','Vale (Adiant. 40% — dia 20)','Comissão','Lume+CS','JAC','PLR','13º Salário','Outro'];
+  const etapaAtual = getEtapa(e);
   document.getElementById('modal-editar-fields').innerHTML =
+    '<div class="form-group"><label>Etapa</label><select id="ed-etapa">'+
+      '<option value="5DU" '+(etapaAtual==='5DU'?'selected':'')+'>5º Dia Útil</option>'+
+      '<option value="VALE" '+(etapaAtual==='VALE'?'selected':'')+'>Vale (dia 20)</option>'+
+    '</select></div>'+
     '<div class="form-group"><label>Tipo</label><select id="ed-tipo">'+tipos.map(t=>'<option '+(t===e.tipo?'selected':'')+'>'+t+'</option>').join('')+'</select></div>'+
     '<div class="form-group"><label>Valor (R$)</label><input type="number" id="ed-valor" value="'+e.valor+'"></div>'+
     '<div class="form-group full-width"><label>Observação</label><input type="text" id="ed-obs" value="'+(e.obs||'')+'"></div>';
@@ -1600,7 +1778,12 @@ function editSaida(i) {
   const e = getMesData(selMes).saidas[i];
   document.getElementById('modal-editar-title').textContent = 'Editar Saída';
   const cats = ['Acidente','Luz','Habitação','Nubank','XP','Inglês','C6 Lucas','IPTU','Santander','Itaú','Condomínio','Espanha','Lazer/Férias','Alimentação','Transporte','Outro'];
+  const etapaAtual = getEtapa(e);
   document.getElementById('modal-editar-fields').innerHTML =
+    '<div class="form-group"><label>Etapa</label><select id="ed-etapa">'+
+      '<option value="5DU" '+(etapaAtual==='5DU'?'selected':'')+'>5º Dia Útil</option>'+
+      '<option value="VALE" '+(etapaAtual==='VALE'?'selected':'')+'>Vale (dia 20)</option>'+
+    '</select></div>'+
     '<div class="form-group"><label>Categoria</label><select id="ed-cat">'+cats.map(c=>'<option '+(c===e.categoria?'selected':'')+'>'+c+'</option>').join('')+'</select></div>'+
     '<div class="form-group"><label>Valor (R$)</label><input type="number" id="ed-valor" value="'+e.valor+'"></div>'+
     '<div class="form-group full-width"><label>Observação</label><input type="text" id="ed-obs" value="'+(e.obs||'')+'"></div>';
@@ -1610,10 +1793,15 @@ function editSaida(i) {
 async function salvarEdicao() {
   const valor = +document.getElementById('ed-valor').value;
   const obs = document.getElementById('ed-obs').value;
+  const etapa = document.getElementById('ed-etapa').value;
   if (!valor) { toast('Informe o valor', true); return; }
   const md = getMesData(selMes);
-  if (_editTipo==='entrada') { md.entradas[_editIdx] = { tipo: document.getElementById('ed-tipo').value, valor, obs }; }
-  else { md.saidas[_editIdx] = { categoria: document.getElementById('ed-cat').value, valor, obs }; }
+  if (_editTipo==='entrada') {
+    md.entradas[_editIdx] = { tipo: document.getElementById('ed-tipo').value, valor, obs, etapa };
+  } else {
+    const pagoAtual = md.saidas[_editIdx].pago || false;
+    md.saidas[_editIdx] = { categoria: document.getElementById('ed-cat').value, valor, obs, etapa, pago: pagoAtual };
+  }
   closeModal('modal-editar'); renderMensal();
   try { await saveData(S); toast('Lançamento atualizado!'); } catch(e) { toast('Erro ao salvar', true); }
 }
