@@ -1915,19 +1915,15 @@ async function salvarInvSaldo() {
     nu:      vNu   !== '' ? +vNu   : S.inv_atual.nu,
   };
 
-  // Atualiza inv_atual diretamente
+  // Salva sempre no mês calendário atual — assim syncInvAtual pega este como o mais recente
+  const mesAtual = calcSelMes();
+  getMesData(mesAtual).patrimonio = { ...novaPos };
   S.inv_atual = { ...novaPos };
 
-  // Descobre qual mês é o mais recente com patrimônio registrado
-  // e atualiza ELE — assim syncInvAtual vai achar o valor certo
-  const mesesComPat = Object.keys(S.meses).filter(k => S.meses[k] && S.meses[k].patrimonio).sort();
-  const mesSalvo = mesesComPat.length > 0 ? mesesComPat[mesesComPat.length - 1] : selMes;
-  getMesData(mesSalvo).patrimonio = { ...novaPos };
-
   const tot = novaPos.cash + novaPos.espanha + novaPos.xp + novaPos.nu;
-  const hi = S.historico.find(h => h.mes === mesSalvo);
+  const hi = S.historico.find(h => h.mes === mesAtual);
   if (hi) { hi.total = tot; hi.realizado = true; }
-  else { S.historico.push({ mes: mesSalvo, total: tot, guardar: 0, realizado: true }); }
+  else { S.historico.push({ mes: mesAtual, total: tot, guardar: 0, realizado: true }); }
   S.historico.sort((a, b) => a.mes.localeCompare(b.mes));
 
   closeModal('modal-inv-saldo');
