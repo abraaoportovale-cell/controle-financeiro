@@ -1904,16 +1904,25 @@ function renderInvestimentos() {
 }
 
 async function salvarInvSaldo() {
-  S.inv_atual = {
-    cash: +document.getElementById('is-cash').value||S.inv_atual.cash,
-    espanha: +document.getElementById('is-esp').value||S.inv_atual.espanha,
-    xp: +document.getElementById('is-xp').value||S.inv_atual.xp,
-    nu: +document.getElementById('is-nu').value||S.inv_atual.nu,
+  // Usa ?? (nullish) em vez de || para não tratar 0 como ausente
+  const vCash   = document.getElementById('is-cash').value.trim();
+  const vEsp    = document.getElementById('is-esp').value.trim();
+  const vXp     = document.getElementById('is-xp').value.trim();
+  const vNu     = document.getElementById('is-nu').value.trim();
+  const novaPos = {
+    cash:    vCash    !== '' ? +vCash    : S.inv_atual.cash,
+    espanha: vEsp     !== '' ? +vEsp     : S.inv_atual.espanha,
+    xp:      vXp      !== '' ? +vXp      : S.inv_atual.xp,
+    nu:      vNu      !== '' ? +vNu      : S.inv_atual.nu,
   };
-  const tot = Object.values(S.inv_atual).reduce((s,v)=>s+v,0);
-  const hi = S.historico.find(h => h.mes===selMes);
-  if (hi) hi.total=tot; else S.historico.push({ mes:selMes, total:tot, guardar:0, realizado:true });
-  S.historico.sort((a,b) => a.mes.localeCompare(b.mes));
+  S.inv_atual = novaPos;
+  // Grava também como patrimônio do mês atual, para que syncInvAtual não reverta na próxima renderização
+  getMesData(selMes).patrimonio = { ...novaPos };
+  const tot = novaPos.cash + novaPos.espanha + novaPos.xp + novaPos.nu;
+  const hi = S.historico.find(h => h.mes === selMes);
+  if (hi) { hi.total = tot; hi.realizado = true; }
+  else { S.historico.push({ mes: selMes, total: tot, guardar: 0, realizado: true }); }
+  S.historico.sort((a, b) => a.mes.localeCompare(b.mes));
   closeModal('modal-inv-saldo'); renderInvestimentos();
   try { await saveData(S); toast('Posição atualizada!'); } catch(e) { toast('Erro ao salvar', true); }
 }
