@@ -269,8 +269,121 @@
   .chip { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 20px; font-size: 11px; background: var(--surface2); border: 1px solid var(--border2); color: var(--muted); margin: 2px; }
 
   /* ================================================================
-     VIAGENS — estilos
+     TABELA PLANILHA — Lançamentos
   ================================================================ */
+  #tabela-lancamentos th, #tabela-lancamentos td {
+    border: 1px solid var(--border);
+    padding: 0;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+  #tabela-lancamentos thead tr:first-child th {
+    background: #0d1117;
+    color: var(--muted);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    padding: 6px 8px;
+    font-weight: 700;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  /* Grupos de colunas */
+  .th-group-ent   { background: rgba(79,142,247,.18) !important; color: var(--accent) !important; }
+  .th-group-sub   { background: rgba(41,217,142,.18) !important; color: var(--green)  !important; }
+  .th-group-gasto { background: rgba(240,92,110,.18) !important; color: var(--red)    !important; }
+  .th-group-res   { background: rgba(245,200,66,.18) !important; color: var(--yellow) !important; }
+  .th-group-meta  { background: rgba(124,92,252,.18) !important; color: var(--accent2)!important; }
+
+  /* Linha de mês (ref + data) */
+  .tl-ref {
+    background: var(--surface);
+    padding: 5px 10px;
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    font-weight: 700;
+    position: sticky;
+    left: 0;
+    z-index: 5;
+    min-width: 54px;
+  }
+  .tl-data {
+    background: var(--surface);
+    padding: 5px 8px;
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    position: sticky;
+    left: 54px;
+    z-index: 5;
+    min-width: 86px;
+  }
+
+  /* Linha CLT (leitura) */
+  .tl-row-clt { background: var(--surface); }
+  .tl-row-clt:hover td { background: var(--surface2) !important; }
+
+  /* Linha PJ (editável) */
+  .tl-row-pj { background: #0f1520; }
+  .tl-row-pj:hover td { filter: brightness(1.07); }
+
+  /* Célula de valor leitura */
+  .tl-val {
+    padding: 5px 8px;
+    text-align: right;
+    font-size: 12px;
+    min-width: 88px;
+    color: var(--text);
+  }
+  .tl-val.pos { color: var(--green); }
+  .tl-val.neg { color: var(--red); }
+  .tl-val.sub { color: var(--green); font-weight: 700; background: rgba(41,217,142,.06); }
+  .tl-val.sobra-pos { color: var(--green); font-weight: 700; background: rgba(41,217,142,.1); }
+  .tl-val.sobra-neg { color: var(--red);   font-weight: 700; background: rgba(240,92,110,.1); }
+  .tl-val.guardar   { color: var(--accent2); font-weight: 700; background: rgba(124,92,252,.08); }
+  .tl-val.subtotal-gasto { color: var(--red); font-weight: 700; background: rgba(240,92,110,.06); }
+
+  /* Input inline para PJ */
+  .tl-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 5px 8px;
+    text-align: right;
+    min-width: 88px;
+    display: block;
+  }
+  .tl-input:focus {
+    background: rgba(79,142,247,.15);
+    outline: 1px solid var(--accent);
+  }
+  .tl-input::placeholder { color: var(--border2); }
+
+  /* Cabeçalho fixo de ref/data */
+  .th-ref {
+    position: sticky; left: 0; z-index: 11;
+    min-width: 54px;
+  }
+  .th-data {
+    position: sticky; left: 54px; z-index: 11;
+    min-width: 86px;
+  }
+
+  /* Tag CLT/PJ */
+  .tl-badge {
+    display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 9px; font-weight: 700;
+    margin-left: 4px; vertical-align: middle;
+  }
+  .tl-badge-clt { background: rgba(79,142,247,.2); color: var(--accent); }
+  .tl-badge-pj  { background: rgba(124,92,252,.2); color: var(--accent2); }
+
   .viagens-page-header {
     display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;
   }
@@ -489,82 +602,11 @@
 
 <!-- PAGE: MENSAL -->
 <div class="page" id="page-mensal">
-  <div class="month-selector" id="month-selector-mensal"></div>
-
-  <!-- BLOCO 5º DIA ÚTIL -->
-  <div class="section etapa-block">
-    <div class="etapa-header">
-      <div class="etapa-titulo"><span class="dot dot-5du"></span>5º Dia Útil — <span id="sel-mes-label">Jan</span></div>
-      <div style="display:flex;align-items:center;gap:14px;">
-        <span class="etapa-sobra" id="sobra-5du">R$ 0</span>
-        <button class="btn btn-small btn-ghost" onclick="openModal('modal-entrada','5DU')">+ Entrada</button>
-        <button class="btn btn-small btn-ghost" onclick="openModal('modal-saida','5DU')">+ Saída</button>
-      </div>
-    </div>
-    <div class="etapa-divider-row">
-      <div>
-        <div class="etapa-col-title">💚 Entradas</div>
-        <div id="entradas-list-5du"></div>
-        <hr class="divider">
-        <div style="display:flex;justify-content:space-between;font-weight:600;">
-          <span>Total Entradas</span>
-          <span style="font-family:var(--mono);color:var(--green);" id="total-entradas-5du">R$ 0</span>
-        </div>
-      </div>
-      <div>
-        <div class="etapa-col-title">❤️ Saídas</div>
-        <div id="saidas-list-5du"></div>
-        <hr class="divider">
-        <div style="display:flex;justify-content:space-between;font-weight:600;">
-          <span>Total Saídas</span>
-          <span style="font-family:var(--mono);color:var(--red);" id="total-saidas-5du">R$ 0</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- BLOCO VALE (DIA 20) -->
-  <div class="section etapa-block">
-    <div class="etapa-header">
-      <div class="etapa-titulo"><span class="dot dot-vale"></span>Vale — Dia 20 — <span id="sel-mes-label2">Jan</span></div>
-      <div style="display:flex;align-items:center;gap:14px;">
-        <span class="etapa-sobra" id="sobra-vale">R$ 0</span>
-        <button class="btn btn-small btn-ghost" onclick="openModal('modal-entrada','VALE')">+ Entrada</button>
-        <button class="btn btn-small btn-ghost" onclick="openModal('modal-saida','VALE')">+ Saída</button>
-      </div>
-    </div>
-    <div class="etapa-divider-row">
-      <div>
-        <div class="etapa-col-title">💚 Entradas</div>
-        <div id="entradas-list-vale"></div>
-        <hr class="divider">
-        <div style="display:flex;justify-content:space-between;font-weight:600;">
-          <span>Total Entradas</span>
-          <span style="font-family:var(--mono);color:var(--green);" id="total-entradas-vale">R$ 0</span>
-        </div>
-      </div>
-      <div>
-        <div class="etapa-col-title">❤️ Saídas</div>
-        <div id="saidas-list-vale"></div>
-        <hr class="divider">
-        <div style="display:flex;justify-content:space-between;font-weight:600;">
-          <span>Total Saídas</span>
-          <span style="font-family:var(--mono);color:var(--red);" id="total-saidas-vale">R$ 0</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="section" id="resumo-mes">
-    <div class="section-title" style="margin-bottom:16px;">📊 Resumo do Mês</div>
-    <div class="cards" id="resumo-cards"></div>
-  </div>
-  <div class="section">
-    <div class="section-header">
-      <div class="section-title">📈 Posição dos Investimentos no Mês</div>
-      <button class="btn btn-small btn-ghost" onclick="openModal('modal-patrimonio')">Registrar Posição</button>
-    </div>
-    <div id="posicao-inv-mes"></div>
+  <div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
+    <table id="tabela-lancamentos" style="border-collapse:collapse; min-width:1800px; width:100%; font-size:12px; font-family:var(--mono);">
+      <thead id="tabela-thead"></thead>
+      <tbody id="tabela-tbody"></tbody>
+    </table>
   </div>
 </div>
 
@@ -1173,6 +1215,7 @@ async function initApp() {
     if (saved && typeof saved === 'object' && Object.keys(saved).length > 1) {
       S = saved;
       if (!S.viagens) S.viagens = []; // garante campo viagens em dados antigos
+      if (!S.pj) S.pj = {};           // garante campo pj em dados antigos
     } else {
       S = initState();
       try { await saveData(S); } catch(e) { console.warn('Não foi possível criar arquivo inicial:', e); }
@@ -1247,6 +1290,7 @@ function initState() {
       { id: 11, nome: 'Espanha', valor: 1000, tipo: 'Vale' },
     ],
     viagens: [],
+    pj: {},
     meses: {
       '2026-01': { entradas: [
         { tipo: 'Salário (5º DU)', valor: 1051.12 },{ tipo: 'VT (Vale Transporte)', valor: 264.00 },
@@ -1593,218 +1637,314 @@ function renderHistorico() {
 }
 
 // ============================================================
-// MENSAL
+// MENSAL — Tabela Planilha (CLT Jan-Ago/26 + PJ Set/26-Dez/27)
 // ============================================================
-function buildMesSel(containerId, onChange) {
-  const c = document.getElementById(containerId); c.innerHTML = '';
-  for (let m=1; m<=12; m++) {
-    const k = `${ANO}-${String(m).padStart(2,'0')}`;
-    const b = document.createElement('button');
-    b.className = 'month-btn'+(k===selMes?' active':'');
-    b.textContent = MESES[m-1];
-    b.onclick = () => { selMes = k; onChange(); };
-    c.appendChild(b);
+
+// Colunas da tabela
+const TL_COLS = [
+  // Entradas
+  { id:'sal',       label:'Salário',       group:'ent',   pj:true,  clt:true  },
+  { id:'adicionais',label:'Adicionais',    group:'ent',   pj:true,  clt:false },
+  { id:'comissao',  label:'Comissão',      group:'ent',   pj:true,  clt:true  },
+  { id:'lume',      label:'Lume+CS',       group:'ent',   pj:true,  clt:true  },
+  { id:'jac',       label:'JAC',           group:'ent',   pj:true,  clt:true  },
+  { id:'_sub5du',   label:'Subtotal 5ºDU', group:'sub',   pj:false, clt:false, calc:true },
+  { id:'carro',     label:'Carro',         group:'ent',   pj:true,  clt:false },
+  { id:'ingles',    label:'Inglês',        group:'ent',   pj:true,  clt:true  },
+  { id:'suportepj', label:'Suporte PJ',    group:'ent',   pj:true,  clt:false },
+  { id:'extras',    label:'Extras',        group:'ent',   pj:true,  clt:true  },
+  // Gastos
+  { id:'luz',       label:'Luz',           group:'gasto', pj:true,  clt:true  },
+  { id:'habitacao', label:'Habitação',     group:'gasto', pj:true,  clt:true  },
+  { id:'condominio',label:'Condomínio',    group:'gasto', pj:true,  clt:true  },
+  { id:'iptu',      label:'IPTU',          group:'gasto', pj:true,  clt:true  },
+  { id:'nubank',    label:'Nubank',        group:'gasto', pj:true,  clt:true  },
+  { id:'xp',        label:'XP',            group:'gasto', pj:true,  clt:true  },
+  { id:'c6lucas',   label:'C6 Lucas',      group:'gasto', pj:true,  clt:true  },
+  { id:'itau',      label:'Itaú',          group:'gasto', pj:true,  clt:true  },
+  { id:'santander', label:'Santander',     group:'gasto', pj:true,  clt:true  },
+  { id:'inss',      label:'INSS',          group:'gasto', pj:true,  clt:false },
+  { id:'fgts',      label:'FGTS+Férias',   group:'gasto', pj:true,  clt:false },
+  { id:'espanha',   label:'Espanha',       group:'gasto', pj:true,  clt:true  },
+  // Totais
+  { id:'_subtgasto',label:'Subtotal Gastos',group:'res',  pj:false, clt:false, calc:true },
+  { id:'_sobra',    label:'Sobra',          group:'res',  pj:false, clt:false, calc:true },
+  { id:'_guardar',  label:'Guardar',        group:'meta', pj:true,  clt:true  },
+];
+
+// Meses que aparecem na tabela
+const TL_MESES_CLT = [
+  '2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07','2026-08'
+];
+const TL_MESES_PJ = [
+  '2026-09','2026-10','2026-11','2026-12',
+  '2027-01','2027-02','2027-03','2027-04','2027-05','2027-06','2027-07','2027-08','2027-09','2027-10','2027-11','2027-12'
+];
+
+// Garante que S.pj existe
+function getPJ() {
+  if (!S.pj) S.pj = {};
+  return S.pj;
+}
+
+// Lê valor PJ de um mês/coluna
+function getPJVal(mes, col) {
+  const pj = getPJ();
+  return (pj[mes] && pj[mes][col] !== undefined) ? +pj[mes][col] : 0;
+}
+
+// Extrai valor CLT de um mês a partir dos dados existentes (entradas/saídas)
+function getCLTVal(mes, col) {
+  const md = S.meses[mes];
+  if (!md) return 0;
+  const ents = md.entradas || [];
+  const sais = md.saidas || [];
+
+  const sumEnt = (...keys) => ents.filter(e => keys.some(k => (e.tipo||'').toLowerCase().includes(k))).reduce((s,e)=>s+(+e.valor||0),0);
+  const sumSai = (...keys) => sais.filter(e => keys.some(k => (e.categoria||'').toLowerCase().includes(k))).reduce((s,e)=>s+(+e.valor||0),0);
+
+  switch(col) {
+    case 'sal':       return sumEnt('salário','vale (adiant');
+    case 'comissao':  return sumEnt('comissão');
+    case 'lume':      return sumEnt('lume');
+    case 'jac':       return sumEnt('jac');
+    case 'ingles':    return sumSai('inglês');
+    case 'extras':    return sumEnt('plr','13º');
+    case 'luz':       return sumSai('luz');
+    case 'habitacao': return sumSai('habitação');
+    case 'condominio':return sumSai('condomínio');
+    case 'iptu':      return sumSai('iptu');
+    case 'nubank':    return sumSai('nubank');
+    case 'xp':        return sumSai('xp');
+    case 'c6lucas':   return sumSai('c6');
+    case 'itau':      return sumSai('itaú');
+    case 'santander': return sumSai('santander');
+    case 'espanha':   return sumSai('espanha');
+    default:          return 0;
   }
 }
 
-// Classifica um lançamento em '5DU' ou 'VALE'.
-// Usa o campo explícito `etapa` se existir (lançamentos novos sempre terão isso).
-// Para dados antigos (sem o campo), deduz pelo texto:
-//  - Saídas antigas sempre têm a obs "5º DU" ou "Vale (dia 20)" → usa a obs.
-//  - Entradas antigas usam o `tipo`: "Vale (Adiant...)" é Vale; "VT (Vale Transporte)" continua 5DU
-//    apesar de ter a palavra "vale" no nome, pois é pago junto do salário.
-// Sem nenhuma pista, cai em 5DU por padrão.
+// Calcula colunas derivadas
+function calcDerived(vals) {
+  // Subtotal 5ºDU = sal + adicionais + comissao + lume + jac
+  vals._sub5du = (vals.sal||0)+(vals.adicionais||0)+(vals.comissao||0)+(vals.lume||0)+(vals.jac||0);
+  // total entradas = _sub5du + carro + ingles + suportepj + extras
+  const totalEnt = vals._sub5du + (vals.carro||0)+(vals.ingles||0)+(vals.suportepj||0)+(vals.extras||0);
+  // Subtotal gastos
+  vals._subtgasto = (vals.luz||0)+(vals.habitacao||0)+(vals.condominio||0)+(vals.iptu||0)+(vals.nubank||0)+(vals.xp||0)+(vals.c6lucas||0)+(vals.itau||0)+(vals.santander||0)+(vals.inss||0)+(vals.fgts||0)+(vals.espanha||0);
+  // Sobra subtotal = total entradas - subtotal gastos
+  vals._sobra = totalEnt - vals._subtgasto;
+  return vals;
+}
+
+function fmtTL(v) {
+  if (!v) return '';
+  return 'R$ '+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+function renderMensal() {
+  const GRUPOS = {
+    ent:   { label:'💰 ENTRADAS',      cls:'th-group-ent'   },
+    sub:   { label:'📊 SUBTOTAL',       cls:'th-group-sub'   },
+    gasto: { label:'💸 GASTOS',         cls:'th-group-gasto' },
+    res:   { label:'📈 RESULTADO',      cls:'th-group-res'   },
+    meta:  { label:'🎯 META',           cls:'th-group-meta'  },
+  };
+
+  // ---------- THEAD ----------
+  // Linha 1: grupos
+  let grpRow = '<tr><th class="th-ref" style="border:1px solid var(--border)">REF.</th><th class="th-data" style="border:1px solid var(--border)">DATA</th>';
+  let lastGrp = null; let grpSpan = 0; let grpCells = [];
+  TL_COLS.forEach((c,i) => {
+    if (c.group !== lastGrp) {
+      if (lastGrp) grpCells.push({g:lastGrp, span:grpSpan});
+      lastGrp = c.group; grpSpan = 1;
+    } else grpSpan++;
+    if (i === TL_COLS.length-1) grpCells.push({g:lastGrp, span:grpSpan});
+  });
+  grpCells.forEach(gc => {
+    const g = GRUPOS[gc.g];
+    grpRow += `<th colspan="${gc.span}" class="${g.cls}" style="border:1px solid var(--border);padding:5px 8px;text-align:center;">${g.label}</th>`;
+  });
+  grpRow += '</tr>';
+
+  // Linha 2: colunas
+  let colRow = '<tr><th class="th-ref" style="border:1px solid var(--border)">REF.A:</th><th class="th-data" style="border:1px solid var(--border)">DATA</th>';
+  TL_COLS.forEach(c => {
+    const grp = GRUPOS[c.group];
+    colRow += `<th class="${grp.cls}" style="border:1px solid var(--border);padding:5px 8px;text-align:center;">${c.label}</th>`;
+  });
+  colRow += '</tr>';
+  document.getElementById('tabela-thead').innerHTML = grpRow + colRow;
+
+  // ---------- TBODY ----------
+  const mesAtual = calcSelMes();
+  let html = '';
+
+  const buildRow = (mes, isPJ) => {
+    const [ano, mm] = mes.split('-');
+    const mesNum = +mm;
+    const refLabel = MESES[mesNum-1]+'/'+ano;
+    // Data do 5º DU aproximado (dia 07)
+    const dataLabel = `05/${mm.padStart(2,'0')}/${ano}`;
+
+    // Monta valores
+    let vals = {};
+    if (isPJ) {
+      const pjData = getPJ()[mes] || {};
+      TL_COLS.forEach(c => { if (!c.calc) vals[c.id] = pjData[c.id] !== undefined ? +pjData[c.id] : 0; });
+    } else {
+      TL_COLS.forEach(c => { if (!c.calc) vals[c.id] = getCLTVal(mes, c.id); });
+    }
+    calcDerived(vals);
+
+    const isCurrent = mes === mesAtual;
+    const rowCls = isPJ ? 'tl-row-pj' : 'tl-row-clt';
+    const badgeCls = isPJ ? 'tl-badge-pj' : 'tl-badge-clt';
+    const badgeTxt = isPJ ? 'PJ' : 'CLT';
+    const highlightStyle = isCurrent ? 'outline:2px solid var(--accent);outline-offset:-2px;' : '';
+
+    let tr = `<tr class="${rowCls}" style="${highlightStyle}">`;
+    tr += `<td class="tl-ref" style="border:1px solid var(--border);">${refLabel}<span class="tl-badge ${badgeCls}">${badgeTxt}</span></td>`;
+    tr += `<td class="tl-data" style="border:1px solid var(--border);padding:5px 8px;color:var(--muted);font-size:11px;">${dataLabel}</td>`;
+
+    TL_COLS.forEach(c => {
+      const v = vals[c.id] || 0;
+      if (c.calc) {
+        // Coluna calculada — sempre somente leitura
+        let tdCls = 'tl-val';
+        if (c.id === '_sub5du') tdCls += ' sub';
+        else if (c.id === '_subtgasto') tdCls += ' subtotal-gasto';
+        else if (c.id === '_sobra') tdCls += v >= 0 ? ' sobra-pos' : ' sobra-neg';
+        tr += `<td class="${tdCls}" data-mes="${mes}" data-col="${c.id}" style="border:1px solid var(--border);">${v ? fmtTL(v) : ''}</td>`;
+      } else if (isPJ) {
+        // Editável inline
+        const placeholder = c.id === '_guardar' ? '0' : '';
+        tr += `<td style="border:1px solid var(--border);padding:0;">
+          <input class="tl-input" type="number" step="0.01" min="0"
+            value="${v || ''}"
+            placeholder="${placeholder}"
+            data-mes="${mes}" data-col="${c.id}"
+            onchange="tlSalvar(this)"
+            onkeydown="tlNavKey(event,this)"
+          >
+        </td>`;
+      } else {
+        // CLT leitura
+        let tdCls = 'tl-val';
+        if (c.group === 'ent' || c.group === 'sub') tdCls += v > 0 ? ' pos' : '';
+        if (c.group === 'gasto') tdCls += v > 0 ? ' neg' : '';
+        if (c.id === '_guardar') tdCls = 'tl-val guardar';
+        tr += `<td class="${tdCls}" style="border:1px solid var(--border);">${v ? fmtTL(v) : ''}</td>`;
+      }
+    });
+    tr += '</tr>';
+    return tr;
+  };
+
+  // Linha de totais anuais
+  const buildTotalRow = (label, mesesLista, isPJ) => {
+    let totals = {};
+    TL_COLS.forEach(c => { if (!c.calc) totals[c.id] = 0; });
+    mesesLista.forEach(mes => {
+      let vals = {};
+      if (isPJ) {
+        const pjData = getPJ()[mes] || {};
+        TL_COLS.forEach(c => { if (!c.calc) vals[c.id] = pjData[c.id] !== undefined ? +pjData[c.id] : 0; });
+      } else {
+        TL_COLS.forEach(c => { if (!c.calc) vals[c.id] = getCLTVal(mes, c.id); });
+      }
+      TL_COLS.forEach(c => { if (!c.calc) totals[c.id] = (totals[c.id]||0)+(vals[c.id]||0); });
+    });
+    calcDerived(totals);
+
+    let tr = `<tr style="background:#0a0b0e;border-top:2px solid var(--border2);">`;
+    tr += `<td colspan="2" style="border:1px solid var(--border);padding:6px 10px;font-size:11px;font-weight:700;color:var(--yellow);text-align:center;position:sticky;left:0;background:#0a0b0e;">${label}</td>`;
+    TL_COLS.forEach(c => {
+      const v = totals[c.id] || 0;
+      let tdCls = 'tl-val';
+      if (c.id === '_sub5du') tdCls += ' sub';
+      else if (c.id === '_subtgasto') tdCls += ' subtotal-gasto';
+      else if (c.id === '_sobra') tdCls += v >= 0 ? ' sobra-pos' : ' sobra-neg';
+      else if (c.id === '_guardar') tdCls = 'tl-val guardar';
+      else if (c.group === 'ent' || c.group === 'sub') tdCls += v > 0 ? ' pos' : '';
+      else if (c.group === 'gasto') tdCls += v > 0 ? ' neg' : '';
+      tr += `<td class="${tdCls}" style="border:1px solid var(--border);font-weight:700;">${v ? fmtTL(v) : ''}</td>`;
+    });
+    tr += '</tr>';
+    return tr;
+  };
+
+  // Separador visual
+  const sep = (txt, color) => `<tr><td colspan="${TL_COLS.length+2}" style="background:${color};padding:4px 12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#fff;border:none;">${txt}</td></tr>`;
+
+  html += sep('📋 CLT — Janeiro a Agosto/2026', 'rgba(79,142,247,.35)');
+  TL_MESES_CLT.forEach(m => { html += buildRow(m, false); });
+  html += buildTotalRow('▶ TOTAL CLT 2026', TL_MESES_CLT, false);
+
+  html += sep('🚀 PJ — Setembro/2026 em diante', 'rgba(124,92,252,.35)');
+  TL_MESES_PJ.forEach(m => { html += buildRow(m, true); });
+  html += buildTotalRow('▶ TOTAL PJ 2026', TL_MESES_PJ.filter(m=>m.startsWith('2026')), true);
+  html += buildTotalRow('▶ TOTAL PJ 2027', TL_MESES_PJ.filter(m=>m.startsWith('2027')), true);
+
+  document.getElementById('tabela-tbody').innerHTML = html;
+}
+
+// Salva célula PJ ao mudar valor
+async function tlSalvar(input) {
+  const mes = input.dataset.mes;
+  const col = input.dataset.col;
+  const val = parseFloat(input.value) || 0;
+  if (!S.pj) S.pj = {};
+  if (!S.pj[mes]) S.pj[mes] = {};
+  S.pj[mes][col] = val;
+
+  // Recalcula a linha e atualiza células calculadas
+  const pjData = S.pj[mes];
+  let vals = {};
+  TL_COLS.forEach(c => { if (!c.calc) vals[c.id] = pjData[c.id] !== undefined ? +pjData[c.id] : 0; });
+  calcDerived(vals);
+  // Atualiza todas as células calculadas da mesma linha
+  document.querySelectorAll(`td[data-mes="${mes}"]`).forEach(td => {
+    const c = td.dataset.col;
+    if (c && vals[c] !== undefined) {
+      const v = vals[c];
+      let cls = 'tl-val';
+      if (c === '_sub5du') cls += ' sub';
+      else if (c === '_subtgasto') cls += ' subtotal-gasto';
+      else if (c === '_sobra') cls += v >= 0 ? ' sobra-pos' : ' sobra-neg';
+      td.className = cls;
+      td.textContent = v ? fmtTL(v) : '';
+    }
+  });
+  try { await saveData(S); setSaveIndicator('saved','✓ Salvo'); } catch(e) { setSaveIndicator('error','✗ Erro'); }
+}
+
+// Navega com Enter/Tab entre células da tabela
+function tlNavKey(e, input) {
+  if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+}
+
+// Mantém compatibilidade das funções antigas que podem ser chamadas por outros módulos
+function buildMesSel() {}
 function getEtapa(item) {
   if (item.etapa === '5DU' || item.etapa === 'VALE') return item.etapa;
   const obs = (item.obs || '').toLowerCase();
   if (obs.includes('vale (dia 20)') || obs.includes('vale(dia 20)')) return 'VALE';
-  if (obs.includes('5º du') || obs.includes('5 du') || obs.includes('5ºdu')) return '5DU';
   const tipo = (item.tipo || '').toLowerCase();
   if (tipo.startsWith('vale (adiant')) return 'VALE';
   return '5DU';
 }
 
-function renderMensal() {
-  buildMesSel('month-selector-mensal', renderMensal);
-  const md = getMesData(selMes);
-  const [,m] = selMes.split('-');
-  const label = MESES[+m-1]+' '+ANO;
-  document.getElementById('sel-mes-label').textContent = label;
-  document.getElementById('sel-mes-label2').textContent = label;
-
-  const entradas5du = []; const entradasVale = [];
-  md.entradas.forEach((e,i) => (getEtapa(e)==='VALE' ? entradasVale : entradas5du).push({...e, _idx:i}));
-  const saidas5du = []; const saidasVale = [];
-  md.saidas.forEach((e,i) => (getEtapa(e)==='VALE' ? saidasVale : saidas5du).push({...e, _idx:i}));
-
-  function rowEntrada(e) {
-    return `<div class="lanc-item">
-      <div class="lanc-left">
-        <div><div class="lanc-nome">${e.tipo}</div>${e.obs?`<div class="lanc-obs">${e.obs}</div>`:''}</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px">
-        <span class="pos" style="font-family:var(--mono)">${fmtR(e.valor)}</span>
-        <button class="btn btn-ghost btn-small" onclick="editEntrada(${e._idx})" style="padding:5px 9px">✎</button>
-        <button class="btn btn-danger btn-small" onclick="delEntrada(${e._idx})">×</button>
-      </div>
-    </div>`;
-  }
-  function rowSaida(e) {
-    const paga = !!e.pago;
-    return `<div class="lanc-item ${paga?'paga':''}">
-      <div class="lanc-left">
-        <input type="checkbox" class="lanc-check" ${paga?'checked':''} onchange="togglePagoSaida(${e._idx})" title="Marcar como pago">
-        <div><div class="lanc-nome">${e.categoria}</div>${e.obs?`<div class="lanc-obs">${e.obs}</div>`:''}</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px">
-        <span class="neg" style="font-family:var(--mono)">${fmtR(e.valor)}</span>
-        <button class="btn btn-ghost btn-small" onclick="editSaida(${e._idx})" style="padding:5px 9px">✎</button>
-        <button class="btn btn-danger btn-small" onclick="delSaida(${e._idx})">×</button>
-      </div>
-    </div>`;
-  }
-
-  // --- 5º Dia Útil ---
-  document.getElementById('entradas-list-5du').innerHTML = entradas5du.length===0
-    ? '<div class="etapa-empty">Nenhuma entrada nesta etapa.</div>'
-    : entradas5du.map(rowEntrada).join('');
-  document.getElementById('saidas-list-5du').innerHTML = saidas5du.length===0
-    ? '<div class="etapa-empty">Nenhuma saída nesta etapa.</div>'
-    : saidas5du.map(rowSaida).join('');
-  const ent5duTotal = entradas5du.reduce((s,e)=>s+(+e.valor||0),0);
-  const sai5duTotal = saidas5du.reduce((s,e)=>s+(+e.valor||0),0);
-  const sobra5du = ent5duTotal - sai5duTotal;
-  document.getElementById('total-entradas-5du').textContent = fmtR(ent5duTotal);
-  document.getElementById('total-saidas-5du').textContent = fmtR(sai5duTotal);
-  const sobra5duEl = document.getElementById('sobra-5du');
-  sobra5duEl.textContent = 'Sobra: ' + fmtR(sobra5du);
-  sobra5duEl.style.color = sobra5du>=0 ? 'var(--green)' : 'var(--red)';
-
-  // --- Vale (dia 20) ---
-  document.getElementById('entradas-list-vale').innerHTML = entradasVale.length===0
-    ? '<div class="etapa-empty">Nenhuma entrada nesta etapa.</div>'
-    : entradasVale.map(rowEntrada).join('');
-  document.getElementById('saidas-list-vale').innerHTML = saidasVale.length===0
-    ? '<div class="etapa-empty">Nenhuma saída nesta etapa.</div>'
-    : saidasVale.map(rowSaida).join('');
-  const entValeTotal = entradasVale.reduce((s,e)=>s+(+e.valor||0),0);
-  const saiValeTotal = saidasVale.reduce((s,e)=>s+(+e.valor||0),0);
-  const sobraVale = entValeTotal - saiValeTotal;
-  document.getElementById('total-entradas-vale').textContent = fmtR(entValeTotal);
-  document.getElementById('total-saidas-vale').textContent = fmtR(saiValeTotal);
-  const sobraValeEl = document.getElementById('sobra-vale');
-  sobraValeEl.textContent = 'Sobra: ' + fmtR(sobraVale);
-  sobraValeEl.style.color = sobraVale>=0 ? 'var(--green)' : 'var(--red)';
-
-  // --- Resumo geral do mês (mantém comportamento já existente) ---
-  const entTotal = md.entradas.reduce((s,e) => s+(+e.valor||0), 0);
-  const saiTotal = md.saidas.reduce((s,e) => s+(+e.valor||0), 0);
-  const sobra = entTotal - saiTotal;
-  const pct_gasto = entTotal>0 ? (saiTotal/entTotal)*100 : 0;
-  document.getElementById('resumo-cards').innerHTML = `
-    <div class="card green"><div class="card-label">Entradas</div><div class="card-value">${fmtR(entTotal)}</div></div>
-    <div class="card red"><div class="card-label">Saídas</div><div class="card-value">${fmtR(saiTotal)}</div></div>
-    <div class="card ${sobra>=0?'green':'red'}"><div class="card-label">Sobra</div><div class="card-value">${fmtR(sobra)}</div><div class="card-sub">${pct_gasto.toFixed(1)}% gasto da renda</div></div>
-  `;
-  const pat = md.patrimonio;
-  if (pat) {
-    const tot = (pat.cash||0)+(pat.espanha||0)+(pat.xp||0)+(pat.nu||0);
-    document.getElementById('posicao-inv-mes').innerHTML = `<div class="cards"><div class="card"><div class="card-label">Cash</div><div class="card-value" style="font-size:17px">${fmtR(pat.cash)}</div></div><div class="card"><div class="card-label">Espanha</div><div class="card-value" style="font-size:17px">${fmtR(pat.espanha)}</div></div><div class="card blue"><div class="card-label">XP Invest</div><div class="card-value" style="font-size:17px">${fmtR(pat.xp)}</div></div><div class="card"><div class="card-label">Nubank</div><div class="card-value" style="font-size:17px">${fmtR(pat.nu)}</div></div><div class="card green"><div class="card-label">Total</div><div class="card-value" style="font-size:17px">${fmtR(tot)}</div></div></div>`;
-  } else {
-    document.getElementById('posicao-inv-mes').innerHTML = '<div style="color:var(--muted);font-size:13px">Clique em "Registrar Posição" para registrar os valores de investimento deste mês.</div>';
-  }
-}
-
-async function togglePagoSaida(i) {
-  const md = getMesData(selMes);
-  md.saidas[i].pago = !md.saidas[i].pago;
-  renderMensal();
-  try { await saveData(S); } catch(e) { toast('Erro ao salvar', true); }
-}
-
-async function addEntrada() {
-  const etapa = document.getElementById('ent-etapa').value;
-  const tipo = document.getElementById('ent-tipo').value;
-  const valor = +document.getElementById('ent-valor').value;
-  const obs = document.getElementById('ent-obs').value;
-  if (!valor) { toast('Informe o valor', true); return; }
-  getMesData(selMes).entradas.push({ tipo, valor, obs, etapa });
-  closeModal('modal-entrada'); renderMensal();
-  try { await saveData(S); toast('Entrada adicionada!'); } catch(e) { toast('Erro ao salvar. Verifique sua conexão.', true); }
-}
-
-async function delEntrada(i) {
-  getMesData(selMes).entradas.splice(i,1); renderMensal();
-  try { await saveData(S); } catch(e) { toast('Erro ao salvar', true); }
-}
-
-async function addSaida() {
-  const etapa = document.getElementById('sai-etapa').value;
-  const categoria = document.getElementById('sai-categoria').value;
-  const valor = +document.getElementById('sai-valor').value;
-  const obs = document.getElementById('sai-obs').value;
-  if (!valor) { toast('Informe o valor', true); return; }
-  getMesData(selMes).saidas.push({ categoria, valor, obs, etapa, pago: false });
-  closeModal('modal-saida'); renderMensal();
-  try { await saveData(S); toast('Saída adicionada!'); } catch(e) { toast('Erro ao salvar. Verifique sua conexão.', true); }
-}
-
-async function delSaida(i) {
-  getMesData(selMes).saidas.splice(i,1); renderMensal();
-  try { await saveData(S); } catch(e) { toast('Erro ao salvar', true); }
-}
-
+async function togglePagoSaida(i) {}
+async function addEntrada() {}
+async function delEntrada(i) {}
+async function addSaida() {}
+async function delSaida(i) {}
 let _editTipo = null; let _editIdx = null;
-
-function editEntrada(i) {
-  _editTipo = 'entrada'; _editIdx = i;
-  const e = getMesData(selMes).entradas[i];
-  document.getElementById('modal-editar-title').textContent = 'Editar Entrada';
-  const tipos = ['Salário (5º dia útil)','VT (Vale Transporte)','Vale (Adiant. 40% — dia 20)','Comissão','Lume+CS','JAC','PLR','13º Salário','Outro'];
-  const etapaAtual = getEtapa(e);
-  document.getElementById('modal-editar-fields').innerHTML =
-    '<div class="form-group"><label>Etapa</label><select id="ed-etapa">'+
-      '<option value="5DU" '+(etapaAtual==='5DU'?'selected':'')+'>5º Dia Útil</option>'+
-      '<option value="VALE" '+(etapaAtual==='VALE'?'selected':'')+'>Vale (dia 20)</option>'+
-    '</select></div>'+
-    '<div class="form-group"><label>Tipo</label><select id="ed-tipo">'+tipos.map(t=>'<option '+(t===e.tipo?'selected':'')+'>'+t+'</option>').join('')+'</select></div>'+
-    '<div class="form-group"><label>Valor (R$)</label><input type="number" id="ed-valor" value="'+e.valor+'"></div>'+
-    '<div class="form-group full-width"><label>Observação</label><input type="text" id="ed-obs" value="'+(e.obs||'')+'"></div>';
-  openModal('modal-editar');
-}
-
-function editSaida(i) {
-  _editTipo = 'saida'; _editIdx = i;
-  const e = getMesData(selMes).saidas[i];
-  document.getElementById('modal-editar-title').textContent = 'Editar Saída';
-  const cats = ['Acidente','Luz','Habitação','Nubank','XP','Inglês','C6 Lucas','IPTU','Santander','Itaú','Condomínio','Espanha','Lazer/Férias','Alimentação','Transporte','Outro'];
-  const etapaAtual = getEtapa(e);
-  document.getElementById('modal-editar-fields').innerHTML =
-    '<div class="form-group"><label>Etapa</label><select id="ed-etapa">'+
-      '<option value="5DU" '+(etapaAtual==='5DU'?'selected':'')+'>5º Dia Útil</option>'+
-      '<option value="VALE" '+(etapaAtual==='VALE'?'selected':'')+'>Vale (dia 20)</option>'+
-    '</select></div>'+
-    '<div class="form-group"><label>Categoria</label><select id="ed-cat">'+cats.map(c=>'<option '+(c===e.categoria?'selected':'')+'>'+c+'</option>').join('')+'</select></div>'+
-    '<div class="form-group"><label>Valor (R$)</label><input type="number" id="ed-valor" value="'+e.valor+'"></div>'+
-    '<div class="form-group full-width"><label>Observação</label><input type="text" id="ed-obs" value="'+(e.obs||'')+'"></div>';
-  openModal('modal-editar');
-}
-
-async function salvarEdicao() {
-  const valor = +document.getElementById('ed-valor').value;
-  const obs = document.getElementById('ed-obs').value;
-  const etapa = document.getElementById('ed-etapa').value;
-  if (!valor) { toast('Informe o valor', true); return; }
-  const md = getMesData(selMes);
-  if (_editTipo==='entrada') {
-    md.entradas[_editIdx] = { tipo: document.getElementById('ed-tipo').value, valor, obs, etapa };
-  } else {
-    const pagoAtual = md.saidas[_editIdx].pago || false;
-    md.saidas[_editIdx] = { categoria: document.getElementById('ed-cat').value, valor, obs, etapa, pago: pagoAtual };
-  }
-  closeModal('modal-editar'); renderMensal();
-  try { await saveData(S); toast('Lançamento atualizado!'); } catch(e) { toast('Erro ao salvar', true); }
-}
+function editEntrada(i) {}
+function editSaida(i) {}
+async function salvarEdicao() {}
 
 async function savePatrimonio() {
   const cash = +document.getElementById('pat-cash').value||0;
@@ -1818,7 +1958,7 @@ async function savePatrimonio() {
   if (hi) { hi.total = tot; hi.realizado = true; }
   else S.historico.push({ mes: selMes, total: tot, guardar: 0, realizado: true });
   S.historico.sort((a,b) => a.mes.localeCompare(b.mes));
-  closeModal('modal-patrimonio'); renderMensal();
+  closeModal('modal-patrimonio');
   try { await saveData(S); toast('Posição registrada!'); } catch(e) { toast('Erro ao salvar. Verifique sua conexão.', true); }
 }
 
