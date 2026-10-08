@@ -3,2408 +3,1299 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Controle Financeiro — Abraão</title>
+<title>México — Roteiro de Viagem 🇲🇽</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
-
   :root {
-    --bg: #0a0b0e;
-    --surface: #111318;
-    --surface2: #181c24;
-    --border: #1e2330;
-    --border2: #252d3d;
-    --text: #e8eaf0;
-    --muted: #6b7494;
-    --accent: #4f8ef7;
-    --accent2: #7c5cfc;
-    --green: #29d98e;
-    --red: #f05c6e;
-    --yellow: #f5c842;
-    --orange: #f5874f;
-    --mono: 'DM Mono', monospace;
-    --sans: 'Space Grotesk', sans-serif;
+    --verde: #006847;
+    --verde-dark: #004C33;
+    --verde-light: #E8F5EE;
+    --vermelho: #CE1126;
+    --vermelho-light: #FFF0F0;
+    --ouro: #C8A84B;
+    --branco: #FFFFFF;
+    --cream: #FFF9F3;
+    --texto: #1A1A1A;
+    --cinza: #777777;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
   body {
-    font-family: var(--sans);
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--texto);
+    overflow-x: hidden;
   }
 
-  .app { display: flex; min-height: 100vh; }
-
-  .sidebar {
-    width: 220px;
-    background: var(--surface);
-    border-right: 1px solid var(--border);
+  .hero {
+    background: var(--verde);
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    position: fixed;
-    top: 0; left: 0; bottom: 0;
-    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
   }
 
-  .logo {
-    padding: 24px 20px 20px;
-    border-bottom: 1px solid var(--border);
+  .flag-stripes {
+    position: absolute; inset: 0;
+    display: flex;
   }
-  .logo h1 { font-size: 15px; font-weight: 700; color: var(--accent); letter-spacing: -.3px; }
-  .logo p { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .flag-stripes .s1 { flex: 1; background: var(--vermelho); }
+  .flag-stripes .s2 { flex: 1; background: var(--branco); }
+  .flag-stripes .s3 { flex: 1; background: var(--verde); }
 
-  .nav { flex: 1; padding: 12px 0; }
-  .nav-item {
-    display: flex; align-items: center; gap: 10px;
-    padding: 9px 20px;
-    cursor: pointer;
-    color: var(--muted);
-    font-size: 13px;
-    font-weight: 500;
-    border-left: 2px solid transparent;
-    transition: all .15s;
+  .hero-content {
+    position: relative; z-index: 2;
+    text-align: center;
+    padding: 2rem;
   }
-  .nav-item:hover { color: var(--text); background: var(--surface2); }
-  .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(79,142,247,.07); }
-  .nav-item svg { width: 15px; height: 15px; flex-shrink: 0; }
 
-  .main { margin-left: 220px; flex: 1; }
-
-  .topbar {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 14px 28px;
-    display: flex; align-items: center; justify-content: space-between;
-    position: sticky; top: 0; z-index: 50;
+  .hero-overlay {
+    background: rgba(0,0,0,0.52);
+    border-radius: 1rem;
+    padding: 3rem 4rem;
+    backdrop-filter: blur(2px);
   }
-  .topbar-title { font-size: 16px; font-weight: 600; }
-  .topbar-sub { font-size: 12px; color: var(--muted); margin-top: 1px; }
 
-  .page { display: none; padding: 28px; }
-  .page.active { display: block; }
-
-  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 14px; margin-bottom: 24px; }
-  
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 18px;
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(4rem, 12vw, 9rem);
+    font-weight: 900;
+    color: var(--branco);
+    letter-spacing: 0.15em;
+    line-height: 1;
+    text-shadow: 0 4px 30px rgba(0,0,0,0.4);
   }
-  .card-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; font-weight: 500; }
-  .card-value { font-size: 22px; font-weight: 700; margin-top: 6px; font-family: var(--mono); }
-  .card-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
-  .card.green .card-value { color: var(--green); }
-  .card.red .card-value { color: var(--red); }
-  .card.blue .card-value { color: var(--accent); }
-  .card.yellow .card-value { color: var(--yellow); }
 
-  .section { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 22px; margin-bottom: 20px; }
-  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
-  .section-title { font-size: 14px; font-weight: 600; }
-  .section-sub { font-size: 12px; color: var(--muted); }
-
-  .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  table { width: 100%; border-collapse: collapse; min-width: 900px; }
-  th {
-    text-align: left; padding: 8px 12px; font-size: 11px; text-transform: uppercase;
-    letter-spacing: .6px; color: var(--muted); border-bottom: 1px solid var(--border);
-    font-weight: 500; white-space: nowrap;
-  }
-  td {
-    padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 13px;
-    font-family: var(--mono); white-space: nowrap;
-  }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: var(--surface2); }
-  td.label { font-family: var(--sans); color: var(--muted); font-size: 12px; }
-  .pos { color: var(--green); }
-  .neg { color: var(--red); }
-  .neutral { color: var(--yellow); }
-
-  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 14px; }
-  .form-group { display: flex; flex-direction: column; gap: 6px; }
-  .form-group label { font-size: 11px; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); font-weight: 500; }
-  .form-group input, .form-group select, .form-group textarea {
-    background: var(--surface2); border: 1px solid var(--border2); border-radius: 7px;
-    color: var(--text); font-family: var(--sans); font-size: 13px; padding: 9px 12px;
-    outline: none; transition: border-color .15s;
-  }
-  .form-group input:focus, .form-group select:focus { border-color: var(--accent); }
-  .form-group select option { background: var(--surface2); }
-
-  .btn {
-    display: inline-flex; align-items: center; gap: 7px;
-    padding: 8px 16px; border-radius: 7px; font-size: 13px; font-weight: 500;
-    cursor: pointer; border: none; font-family: var(--sans); transition: all .15s;
-  }
-  .btn-primary { background: var(--accent); color: #fff; }
-  .btn-primary:hover { background: #3a7ae0; }
-  .btn-success { background: var(--green); color: #000; }
-  .btn-danger { background: var(--red); color: #fff; }
-  .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border2); }
-  .btn-ghost:hover { color: var(--text); border-color: var(--accent); }
-  .btn-small { padding: 5px 11px; font-size: 12px; }
-
-  .btn-row { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
-
-  .badge {
-    display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;
-  }
-  .badge-green { background: rgba(41,217,142,.15); color: var(--green); }
-  .badge-red { background: rgba(240,92,110,.15); color: var(--red); }
-  .badge-yellow { background: rgba(245,200,66,.15); color: var(--yellow); }
-  .badge-blue { background: rgba(79,142,247,.15); color: var(--accent); }
-
-  .progress-wrap { background: var(--surface2); border-radius: 4px; height: 6px; overflow: hidden; margin-top: 8px; }
-  .progress-bar { height: 100%; border-radius: 4px; transition: width .4s; }
-  .progress-bar.green { background: var(--green); }
-  .progress-bar.red { background: var(--red); }
-  .progress-bar.yellow { background: var(--yellow); }
-
-  .month-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
-  .month-btn {
-    padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 500;
-    cursor: pointer; border: 1px solid var(--border2); background: transparent; color: var(--muted);
-    font-family: var(--sans); transition: all .15s;
-  }
-  .month-btn:hover { color: var(--text); border-color: var(--accent); }
-  .month-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-
-  .divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
-
-  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
-
-  .inv-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
-  .inv-row:last-child { border-bottom: none; }
-  .inv-name { font-size: 13px; font-weight: 500; }
-  .inv-type { font-size: 11px; color: var(--muted); margin-top: 2px; }
-  .inv-value { font-family: var(--mono); font-size: 14px; font-weight: 600; }
-
-  .alert { padding: 12px 16px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; }
-  .alert-info { background: rgba(79,142,247,.1); border: 1px solid rgba(79,142,247,.3); color: #a0bdff; }
-  .alert-warn { background: rgba(245,200,66,.1); border: 1px solid rgba(245,200,66,.3); color: #f5d47a; }
-
-  .c6-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); }
-  .c6-item:last-child { border-bottom: none; }
-
-  /* ================================================================
-     ETAPAS (5º Dia Útil / Vale dia 20) — Lançamentos
-  ================================================================ */
-  .etapa-block { margin-bottom: 22px; }
-  .etapa-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding-bottom: 8px; margin-bottom: 10px; border-bottom: 1px solid var(--border2);
-  }
-  .etapa-titulo { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--text); display: flex; align-items: center; gap: 6px; }
-  .etapa-titulo .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
-  .dot-5du { background: var(--accent); }
-  .dot-vale { background: var(--accent2); }
-  .etapa-sobra { font-family: var(--mono); font-size: 13px; font-weight: 700; }
-
-  .lanc-item {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 8px 0; border-bottom: 1px solid var(--border);
-    transition: background .2s, opacity .2s;
-    border-radius: 6px;
-  }
-  .lanc-item:last-child { border-bottom: none; }
-  .lanc-item.paga { background: rgba(41,217,142,.10); }
-  .lanc-left { display:flex; align-items:center; gap:10px; min-width:0; }
-  .lanc-check {
-    width: 17px; height: 17px; flex-shrink: 0; cursor: pointer; accent-color: var(--green);
-  }
-  .lanc-nome { font-size: 13px; font-weight: 500; }
-  .lanc-obs { font-size: 11px; color: var(--muted); }
-
-  .etapa-empty { color: var(--muted); font-size: 12px; padding: 8px 0; }
-  .etapa-divider-row { display:grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 22px; }
-  @media (max-width: 900px) { .etapa-divider-row { grid-template-columns: 1fr; } }
-  .etapa-col-title { font-size: 11px; font-weight: 700; text-transform:uppercase; letter-spacing:.5px; color: var(--muted); margin-bottom: 8px; }
-
-  .tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
-  .tab {
-    padding: 10px 18px; font-size: 13px; font-weight: 500; cursor: pointer;
-    color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px;
-    transition: all .15s; background: none; border-top: none; border-left: none; border-right: none;
-    font-family: var(--sans);
-  }
-  .tab:hover { color: var(--text); }
-  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
-  .tab-content { display: none; }
-  .tab-content.active { display: block; }
-
-  .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.7); z-index: 999; align-items: center; justify-content: center; }
-  .modal-bg.open { display: flex; }
-  .modal { background: var(--surface); border: 1px solid var(--border2); border-radius: 12px; padding: 28px; max-width: 480px; width: 90%; }
-  .modal h3 { font-size: 16px; font-weight: 600; margin-bottom: 20px; }
-
-  #toast {
-    position: fixed; bottom: 24px; right: 24px;
-    background: var(--green); color: #000;
-    padding: 12px 20px; border-radius: 8px; font-size: 13px; font-weight: 600;
-    opacity: 0; transform: translateY(10px); transition: all .3s; z-index: 9999;
-    pointer-events: none;
-  }
-  #toast.show { opacity: 1; transform: translateY(0); }
-  #toast.error { background: var(--red); color: #fff; }
-
-  #save-indicator {
-    position: fixed; top: 14px; right: 24px;
-    font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px;
-    z-index: 9999; transition: all .3s; opacity: 0;
-  }
-  #save-indicator.saving { background: rgba(79,142,247,.2); color: var(--accent); border: 1px solid var(--accent); opacity: 1; }
-  #save-indicator.saved { background: rgba(41,217,142,.2); color: var(--green); border: 1px solid var(--green); opacity: 1; }
-  #save-indicator.error { background: rgba(240,92,110,.2); color: var(--red); border: 1px solid var(--red); opacity: 1; }
-
-  .full-width { grid-column: 1 / -1; }
-  .text-right { text-align: right; }
-  .mt-16 { margin-top: 16px; }
-  .flex-end { display: flex; justify-content: flex-end; }
-  .gap-10 { gap: 10px; }
-  .chip { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 20px; font-size: 11px; background: var(--surface2); border: 1px solid var(--border2); color: var(--muted); margin: 2px; }
-
-  /* ================================================================
-     TABELA PLANILHA — Lançamentos
-  ================================================================ */
-  #tabela-lancamentos th, #tabela-lancamentos td {
-    border: 1px solid var(--border);
-    padding: 0;
-    white-space: nowrap;
-    vertical-align: middle;
-  }
-  #tabela-lancamentos thead tr:first-child th {
-    background: #0d1117;
-    color: var(--muted);
-    font-size: 10px;
+  .hero-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    font-weight: 600;
+    color: var(--branco);
+    letter-spacing: 0.35em;
     text-transform: uppercase;
-    letter-spacing: .5px;
-    padding: 6px 8px;
-    font-weight: 700;
-    text-align: center;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-  /* Grupos de colunas */
-  .th-group-ent   { background: rgba(79,142,247,.18) !important; color: var(--accent) !important; }
-  .th-group-sub   { background: rgba(41,217,142,.18) !important; color: var(--green)  !important; }
-  .th-group-gasto { background: rgba(240,92,110,.18) !important; color: var(--red)    !important; }
-  .th-group-res   { background: rgba(245,200,66,.18) !important; color: var(--yellow) !important; }
-  .th-group-meta  { background: rgba(124,92,252,.18) !important; color: var(--accent2)!important; }
-
-  /* Linha de mês (ref + data) */
-  .tl-ref {
-    background: var(--surface);
-    padding: 5px 10px;
-    font-size: 11px;
-    color: var(--muted);
-    text-align: center;
-    font-weight: 700;
-    position: sticky;
-    left: 0;
-    z-index: 5;
-    min-width: 54px;
-  }
-  .tl-data {
-    background: var(--surface);
-    padding: 5px 8px;
-    font-size: 11px;
-    color: var(--muted);
-    text-align: center;
-    position: sticky;
-    left: 54px;
-    z-index: 5;
-    min-width: 86px;
+    margin-top: 0.8rem;
+    opacity: 0.9;
   }
 
-  /* Linha CLT (leitura) */
-  .tl-row-clt { background: var(--surface); }
-  .tl-row-clt:hover td { background: var(--surface2) !important; }
-
-  /* Linha PJ (editável) */
-  .tl-row-pj { background: #0f1520; }
-  .tl-row-pj:hover td { filter: brightness(1.07); }
-
-  /* Célula de valor leitura */
-  .tl-val {
-    padding: 5px 8px;
-    text-align: right;
-    font-size: 12px;
-    min-width: 88px;
-    color: var(--text);
+  .hero-dates {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.8);
+    letter-spacing: 0.15em;
+    margin-top: 0.5rem;
   }
-  .tl-val.pos { color: var(--green); }
-  .tl-val.neg { color: var(--red); }
-  .tl-val.sub { color: var(--green); font-weight: 700; background: rgba(41,217,142,.06); }
-  .tl-val.sobra-pos { color: var(--green); font-weight: 700; background: rgba(41,217,142,.1); }
-  .tl-val.sobra-neg { color: var(--red);   font-weight: 700; background: rgba(240,92,110,.1); }
-  .tl-val.guardar   { color: var(--accent2); font-weight: 700; background: rgba(124,92,252,.08); }
-  .tl-val.subtotal-gasto { color: var(--red); font-weight: 700; background: rgba(240,92,110,.06); }
 
-  /* Input inline para PJ */
-  .tl-input {
-    width: 100%;
-    background: transparent;
+  .eagle { font-size: 4rem; margin-bottom: 0.5rem; animation: float 3s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+
+  .scroll-hint {
+    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    color: rgba(255,255,255,0.7); font-size: 0.85rem; letter-spacing: 0.2em;
+    display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+    animation: bounce 2s ease-in-out infinite;
+  }
+  @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+
+  .nav-bar {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--verde-dark);
+    display: flex; gap: 0; overflow-x: auto;
+    scrollbar-width: none;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  }
+  .nav-bar::-webkit-scrollbar { display: none; }
+
+  .nav-btn {
+    flex-shrink: 0;
+    padding: 0.75rem 1.2rem;
+    color: rgba(255,255,255,0.75);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    cursor: pointer;
     border: none;
-    outline: none;
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 12px;
-    padding: 5px 8px;
-    text-align: right;
-    min-width: 88px;
-    display: block;
+    background: none;
+    transition: all 0.2s;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
   }
-  .tl-input:focus {
-    background: rgba(79,142,247,.15);
-    outline: 1px solid var(--accent);
-  }
-  .tl-input::placeholder { color: var(--border2); }
-
-  /* Cabeçalho fixo de ref/data */
-  .th-ref {
-    position: sticky; left: 0; z-index: 11;
-    min-width: 54px;
-  }
-  .th-data {
-    position: sticky; left: 54px; z-index: 11;
-    min-width: 86px;
+  .nav-btn:hover, .nav-btn.active {
+    color: var(--branco);
+    background: rgba(255,255,255,0.1);
+    border-bottom-color: var(--ouro);
   }
 
-  /* Tag CLT/PJ */
-  .tl-badge {
-    display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 9px; font-weight: 700;
-    margin-left: 4px; vertical-align: middle;
+  .section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+    scroll-margin-top: 50px;
   }
-  .tl-badge-clt { background: rgba(79,142,247,.2); color: var(--accent); }
-  .tl-badge-pj  { background: rgba(124,92,252,.2); color: var(--accent2); }
 
-  .viagens-page-header {
-    display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;
+  .section-header {
+    display: flex; align-items: center; gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 3px solid var(--verde);
   }
-  .viagens-page-header h2 { font-size: 18px; font-weight: 700; margin: 0; }
 
-  .viagens-resumo {
+  .section-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--verde-dark);
+  }
+
+  .day-badge {
+    background: var(--verde);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+
+  .day-badge.red { background: var(--vermelho); }
+  .day-badge.gold { background: var(--ouro); color: var(--texto); }
+  .day-badge.blue { background: #0077AA; }
+  .day-badge.purple { background: #6B21A8; }
+  .day-badge.dark { background: #333; }
+  .day-badge.teal { background: #0D7A6B; }
+
+  .overview-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 14px;
-    margin-bottom: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
   }
 
-  .viagens-grid {
+  .overview-card {
+    background: white;
+    border-radius: 0.75rem;
+    padding: 1rem 1.2rem;
+    border-left: 5px solid var(--verde);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .overview-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
+  .overview-card.red { border-color: var(--vermelho); }
+  .overview-card.gold { border-color: var(--ouro); }
+  .overview-card.blue { border-color: #0077AA; }
+  .overview-card.purple { border-color: #6B21A8; }
+  .overview-card.dark { border-color: #555; }
+  .overview-card.teal { border-color: #0D7A6B; }
+
+  .ov-day { font-size: 0.7rem; font-weight: 700; color: var(--cinza); letter-spacing: 0.1em; text-transform: uppercase; }
+  .ov-label { font-size: 1rem; font-weight: 700; color: var(--texto); margin: 0.2rem 0; }
+  .ov-desc { font-size: 0.8rem; color: var(--cinza); line-height: 1.4; }
+
+  .cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
   }
 
-  .viagem-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-    transition: border-color .2s, box-shadow .2s;
+  .cards-grid.single { grid-template-columns: 1fr; }
+  .cards-grid.two { grid-template-columns: repeat(2, 1fr); }
+
+  .card {
+    background: white;
+    border-radius: 0.75rem;
+    padding: 1rem 1.2rem;
+    border-left: 5px solid var(--verde);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    transition: transform 0.2s, box-shadow 0.2s;
   }
-  .viagem-card:hover {
-    border-color: var(--border2);
-    box-shadow: 0 4px 24px rgba(0,0,0,.4);
+  .card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
+
+  .card.lunch { border-color: var(--vermelho); }
+  .card.coffee { border-color: var(--ouro); }
+  .card.afternoon { border-color: #0077AA; }
+  .card.night { border-color: #6B21A8; }
+  .card.wide { grid-column: 1 / -1; }
+  .card.optional { border-style: dashed; opacity: 0.85; }
+
+  .card-label {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; margin-bottom: 0.3rem;
+    color: var(--verde);
+  }
+  .card.lunch .card-label { color: var(--vermelho); }
+  .card.coffee .card-label { color: #A87C2A; }
+  .card.afternoon .card-label { color: #0077AA; }
+  .card.night .card-label { color: #6B21A8; }
+
+  .card-name { font-size: 1.05rem; font-weight: 700; color: var(--texto); margin-bottom: 0.25rem; }
+
+  .card-meta {
+    font-size: 0.82rem; color: var(--cinza);
+    display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;
   }
 
-  .viagem-card-header {
-    display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px;
+  .price-tag {
+    background: #F0FBF4; color: var(--verde-dark);
+    padding: 0.15rem 0.5rem; border-radius: 999px;
+    font-size: 0.75rem; font-weight: 600;
   }
-  .viagem-card-titulo { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.3; }
-  .viagem-card-mes { font-size: 11px; color: var(--muted); margin-top: 3px; font-family: var(--mono); }
 
-  .vbadge {
-    font-size: 10px; padding: 3px 9px; border-radius: 20px; font-weight: 700;
-    white-space: nowrap; flex-shrink: 0; margin-left: 10px;
-  }
-  .vbadge-planejando { background: rgba(79,142,247,.15); color: var(--accent); }
-  .vbadge-confirmada { background: rgba(41,217,142,.15); color: var(--green); }
-  .vbadge-realizada  { background: rgba(107,116,148,.15); color: var(--muted); }
-  .vbadge-cancelada  { background: rgba(240,92,110,.15); color: var(--red); }
+  .price-tag.free { background: #E8F8F0; color: #1A7A4A; }
+  .price-tag.paid { background: #FFF3E0; color: #B06000; }
 
-  .viagem-progress-wrap { margin: 12px 0; }
-  .viagem-progress-label {
-    display: flex; justify-content: space-between;
-    font-size: 11px; color: var(--muted); margin-bottom: 5px;
+  .note-tag {
+    font-style: italic; color: #999; font-size: 0.78rem;
   }
-  .viagem-progress-bar {
-    height: 5px; border-radius: 4px; background: var(--border2); overflow: hidden;
-  }
-  .viagem-progress-fill { height: 100%; border-radius: 4px; transition: width .4s; }
-  .vpfill-ok   { background: var(--green); }
-  .vpfill-warn { background: var(--yellow); }
-  .vpfill-over { background: var(--red); }
 
-  .viagem-itens {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; margin: 12px 0;
+  .reserve-tag {
+    background: #FFF3F3; color: var(--vermelho);
+    padding: 0.15rem 0.5rem; border-radius: 999px;
+    font-size: 0.72rem; font-weight: 600;
   }
-  .viagem-item-row {
+
+  .optional-tag {
+    background: #F0F4FF; color: #3344AA;
+    padding: 0.15rem 0.5rem; border-radius: 999px;
+    font-size: 0.72rem; font-weight: 600;
+  }
+
+  .link-btn {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    margin-top: 0.4rem;
+    font-size: 0.78rem; font-weight: 600;
+    color: var(--verde);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--verde);
+    transition: all 0.2s;
+  }
+  .link-btn:hover { color: var(--vermelho); border-color: var(--vermelho); }
+
+  .links-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.4rem; }
+
+  .options-box {
+    background: #FFFBF0;
+    border: 2px solid var(--ouro);
+    border-radius: 0.75rem;
+    padding: 1rem 1.2rem;
+    margin-bottom: 0.5rem;
+    grid-column: 1 / -1;
+  }
+  .options-box h4 { font-size: 0.8rem; font-weight: 700; color: #A87C2A; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .options-box p { font-size: 0.85rem; color: var(--texto); margin-bottom: 0.3rem; }
+
+  .flow-bar {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, #f0faf5, #fff9f0);
+    border: 1.5px solid #c8e6d8;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--verde-dark);
+    letter-spacing: 0.03em;
+  }
+  .flow-bar span { color: var(--cinza); font-weight: 400; }
+  .flow-sep { color: var(--ouro); font-size: 1rem; }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 640px) {
+    .summary-grid { grid-template-columns: 1fr; }
+    .cards-grid.two { grid-template-columns: 1fr; }
+    .hero-overlay { padding: 2rem 1.5rem; }
+    .flow-bar { gap: 0.3rem; }
+  }
+
+  .summary-block {
+    background: white;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  }
+
+  .summary-header {
+    padding: 0.7rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: white;
+    background: var(--verde);
+  }
+  .summary-header.red { background: var(--vermelho); }
+  .summary-header.gold { background: var(--ouro); color: var(--texto); }
+  .summary-header.purple { background: #6B21A8; }
+  .summary-header.blue { background: #0077AA; }
+
+  .summary-list {
+    list-style: none;
+    padding: 0.75rem 1rem;
+  }
+  .summary-list li {
+    padding: 0.35rem 0;
+    font-size: 0.87rem;
+    color: var(--texto);
+    border-bottom: 1px solid #F5F5F5;
+    display: flex; align-items: flex-start; gap: 0.5rem;
+  }
+  .summary-list li:last-child { border-bottom: none; }
+  .summary-list li a { color: var(--verde); text-decoration: none; font-weight: 600; }
+  .summary-list li a:hover { color: var(--vermelho); }
+
+  .total-block { border: 2px solid var(--ouro); }
+  .total-body { padding: 1.2rem 1.5rem 1.5rem; }
+  .total-warning {
+    font-size: 0.85rem; color: var(--texto);
+    background: #FFFBF0; border-left: 4px solid var(--ouro);
+    padding: 0.6rem 0.9rem; border-radius: 0.4rem; margin-bottom: 1rem;
+  }
+  .total-row {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 5px 0; border-bottom: 1px solid var(--border);
-    font-size: 12px; color: var(--muted);
+    gap: 1rem; padding: 0.7rem 0; border-bottom: 1px solid #F0F0F0;
+    flex-wrap: wrap;
   }
-  .viagem-item-row:last-child { border-bottom: none; }
-  .viagem-item-row span:last-child { color: var(--text); font-family: var(--mono); font-weight: 600; font-size: 12px; }
+  .total-row .total-label { font-size: 0.85rem; color: var(--cinza); max-width: 65%; }
+  .total-row .total-value { font-size: 1.05rem; font-weight: 700; color: var(--verde-dark); white-space: nowrap; }
+  .total-row .total-value span { display: block; font-size: 0.68rem; font-weight: 500; color: var(--cinza); text-transform: uppercase; letter-spacing: 0.05em; }
+  .total-row.highlight {
+    background: var(--verde-light); margin: 0.5rem -1.5rem 0; padding: 0.9rem 1.5rem;
+    border-bottom: none; border-radius: 0.5rem;
+  }
+  .total-row.highlight .total-label { font-weight: 700; color: var(--verde-dark); }
+  .total-row.highlight .total-value { font-size: 1.3rem; color: var(--vermelho); }
+  .total-note { font-size: 0.82rem; color: var(--texto); margin: 1rem 0 0.4rem; }
+  .total-group-list { list-style: none; padding-left: 0; }
+  .total-group-list li {
+    font-size: 0.82rem; color: var(--cinza); padding: 0.4rem 0 0.4rem 0.2rem;
+    border-bottom: 1px dashed #EEE;
+  }
+  .total-group-list li strong { color: var(--texto); }
 
-  .viagem-totals {
-    border-top: 1px solid var(--border2);
-    padding-top: 12px;
-    margin-top: 8px;
-  }
-  .viagem-total-row {
-    display: flex; justify-content: space-between; align-items: center;
-    font-size: 13px; font-weight: 600; padding: 3px 0;
-  }
-  .viagem-total-row.sub { font-size: 11px; font-weight: 400; color: var(--muted); }
-  .vtotal-ok   { color: var(--green); font-family: var(--mono); }
-  .vtotal-over { color: var(--red);   font-family: var(--mono); }
-  .vtotal-neu  { color: var(--text);  font-family: var(--mono); }
-
-  .viagem-obs {
-    font-size: 11px; color: var(--muted); font-style: italic;
-    margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);
-    line-height: 1.5;
+  .divider {
+    height: 4px;
+    background: linear-gradient(90deg, var(--verde), var(--vermelho));
   }
 
-  .viagem-card-actions { display: flex; gap: 8px; margin-top: 14px; }
-  .vbtn-edit, .vbtn-del {
-    flex: 1; padding: 7px; border-radius: 7px; border: none; cursor: pointer;
-    font-size: 12px; font-weight: 600; font-family: var(--sans); transition: opacity .15s;
+  footer {
+    background: var(--verde-dark);
+    color: rgba(255,255,255,0.7);
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.85rem;
   }
-  .vbtn-edit { background: var(--surface2); color: var(--text); border: 1px solid var(--border2); }
-  .vbtn-del  { background: rgba(240,92,110,.1); color: var(--red); border: 1px solid rgba(240,92,110,.2); }
-  .vbtn-edit:hover, .vbtn-del:hover { opacity: .75; }
 
-  .viagens-empty {
-    grid-column: 1/-1; text-align: center;
-    padding: 60px 20px; color: var(--muted); font-size: 14px; line-height: 1.8;
-  }
-  .viagens-empty-icon { font-size: 40px; margin-bottom: 12px; }
+  footer strong { color: white; }
 
-  /* Modal viagem */
-  .modal-viagem {
-    max-width: 560px; width: 95vw;
-    max-height: 90vh; overflow-y: auto;
-  }
-  .vform-section {
-    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
-    color: var(--muted); margin: 18px 0 10px; padding-bottom: 5px;
-    border-bottom: 1px solid var(--border);
-  }
-  .vform-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  @media (max-width: 520px) {
-    .vform-grid-2 { grid-template-columns: 1fr; }
-    .viagens-grid { grid-template-columns: 1fr; }
-  }
+  .section { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .section.visible { opacity: 1; transform: translateY(0); }
 </style>
 </head>
 <body>
-<div class="app">
 
-<!-- SIDEBAR -->
-<nav class="sidebar">
-  <div class="logo">
-    <h1>💰 Controle Fin.</h1>
-    <p>Abraão Moreira</p>
+<section class="hero" id="inicio">
+  <div class="flag-stripes">
+    <div class="s1"></div><div class="s2"></div><div class="s3"></div>
   </div>
-  <div class="nav">
-    <div class="nav-item active" onclick="showPage('dashboard')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-      Dashboard
-    </div>
-    <div class="nav-item" onclick="showPage('mensal')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      Lançamentos
-    </div>
-    <div class="nav-item" onclick="showPage('projecao')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-      Projeção 2026
-    </div>
-    <div class="nav-item" onclick="showPage('investimentos')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-      Investimentos
-    </div>
-    <div class="nav-item" onclick="showPage('plr')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-      PLR & Bônus
-    </div>
-    <!-- ✈️ ABA VIAGENS -->
-    <div class="nav-item" onclick="showPage('viagens')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
-      Viagens
-    </div>
-    <div class="nav-item" onclick="showPage('config')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-      Configurações
+  <div class="hero-content">
+    <div class="hero-overlay">
+      <div class="eagle">🦅</div>
+      <h1>MÉXICO</h1>
+      <div class="hero-sub">Roteiro de Viagem</div>
+      <div class="hero-dates">Cidade do México • Puebla • Cholula &nbsp;|&nbsp; Dias 13 – 20</div>
     </div>
   </div>
-  <div style="padding:16px 20px; border-top:1px solid var(--border);">
-    <button class="btn btn-ghost" style="width:100%; justify-content:center;" onclick="exportarExcel()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Exportar Excel
-    </button>
+  <div class="scroll-hint">
+    <span>EXPLORAR</span>
+    <span>↓</span>
   </div>
+</section>
+
+<nav class="nav-bar">
+  <button class="nav-btn" onclick="goTo('visao')">🗺️ Visão Geral</button>
+  <button class="nav-btn" onclick="goTo('dia13')">🌙 Dia 13</button>
+  <button class="nav-btn" onclick="goTo('dia14')">🏛️ Dia 14</button>
+  <button class="nav-btn" onclick="goTo('dia15')">🏔️ Dia 15</button>
+  <button class="nav-btn" onclick="goTo('dia16')">🌳 Dia 16</button>
+  <button class="nav-btn" onclick="goTo('dia17')">🎨 Dia 17</button>
+  <button class="nav-btn" onclick="goTo('dia18')">🌆 Dia 18</button>
+  <button class="nav-btn" onclick="goTo('dia19')">🏙️ Dia 19</button>
+  <button class="nav-btn" onclick="goTo('dia20')">✈️ Dia 20</button>
+  <button class="nav-btn" onclick="goTo('resumo')">📋 Resumo</button>
 </nav>
 
-<!-- MAIN -->
-<div class="main">
-
-<div class="topbar">
-  <div>
-    <div class="topbar-title" id="topbar-title">Dashboard</div>
-    <div class="topbar-sub" id="topbar-sub">Visão geral do seu patrimônio</div>
+<div class="section" id="visao">
+  <div class="section-header">
+    <h2>🗺️ Visão Geral da Viagem</h2>
   </div>
-  <div style="display:flex;gap:10px;align-items:center;">
-    <span style="font-size:12px;color:var(--muted);" id="hoje-label"></span>
-    <button class="btn btn-primary btn-small" onclick="showPage('mensal')">+ Lançamento</button>
-  </div>
-</div>
-
-<!-- PAGE: DASHBOARD -->
-<div class="page active" id="page-dashboard">
-  <div class="cards" id="dash-cards"></div>
-  <div class="two-col">
-    <div class="section">
-      <div class="section-header">
-        <div class="section-title">Patrimônio Total</div>
-        <span id="patrimonio-total" style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--green)"></span>
-      </div>
-      <div id="inv-breakdown"></div>
+  <div class="overview-grid">
+    <div class="overview-card">
+      <div class="ov-day">Dia 13</div>
+      <div class="ov-label">🌙 Chegada</div>
+      <div class="ov-desc">Check-in • Jantar no Lardo • Caminhada leve em Roma/Condesa</div>
     </div>
-    <div class="section">
-      <div class="section-header">
-        <div class="section-title">Resumo do Mês</div>
-        <select id="dash-mes-sel" style="background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);padding:5px 10px;font-family:var(--sans);font-size:12px;" onchange="renderDashMes()"></select>
-      </div>
-      <div id="dash-mes-content"></div>
+    <div class="overview-card red">
+      <div class="ov-day">Dia 14</div>
+      <div class="ov-label">🏛️ Centro Histórico</div>
+      <div class="ov-desc">Zócalo • Catedral • Templo Mayor • Bellas Artes • Cha Cha Cha</div>
     </div>
-  </div>
-  <div class="section">
-    <div class="section-header">
-      <div class="section-title">Histórico de Patrimônio</div>
-      <div class="section-sub">Evolução mensal registrada</div>
+    <div class="overview-card gold">
+      <div class="ov-day">Dia 15</div>
+      <div class="ov-label">🏔️ Teotihuacán</div>
+      <div class="ov-desc">Pirâmides • La Gruta • Panadería Rosetta • Altanera</div>
     </div>
-    <div class="tbl-wrap">
-      <table>
-        <thead><tr><th>Mês</th><th>Patrimônio</th><th>Variação</th><th>Total Guardado</th></tr></thead>
-        <tbody id="historico-tbody"></tbody>
-      </table>
+    <div class="overview-card blue">
+      <div class="ov-day">Dia 16</div>
+      <div class="ov-label">🌳 Chapultepec + Polanco</div>
+      <div class="ov-desc">Bosque • Museu de Antropologia • Soumaya + Jumex • El Turix • Lucha Libre</div>
     </div>
-  </div>
-</div>
-
-<!-- PAGE: MENSAL -->
-<div class="page" id="page-mensal">
-  <div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
-    <table id="tabela-lancamentos" style="border-collapse:collapse; min-width:1800px; width:100%; font-size:12px; font-family:var(--mono);">
-      <thead id="tabela-thead"></thead>
-      <tbody id="tabela-tbody"></tbody>
-    </table>
+    <div class="overview-card purple">
+      <div class="ov-day">Dia 17</div>
+      <div class="ov-label">🎨 Coyoacán + Xochimilco</div>
+      <div class="ov-desc">Frida Kahlo • Mercado • Los Danzantes • Trajineras • Torre Latino (noite)</div>
+    </div>
+    <div class="overview-card teal">
+      <div class="ov-day">Dia 18</div>
+      <div class="ov-label">🌆 Puebla + Cholula</div>
+      <div class="ov-desc">Bate-volta colonial e arqueológico • Pirâmide de Cholula • Sartoria</div>
+    </div>
+    <div class="overview-card">
+      <div class="ov-day">Dia 19</div>
+      <div class="ov-label">🏙️ Roma Norte + Condesa</div>
+      <div class="ov-desc">Biblioteca Vasconcelos • Álvaro Obregón • Mercado Roma • Madre Café • MUCHO • Parques • Limantour • Supra</div>
+    </div>
+    <div class="overview-card dark">
+      <div class="ov-day">Dia 20</div>
+      <div class="ov-label">✈️ Partida (Voo 00:40)</div>
+      <div class="ov-desc">Reforma 222 • Almoço em Roma Norte • La Ciudadela • Jantar perto do hotel • Aeroporto 21h</div>
+    </div>
   </div>
 </div>
 
-<!-- PAGE: PROJEÇÃO -->
-<div class="page" id="page-projecao">
-  <div class="alert alert-info" style="margin-bottom:20px;">
-    📌 Esta projeção é baseada no seu histórico. Valores em <strong>azul</strong> são projetados; em <strong>branco</strong> são realizados.
+<div class="divider"></div>
+
+<div class="section" id="dia13">
+  <div class="section-header">
+    <span class="day-badge">Dia 13</span>
+    <h2>🌙 Chegada (~18h) — Roma Norte</h2>
   </div>
-  <div class="section">
-    <div class="section-header">
-      <div class="section-title">Projeção Anual 2026</div>
-    </div>
-    <div class="tabs" id="tab-projecao">
-      <button class="tab active" data-tab="pj-clt" onclick="showTab('tab-projecao','pj-clt')">Regime CLT</button>
-      <button class="tab" data-tab="pj-pj" onclick="showTab('tab-projecao','pj-pj')">Regime PJ</button>
-    </div>
-    <div class="tab-content active" id="pj-clt">
-      <div class="tbl-wrap">
-        <table id="tbl-projecao-clt">
-          <thead>
-            <tr><th>Mês</th><th>Salário</th><th>VT</th><th>Vale (20)</th><th>Comissão</th><th>Lume+CS</th><th>JAC</th>
-            <th>Total Entrada</th><th>Total Gastos</th><th>Guardar</th><th>Patrimônio</th><th>Var%</th></tr>
-          </thead>
-          <tbody id="tbody-projecao-clt"></tbody>
-        </table>
+  <div class="cards-grid">
+    <div class="card">
+      <div class="card-label">🏨 Check-in</div>
+      <div class="card-name">Hotel + Descanso</div>
+      <div class="card-meta">
+        <span class="price-tag free">Grátis</span>
+        <span class="note-tag">Deixe as malas, respire — você chegou!</span>
       </div>
     </div>
-    <div class="tab-content" id="pj-pj">
-      <div class="alert alert-warn">PJ: salário R$ 13.650 + adicionais. Valores abaixo são projetados para o cenário PJ.</div>
-      <div class="tbl-wrap">
-        <table>
-          <thead>
-            <tr><th>Mês</th><th>Salário PJ</th><th>Adicionais</th><th>Comissão</th>
-            <th>Total Entrada</th><th>Total Gastos</th><th>Guardar</th><th>Patrimônio</th></tr>
-          </thead>
-          <tbody id="tbody-projecao-pj"></tbody>
-        </table>
+    <div class="card night">
+      <div class="card-label">🍽️ Jantar</div>
+      <div class="card-name">Lardo CDMX</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Pago • R$ 80–120</span>
+        <span class="reserve-tag">✔ Reservado • 21h (via WhatsApp)</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Lardo+CDMX+Roma+Norte" target="_blank" class="link-btn">📍 Google Maps ↗</a>
+      </div>
+    </div>
+    <div class="card optional afternoon wide">
+      <div class="card-label">🚶 Caminhada Opcional — Se houver energia</div>
+      <div class="card-name">Roma Norte / Condesa a pé</div>
+      <div class="card-meta">
+        <span class="price-tag free">Grátis</span>
+        <span class="optional-tag">Opcional</span>
+        <span class="note-tag">Ruas arborizadas, casarões, clima da cidade</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Roma+Norte+CDMX" target="_blank" class="link-btn">📍 Roma Norte ↗</a>
+        <a href="https://maps.google.com/?q=Condesa+CDMX" target="_blank" class="link-btn">📍 Condesa ↗</a>
       </div>
     </div>
   </div>
 </div>
 
-<!-- PAGE: INVESTIMENTOS -->
-<div class="page" id="page-investimentos">
-  <div class="cards" id="inv-cards"></div>
-  <div class="two-col">
-    <div class="section">
-      <div class="section-header">
-        <div class="section-title">💰 Saldos por Conta</div>
-        <button class="btn btn-small btn-ghost" onclick="openModal('modal-inv-saldo')">Atualizar</button>
-      </div>
-      <div id="saldos-conta"></div>
-    </div>
-    <div class="section">
-      <div class="section-header">
-        <div class="section-title">📋 Carteira XP Detalhada</div>
-        <div class="section-sub">Atualizada manualmente</div>
-      </div>
-      <div id="xp-detalhada"></div>
-    </div>
-  </div>
-  <div class="section">
-    <div class="section-header"><div class="section-title">Evolução Patrimonial</div></div>
-    <div class="tbl-wrap">
-      <table>
-        <thead><tr><th>Mês</th><th>Cash</th><th>Espanha</th><th>XP Invest</th><th>Nubank</th><th>Total</th><th>Var%</th></tr></thead>
-        <tbody id="tbody-inv-hist"></tbody>
-      </table>
-    </div>
-  </div>
-</div>
+<div class="divider"></div>
 
-<!-- PAGE: PLR -->
-<div class="page" id="page-plr">
-  <div class="alert alert-info">
-    💡 PLR = 3x salário médio anual ÷ 2 parcelas. A 2ª parcela é reduzida pelo churn (cancelamentos).
+<div class="section" id="dia14">
+  <div class="section-header">
+    <span class="day-badge red">Dia 14</span>
+    <h2>🏛️ Centro Histórico — Tudo a Pé</h2>
   </div>
-  <div class="cards">
-    <div class="card green">
-      <div class="card-label">PLR 1ª Parcela (Fev)</div>
-      <div class="card-value" id="plr-1a">R$ 0</div>
-      <div class="card-sub">pago em fevereiro</div>
-    </div>
-    <div class="card yellow">
-      <div class="card-label">PLR 2ª Parcela (Jun)</div>
-      <div class="card-value" id="plr-2a">R$ 0</div>
-      <div class="card-sub">com abate de churn</div>
-    </div>
-    <div class="card blue">
-      <div class="card-label">PLR Total</div>
-      <div class="card-value" id="plr-total">R$ 0</div>
-      <div class="card-sub">estimativa</div>
-    </div>
-  </div>
-  <div class="two-col">
-    <div class="section">
-      <div class="section-title" style="margin-bottom:16px;">Configuração PLR</div>
-      <div class="form-grid" style="grid-template-columns:1fr;">
-        <div class="form-group"><label>Salário 1 (período menor)</label><input type="number" id="plr-sal-baixo" value="6952"></div>
-        <div class="form-group"><label>Salário 2 (período maior)</label><input type="number" id="plr-sal-alto" value="7378"></div>
-        <div class="form-group"><label>Meta de vendas (R$)</label><input type="number" id="plr-meta" value="5300000000"></div>
-        <div class="form-group"><label>% churn (ex: 0.30 = 30%)</label><input type="number" id="plr-churn" value="0.30" step="0.01" placeholder="ex: 0.30"></div>
-        <div class="form-group"><label>Multiplicador PLR</label><input type="number" id="plr-mult" value="3" step="0.5"></div>
-        <div class="form-group"><label>% Atingimento GRE (ex: 99.8)</label><input type="number" id="plr-ating" value="100" step="0.1" placeholder="ex: 99.8"></div>
+  <div class="cards-grid">
+    <div class="card wide">
+      <div class="card-label">🌅 Manhã — Monumentos (roteiro a pé)</div>
+      <div class="card-name">Zócalo • Catedral Metropolitana • Palácio Nacional • Templo Mayor</div>
+      <div class="card-meta">
+        <span class="price-tag free">Zócalo: Grátis</span>
+        <span class="price-tag free">Catedral: Grátis</span>
+        <span class="price-tag free">Palácio Nacional: Grátis</span>
+        <span class="price-tag paid">Templo Mayor: Pago ~R$ 50</span>
       </div>
-      <div class="btn-row" style="margin-top:14px">
-        <button class="btn btn-primary" onclick="calcPLR()">💾 Salvar / Recalcular</button>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Zocalo+Ciudad+de+Mexico" target="_blank" class="link-btn">📍 Zócalo ↗</a>
+        <a href="https://maps.google.com/?q=Catedral+Metropolitana+CDMX" target="_blank" class="link-btn">📍 Catedral ↗</a>
+        <a href="https://maps.google.com/?q=Palacio+Nacional+CDMX" target="_blank" class="link-btn">📍 Palácio Nacional ↗</a>
+        <a href="https://maps.google.com/?q=Templo+Mayor+CDMX" target="_blank" class="link-btn">📍 Templo Mayor ↗</a>
       </div>
     </div>
-    <div class="section">
-      <div class="section-title" style="margin-bottom:16px;">Cálculo Detalhado</div>
-      <div id="plr-detalhes"></div>
-    </div>
-  </div>
-</div>
-
-<!-- PAGE: VIAGENS ✈️ -->
-<div class="page" id="page-viagens">
-  <div class="viagens-page-header">
-    <h2>✈️ Viagens</h2>
-    <button class="btn btn-primary" onclick="abrirModalViagem()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      Nova Viagem
-    </button>
-  </div>
-  <!-- Cards de resumo -->
-  <div class="viagens-resumo" id="viagens-resumo-cards"></div>
-  <!-- Grid de cards -->
-  <div class="viagens-grid" id="viagens-lista"></div>
-</div>
-
-<!-- PAGE: CONFIG -->
-<div class="page" id="page-config">
-  <div class="section">
-    <div class="section-title" style="margin-bottom:20px;">⚙️ Configurações Gerais</div>
-    <div class="form-grid">
-      <div class="form-group"><label>Salário Base (CLT)</label><input type="number" id="cfg-salario" value="8471" oninput="saveConfig()"></div>
-      <div class="form-group"><label>VT — Vale Transporte</label><input type="number" id="cfg-vt" value="264" oninput="saveConfig()"></div>
-      <div class="form-group"><label>Lume + CS</label><input type="number" id="cfg-lume" value="2800" oninput="saveConfig()"></div>
-      <div class="form-group"><label>JAC</label><input type="number" id="cfg-jac" value="1772" oninput="saveConfig()"></div>
-    </div>
-    <hr class="divider">
-    <div class="section-title" style="margin-bottom:16px;">Gastos Fixos Mensais</div>
-    <div id="gastos-fixos-list"></div>
-    <div class="btn-row">
-      <button class="btn btn-ghost btn-small" onclick="openModal('modal-fixo')">+ Gasto Fixo</button>
-    </div>
-    <hr class="divider">
-    <div class="btn-row">
-      <button class="btn btn-danger btn-small" onclick="if(confirm('Apagar TODOS os dados?')) limparTudo()">🗑 Limpar Todos os Dados</button>
-      <button class="btn btn-primary btn-small" onclick="importarDadosIniciais()">↩ Restaurar Dados Iniciais (v7)</button>
-    </div>
-    <div style="margin-top:12px;font-size:11px;color:var(--muted)">Versão dos dados: <strong id="data-ver-label"></strong></div>
-  </div>
-</div>
-
-</div><!-- /main -->
-</div><!-- /app -->
-
-<!-- MODALS existentes -->
-<div class="modal-bg" id="modal-entrada">
-  <div class="modal">
-    <h3>+ Nova Entrada</h3>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Etapa</label>
-        <select id="ent-etapa">
-          <option value="5DU">5º Dia Útil</option>
-          <option value="VALE">Vale (dia 20)</option>
-        </select>
+    <div class="card lunch">
+      <div class="card-label">🍽️ Almoço</div>
+      <div class="card-name">Azul Histórico</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Pago • R$ 100–150</span>
+        <span class="reserve-tag">✔ Reservado • 13:00 (via e-mail)</span>
       </div>
-      <div class="form-group">
-        <label>Tipo</label>
-        <select id="ent-tipo">
-          <option>Salário (5º dia útil)</option><option>VT (Vale Transporte)</option>
-          <option>Vale (Adiant. 40% — dia 20)</option><option>Comissão</option>
-          <option>Lume+CS</option><option>JAC</option><option>PLR</option>
-          <option>13º Salário</option><option>Outro</option>
-        </select>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Azul+Historico+CDMX" target="_blank" class="link-btn">📍 Google Maps ↗</a>
+        <a href="https://www.opentable.com.mx" target="_blank" class="link-btn">📅 Reservar ↗</a>
       </div>
-      <div class="form-group"><label>Valor (R$)</label><input type="number" id="ent-valor" placeholder="0,00"></div>
-      <div class="form-group full-width"><label>Observação</label><input type="text" id="ent-obs" placeholder="Opcional"></div>
     </div>
-    <div class="btn-row">
-      <button class="btn btn-primary" onclick="addEntrada()">Salvar</button>
-      <button class="btn btn-ghost" onclick="closeModal('modal-entrada')">Cancelar</button>
+    <div class="card coffee">
+      <div class="card-label">☕ Café da Tarde — no caminho</div>
+      <div class="card-name">Café de Tacuba 🔥</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Pago • R$ 30–60</span>
+        <span class="note-tag">No caminho perfeito — sem desvio</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Cafe+de+Tacuba+CDMX" target="_blank" class="link-btn">📍 Google Maps ↗</a>
+      </div>
+    </div>
+    <div class="card afternoon">
+      <div class="card-label">🎨 Tarde — Cultura</div>
+      <div class="card-name">Palácio de Bellas Artes + Calle Madero</div>
+      <div class="card-meta">
+        <span class="price-tag free">Bellas Artes exterior: Grátis</span>
+        <span class="price-tag paid">Interior: Pago ~R$ 20</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Palacio+de+Bellas+Artes+CDMX" target="_blank" class="link-btn">📍 Bellas Artes ↗</a>
+        <a href="https://maps.google.com/?q=Calle+Madero+CDMX" target="_blank" class="link-btn">📍 Calle Madero ↗</a>
+      </div>
+    </div>
+    <div class="card night">
+      <div class="card-label">🌇 Noite — Rooftop</div>
+      <div class="card-name">Terraza Cha Cha Cha</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Pago • R$ 120–200</span>
+        <span class="reserve-tag">✔ Reservado • 17h</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Terraza+Cha+Cha+Cha+CDMX" target="_blank" class="link-btn">📍 Google Maps ↗</a>
+        <a href="https://www.instagram.com/terrazachachacha" target="_blank" class="link-btn">📅 Reservar via Instagram ↗</a>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="modal-bg" id="modal-saida">
-  <div class="modal">
-    <h3>+ Nova Saída</h3>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Etapa</label>
-        <select id="sai-etapa">
-          <option value="5DU">5º Dia Útil</option>
-          <option value="VALE">Vale (dia 20)</option>
-        </select>
+<div class="divider"></div>
+
+<div class="section" id="dia15">
+  <div class="section-header">
+    <span class="day-badge gold">Dia 15</span>
+    <h2>🏔️ Teotihuacán — Pirâmides</h2>
+  </div>
+  <div class="cards-grid">
+    <div class="card wide">
+      <div class="card-label">🌅 Manhã — Zona Arqueológica</div>
+      <div class="card-name">🎟️ Teotihuacán — Pirâmide do Sol • Pirâmide da Lua • Avenida dos Mortos</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Entrada: Pago ~R$ 60</span>
+        <span class="reserve-tag">✔ Reservado</span>
+        <span class="note-tag">Feita via site • Sair cedo — chegar às 7:30</span>
       </div>
-      <div class="form-group">
-        <label>Categoria</label>
-        <select id="sai-categoria">
-          <option>Acidente</option><option>Luz</option><option>Habitação</option>
-          <option>Nubank</option><option>XP</option><option>Inglês</option>
-          <option>C6 Lucas</option><option>IPTU</option><option>Santander</option>
-          <option>Itaú</option><option>Condomínio</option><option>Espanha</option>
-          <option>Lazer/Férias</option><option>Alimentação</option><option>Transporte</option><option>Outro</option>
-        </select>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Zona+Arqueologica+Teotihuacan" target="_blank" class="link-btn">📍 Zona Arqueológica ↗</a>
+        <a href="https://maps.google.com/?q=Piramide+del+Sol+Teotihuacan" target="_blank" class="link-btn">📍 Pirâmide do Sol ↗</a>
+        <a href="https://maps.google.com/?q=Piramide+de+la+Luna+Teotihuacan" target="_blank" class="link-btn">📍 Pirâmide da Lua ↗</a>
       </div>
-      <div class="form-group"><label>Valor (R$)</label><input type="number" id="sai-valor" placeholder="0,00"></div>
-      <div class="form-group full-width"><label>Observação</label><input type="text" id="sai-obs" placeholder="Opcional"></div>
     </div>
-    <div class="btn-row">
-      <button class="btn btn-primary" onclick="addSaida()">Salvar</button>
-      <button class="btn btn-ghost" onclick="closeModal('modal-saida')">Cancelar</button>
+    <div class="card lunch">
+      <div class="card-label">🍽️ Almoço — No próprio sítio</div>
+      <div class="card-name">Restaurante La Gruta 🔥</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Pago • R$ 100–180</span>
+        <span class="reserve-tag">✔ Reservado • 12:45</span>
+        <span class="note-tag">Dentro de uma caverna de lava — imperdível</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=La+Gruta+Teotihuacan" target="_blank" class="link-btn">📍 Google Maps ↗</a>
+        <a href="https://lagruta.com.mx" target="_blank" class="link-btn">📅 Site oficial ↗</a>
+      </div>
+    </div>
+    <div class="card coffee">
+      <div class="card-label">☕ Café da Tarde — Na volta</div>
+      <div class="card-name">Panadería Rosetta 🔥</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Pago • R$ 30–60</span>
+        <span class="note-tag">Melhor pós-passeio possível</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Panaderia+Rosetta+CDMX" target="_blank" class="link-btn">📍 Google Maps ↗</a>
+      </div>
+    </div>
+    <div class="card night">
+      <div class="card-label">🌙 Jantar</div>
+      <div class="card-name">Altanera</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Pago • R$ 150–220</span>
+        <span class="reserve-tag">✔ Reservado • 20:30</span>
+        <span class="note-tag">Substituiu o Contramar (sem vaga) • Colima 161, Roma Norte • Rooftop surf-and-turf, vista pro pôr do sol • Costuma lotar</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Altanera+Colima+161+Roma+Norte" target="_blank" class="link-btn">📍 Google Maps ↗</a>
+        <a href="https://www.opentable.com/r/altanera-ciudad-de-mexico" target="_blank" class="link-btn">📅 OpenTable ↗</a>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="modal-bg" id="modal-editar">
-  <div class="modal">
-    <h3 id="modal-editar-title">Editar</h3>
-    <div class="form-grid" id="modal-editar-fields"></div>
-    <div class="btn-row">
-      <button class="btn btn-primary" onclick="salvarEdicao()">Salvar</button>
-      <button class="btn btn-ghost" onclick="closeModal('modal-editar')">Cancelar</button>
+<div class="divider"></div>
+
+<div class="section" id="dia16">
+  <div class="section-header">
+    <span class="day-badge blue">Dia 16</span>
+    <h2>🌳 Chapultepec + Museus + Polanco + Lucha Libre</h2>
+  </div>
+  <div class="cards-grid">
+    <div class="card wide">
+      <div class="card-label">🌅 Manhã — Bosque de Chapultepec</div>
+      <div class="card-name">🌳 Bosque de Chapultepec</div>
+      <div class="card-meta">
+        <span class="price-tag free">Grátis</span>
+        <span class="note-tag">Chegue cedo • Pedalar é ótima pedida</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Bosque+de+Chapultepec+CDMX" target="_blank" class="link-btn">📍 Google Maps ↗</a>
+      </div>
+    </div>
+    <div class="card optional">
+      <div class="card-label">🚲 Opcional — Bike</div>
+      <div class="card-name">Aluguel de Bicicleta no Parque</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Pago • R$ 30–60</span>
+        <span class="optional-tag">Opcional</span>
+      </div>
+      <div class="links-row">
+        <a href="https://ecobici.cdmx.gob.mx/" target="_blank" class="link-btn">📍 Ecobici ↗</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">🏛️ Manhã — Museu Imperdível</div>
+      <div class="card-name">Museu Nacional de Antropologia</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Pago ~R$ 60</span>
+        <span class="reserve-tag">✔ Reservado • 9h</span>
+        <span class="note-tag">Um dos melhores museus do mundo • Comprar online evita fila</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Museo+Nacional+de+Antropologia+CDMX" target="_blank" class="link-btn">📍 Google Maps ↗</a>
+        <a href="https://ventadeboletosenlinea.inah.gob.mx/" target="_blank" class="link-btn">🎟 Site oficial ↗</a>
+      </div>
+    </div>
+    <div class="card optional afternoon">
+      <div class="card-label">🏰 Opcional — Castelo</div>
+      <div class="card-name">Castelo de Chapultepec</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Pago ~R$ 50</span>
+        <span class="optional-tag">Opcional</span>
+        <span class="note-tag">Comprar na hora • Vista incrível da cidade</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Castillo+de+Chapultepec+CDMX" target="_blank" class="link-btn">📍 Google Maps ↗</a>
+        <a href="https://www.mnh.inah.gob.mx" target="_blank" class="link-btn">🎟 Site oficial ↗</a>
+      </div>
+    </div>
+    <div class="card afternoon wide">
+      <div class="card-label">🎨 Tarde — Plaza Carso, Nuevo Polanco</div>
+      <div class="card-name">Museo Soumaya + Museo Jumex</div>
+      <div class="card-meta">
+        <span class="price-tag free">Ambos grátis</span>
+        <span class="note-tag">Soumaya: todos os dias 10h30-18h30 • Jumex: ter-sex 10h-17h, sáb 10h-19h, dom 10h-17h, FECHADO segunda • Ficam um de frente pro outro</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Museo+Soumaya+Plaza+Carso" target="_blank" class="link-btn">📍 Museo Soumaya ↗</a>
+        <a href="https://maps.google.com/?q=Museo+Jumex+CDMX" target="_blank" class="link-btn">📍 Museo Jumex ↗</a>
+      </div>
+    </div>
+    <div class="card lunch">
+      <div class="card-label">🍽️ Almoço — Em Polanco</div>
+      <div class="card-name">El Turix</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Pago • R$ 30–60</span>
+        <span class="note-tag">Cochinita pibil imperdível • sem reserva, é balcão</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=El+Turix+Polanco+CDMX" target="_blank" class="link-btn">📍 Google Maps ↗</a>
+      </div>
+    </div>
+    <div class="card night wide">
+      <div class="card-label">🥊 Noite — Entretenimento</div>
+      <div class="card-name">Lucha Libre — Arena México ou Arena Coliseo</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Pago • R$ 80–200</span>
+        <span class="reserve-tag">✔ Reservado e pago • 20:30</span>
+        <span class="note-tag">Experiência cultural única — leve o espírito!</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Arena+Mexico+CDMX" target="_blank" class="link-btn">📍 Arena México ↗</a>
+        <a href="https://maps.google.com/?q=Arena+Coliseo+CDMX" target="_blank" class="link-btn">📍 Arena Coliseo ↗</a>
+        <a href="https://www.ticketmaster.com.mx" target="_blank" class="link-btn">🎟 Ticketmaster ↗</a>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="modal-bg" id="modal-patrimonio">
-  <div class="modal">
-    <h3>📈 Registrar Posição Atual</h3>
-    <div class="form-grid">
-      <div class="form-group"><label>Cash (dinheiro físico)</label><input type="number" id="pat-cash" placeholder="0"></div>
-      <div class="form-group"><label>Espanha (reserva)</label><input type="number" id="pat-espanha" placeholder="0"></div>
-      <div class="form-group"><label>XP Invest</label><input type="number" id="pat-xp" placeholder="0"></div>
-      <div class="form-group"><label>Nubank</label><input type="number" id="pat-nu" placeholder="0"></div>
+<div class="divider"></div>
+
+<div class="section" id="dia17">
+  <div class="section-header">
+    <span class="day-badge purple">Dia 17</span>
+    <h2>🎨 Coyoacán + Xochimilco</h2>
+  </div>
+  <div class="cards-grid">
+    <div class="card wide">
+      <div class="card-label">🌅 Manhã — Museu</div>
+      <div class="card-name">🎟️ Museu Frida Kahlo — Casa Azul</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Pago ~R$ 100</span>
+        <span class="reserve-tag">✔ Reservado e pago • 11h</span>
+        <span class="note-tag">Esgota rápido — já comprado com antecedência • Café no hotel ✔</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Museo+Frida+Kahlo+Coyoacan" target="_blank" class="link-btn">📍 Google Maps ↗</a>
+        <a href="https://boletos.museofridakahlo.org.mx" target="_blank" class="link-btn">🎟 Comprar ingresso (site oficial) ↗</a>
+      </div>
     </div>
-    <div class="btn-row">
-      <button class="btn btn-primary" onclick="savePatrimonio()">Salvar Posição</button>
-      <button class="btn btn-ghost" onclick="closeModal('modal-patrimonio')">Cancelar</button>
+    <div class="card afternoon">
+      <div class="card-label">🏘️ Manhã — Centro de Coyoacán</div>
+      <div class="card-name">Centro de Coyoacán + Mercado de Coyoacán</div>
+      <div class="card-meta">
+        <span class="price-tag free">Grátis</span>
+        <span class="note-tag">Praça charmosa, artesanato, tacos e cerveja de limão</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Centro+de+Coyoacan+CDMX" target="_blank" class="link-btn">📍 Centro Coyoacán ↗</a>
+        <a href="https://maps.google.com/?q=Mercado+de+Coyoacan+CDMX" target="_blank" class="link-btn">📍 Mercado Coyoacán ↗</a>
+      </div>
+    </div>
+    <div class="card lunch">
+      <div class="card-label">🍽️ Almoço</div>
+      <div class="card-name">Los Danzantes (Coyoacán)</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Pago • R$ 120–180</span>
+        <span class="reserve-tag">✔ Reservado via WhatsApp</span>
+        <span class="note-tag">Gastronomia mexicana contemporânea</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Los+Danzantes+Coyoacan" target="_blank" class="link-btn">📍 Google Maps ↗</a>
+        <a href="https://losdanzantes.com" target="_blank" class="link-btn">📅 Site oficial ↗</a>
+      </div>
+    </div>
+    <div class="card coffee">
+      <div class="card-label">☕ Café da Tarde</div>
+      <div class="card-name">Café Avellaneda</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Pago • R$ 30–50</span>
+        <span class="note-tag">Café especial em Coyoacán — muito gostoso</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Cafe+Avellaneda+Coyoacan" target="_blank" class="link-btn">📍 Google Maps ↗</a>
+      </div>
+    </div>
+    <div class="card afternoon wide">
+      <div class="card-label">🚤 Tarde — Experiência Única</div>
+      <div class="card-name">Xochimilco — Trajineras (canais)</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Pago • $700–800 MXN/hora (por trajinera inteira, cabe até 18 pessoas)</span>
+        <span class="note-tag">Reservar na hora no embarcadouro (Nativitas/Cuemanco/Fernando Celada) ou reservar antes pelo site — em 2026, por causa da Copa do Mundo, reservar antes dá mais garantia</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Embarcadero+Nuevo+Nativitas+Xochimilco" target="_blank" class="link-btn">📍 Embarcadero Nativitas ↗</a>
+        <a href="https://trajineras.com" target="_blank" class="link-btn">📅 Reservar ↗</a>
+      </div>
+    </div>
+    <div class="card night wide">
+      <div class="card-label">🌇 Noite — Mirante (já pago) • 21h</div>
+      <div class="card-name">Torre Latinoamericana — Promo Noturna</div>
+      <div class="card-meta">
+        <span class="price-tag paid">MX$ 440,02 (2 adultos) — já pago</span>
+        <span class="reserve-tag">✔ Pago via site • Cartão final 8789</span>
+        <span class="note-tag">Promo Noturna inclui botana e bebida por pessoa, não é só o mirador • Comprovante Peek anexado no Notion • Pago em 12/07/2026</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Torre+Latinoamericana+CDMX" target="_blank" class="link-btn">📍 Google Maps ↗</a>
+        <a href="https://www.torrelatino.com" target="_blank" class="link-btn">🎟 Site oficial ↗</a>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="modal-bg" id="modal-fixo">
-  <div class="modal">
-    <h3>+ Gasto Fixo</h3>
-    <div class="form-grid">
-      <div class="form-group"><label>Nome</label><input type="text" id="fixo-nome" placeholder="Ex: Academia"></div>
-      <div class="form-group"><label>Valor (R$)</label><input type="number" id="fixo-val" placeholder="0"></div>
-      <div class="form-group"><label>Tipo de pgto</label><select id="fixo-tipo"><option>5º Dia Útil</option><option>Vale</option><option>Variável</option></select></div>
+<div class="divider"></div>
+
+<div class="section" id="dia18">
+  <div class="section-header">
+    <span class="day-badge teal">Dia 18</span>
+    <h2>🌆 Puebla + Cholula — Bate-Volta Colonial</h2>
+  </div>
+  <div class="cards-grid">
+    <div class="card wide">
+      <div class="card-label">🚗 Saída Cedo da CDMX</div>
+      <div class="card-name">Deslocamento: Cidade do México → Puebla (~2h)</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Pago • R$ 200–400</span>
+        <span class="reserve-tag">✔ Reservado e pago</span>
+        <span class="note-tag">Sair às 7–8h • Autopista 150D • Definir: carro alugado ou tour organizado</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Puebla+Mexico" target="_blank" class="link-btn">📍 Puebla ↗</a>
+        <a href="https://www.getyourguide.com/mexico-city-l116/puebla-cholula-day-trip-t64281/" target="_blank" class="link-btn">🎟 Tour organizado (GetYourGuide) ↗</a>
+      </div>
     </div>
-    <div class="btn-row">
-      <button class="btn btn-primary" onclick="addFixo()">Salvar</button>
-      <button class="btn btn-ghost" onclick="closeModal('modal-fixo')">Cancelar</button>
+    <div class="card">
+      <div class="card-label">🏛️ Manhã — Centro Histórico de Puebla</div>
+      <div class="card-name">Zócalo de Puebla + Catedral de Puebla</div>
+      <div class="card-meta">
+        <span class="price-tag free">Zócalo: Grátis</span>
+        <span class="price-tag free">Catedral: Grátis</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Zocalo+de+Puebla" target="_blank" class="link-btn">📍 Zócalo Puebla ↗</a>
+        <a href="https://maps.google.com/?q=Catedral+de+Puebla" target="_blank" class="link-btn">📍 Catedral ↗</a>
+      </div>
+    </div>
+    <div class="card afternoon">
+      <div class="card-label">💎 Manhã — Joia Barroca</div>
+      <div class="card-name">Capilla del Rosario + Callejón de los Sapos</div>
+      <div class="card-meta">
+        <span class="price-tag free">Capilla: Grátis (doação opcional)</span>
+        <span class="price-tag free">Callejón: Grátis</span>
+        <span class="note-tag">Interior da Capilla del Rosario é de tirar o fôlego</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Capilla+del+Rosario+Puebla" target="_blank" class="link-btn">📍 Capilla del Rosario ↗</a>
+        <a href="https://maps.google.com/?q=Callejon+de+los+Sapos+Puebla" target="_blank" class="link-btn">📍 Callejón dos Sapos ↗</a>
+      </div>
+    </div>
+    <div class="card lunch">
+      <div class="card-label">🍽️ Almoço — Gastronomia Poblana</div>
+      <div class="card-name">El Mural de los Poblanos</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Pago • R$ 100–180</span>
+        <span class="reserve-tag">✔ Reservado • 13:30</span>
+        <span class="note-tag">Mole poblano autêntico • Vista para a Catedral</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=El+Mural+de+los+Poblanos+Puebla" target="_blank" class="link-btn">📍 Google Maps ↗</a>
+        <a href="https://www.elmuraldelospoblanos.com" target="_blank" class="link-btn">📅 Site oficial ↗</a>
+      </div>
+    </div>
+    <div class="card wide">
+      <div class="card-label">🏔️ Tarde — Cholula (15 min de Puebla)</div>
+      <div class="card-name">Grande Pirâmide de Cholula + Santuario de Nuestra Señora de los Remedios</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Zona arqueológica: Pago ~R$ 50</span>
+        <span class="price-tag free">Igreja no topo: Grátis</span>
+        <span class="note-tag">A maior pirâmide do mundo por volume • Vista incrível do vulcão Popocatépetl • Entrada geral sem reserva, compra-se na bilheteria • ⚠️ Fechado às segundas! Túneis internos reabertos em 2026 têm acesso por horários limitados e grupos reduzidos — chegar cedo se quiser fazer esse passeio extra</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Gran+Piramide+de+Cholula" target="_blank" class="link-btn">📍 Grande Pirâmide ↗</a>
+        <a href="https://maps.google.com/?q=Santuario+Nuestra+Senora+de+los+Remedios+Cholula" target="_blank" class="link-btn">📍 Santuário ↗</a>
+        <a href="https://maps.google.com/?q=Cholula+Puebla" target="_blank" class="link-btn">📍 Cholula ↗</a>
+      </div>
+    </div>
+    <div class="card night wide">
+      <div class="card-label">🌙 Retorno + Jantar Final em CDMX</div>
+      <div class="card-name">Volta à CDMX + Jantar - Sartoria</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Pago • R$ 100–160</span>
+        <span class="reserve-tag">✔ Reservado</span>
+        <span class="note-tag">Substituiu Fonda Fina (fecha 19h aos domingos, não dava tempo) e Máximo Bistrot (caro/sem vaga) • Orizaba 42, Roma Norte • Italiano, terraço charmoso, sempre badalado • Domingo aberto até 23h • Não aparece em sistema de reserva online — ligar direto ou reservar via Instagram perto da data</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Sartoria+Orizaba+42+Roma+Norte" target="_blank" class="link-btn">📍 Google Maps ↗</a>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="modal-bg" id="modal-inv-saldo">
-  <div class="modal">
-    <h3>Atualizar Saldos de Investimento</h3>
-    <div class="form-grid">
-      <div class="form-group"><label>Cash</label><input type="number" id="is-cash" placeholder="0"></div>
-      <div class="form-group"><label>Espanha</label><input type="number" id="is-esp" placeholder="0"></div>
-      <div class="form-group"><label>XP Invest</label><input type="number" id="is-xp" placeholder="0"></div>
-      <div class="form-group"><label>Nubank</label><input type="number" id="is-nu" placeholder="0"></div>
+<div class="divider"></div>
+
+<div class="section" id="dia19">
+  <div class="section-header">
+    <span class="day-badge">Dia 19</span>
+    <h2>🏙️ Roma Norte + Condesa — Experiência Urbana Completa</h2>
+  </div>
+  <div class="cards-grid">
+
+    <div class="card wide">
+      <div class="card-label">📚 Bem cedo — Antes da caminhada</div>
+      <div class="card-name">Biblioteca Vasconcelos</div>
+      <div class="card-meta">
+        <span class="price-tag free">Grátis</span>
+        <span class="note-tag">Ir de metrô/Uber • ~20-25 min de Roma Norte • Fecha às 19h30, mas melhor ir logo cedo pra não atrasar o resto do dia • Uma das bibliotecas mais impressionantes do mundo</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Biblioteca+Vasconcelos+CDMX" target="_blank" class="link-btn">📍 Google Maps ↗</a>
+      </div>
     </div>
-    <div class="btn-row">
-      <button class="btn btn-primary" onclick="salvarInvSaldo()">Salvar</button>
-      <button class="btn btn-ghost" onclick="closeModal('modal-inv-saldo')">Cancelar</button>
+
+    <div class="flow-bar">
+      📚 Biblioteca Vasconcelos
+      <span class="flow-sep">→</span>
+      🌅 Caminhada guiada
+      <span class="flow-sep">→</span>
+      🍽️ Almoço
+      <span class="flow-sep">→</span>
+      ☕ Café especial
+      <span class="flow-sep">→</span>
+      🎨 Museu
+      <span class="flow-sep">→</span>
+      🌳 Parques
+      <span class="flow-sep">→</span>
+      🍸 Bar premiado
+      <span class="flow-sep">→</span>
+      🌇 Rooftop
+      <span style="margin-left:0.5rem; font-size:0.72rem; color:#999; font-style:italic;">— tudo a pé</span>
+    </div>
+
+    <div class="card wide">
+      <div class="card-label">🌅 Manhã — Caminhada Guiada por Roma Norte</div>
+      <div class="card-name">Plaza Río de Janeiro → Álvaro Obregón → Ruas Orizaba & Colima</div>
+      <div class="card-meta">
+        <span class="price-tag free">Grátis</span>
+        <span class="note-tag">Café no hotel ✔ • Rota estruturada: comece na Plaza Río de Janeiro, siga pelo boulevard arborizado da Álvaro Obregón e explore as ruas Orizaba e Colima — galerias de arte, livrarias independentes, fachadas porfirianas e art déco</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Plaza+Rio+de+Janeiro+Roma+Norte+CDMX" target="_blank" class="link-btn">📍 Plaza Río de Janeiro ↗</a>
+        <a href="https://maps.google.com/?q=Avenida+Alvaro+Obregon+Roma+Norte+CDMX" target="_blank" class="link-btn">📍 Álvaro Obregón ↗</a>
+      </div>
+    </div>
+
+    <div class="card lunch">
+      <div class="card-label">🍽️ Almoço — No fluxo da caminhada</div>
+      <div class="card-name">Mercado Roma</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Pago • R$ 50–80</span>
+        <span class="note-tag">Gastronomia variada • Prático e excelente custo-benefício • Dentro do roteiro a pé</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Mercado+Roma+CDMX" target="_blank" class="link-btn">📍 Google Maps ↗</a>
+      </div>
+    </div>
+
+    <div class="card coffee">
+      <div class="card-label">☕ Café da Tarde — Destaque do Dia</div>
+      <div class="card-name">Madre Café 🔥</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Pago • R$ 50–90</span>
+        <span class="note-tag">Melhor café especial da viagem — não pule este</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Madre+Cafe+CDMX" target="_blank" class="link-btn">📍 Google Maps ↗</a>
+      </div>
+    </div>
+
+    <div class="card optional afternoon">
+      <div class="card-label">🎨 Cultura — Recomendado</div>
+      <div class="card-name">Museo del Objeto del Objeto — MUCHO</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Pago • R$ 30–50</span>
+        <span class="optional-tag">Opcional — recomendado</span>
+        <span class="note-tag">Museu de design e cultura material mexicana • 40–60 min • Pequeno, denso e surpreendente</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Museo+del+Objeto+del+Objeto+MUCHO+CDMX" target="_blank" class="link-btn">📍 Google Maps ↗</a>
+      </div>
+    </div>
+
+    <div class="card afternoon wide">
+      <div class="card-label">🌳 Tarde — Parques da Condesa em Sequência</div>
+      <div class="card-name">Parque España → Parque México</div>
+      <div class="card-meta">
+        <span class="price-tag free">Grátis</span>
+        <span class="note-tag">Um leva naturalmente ao outro a pé • Vida local, cães, ciclistas, cafés de calçada • Perfeito para desacelerar antes da noite</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Parque+Espana+Condesa+CDMX" target="_blank" class="link-btn">📍 Parque España ↗</a>
+        <a href="https://maps.google.com/?q=Parque+Mexico+CDMX" target="_blank" class="link-btn">📍 Parque México ↗</a>
+      </div>
+    </div>
+
+    <div class="card optional night">
+      <div class="card-label">🍸 Pré-Noite — Bar Premiado (Altamente Recomendado)</div>
+      <div class="card-name">Licorería Limantour</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Pago • R$ 80–130</span>
+        <span class="optional-tag">Opcional — não perca</span>
+        <span class="note-tag">Um dos melhores bares da América Latina • Coquetéis autorais com ingredientes mexicanos • Parada rápida antes do rooftop — combine perfeitamente com o encerramento do dia</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Licoreria+Limantour+Roma+Norte+CDMX" target="_blank" class="link-btn">📍 Google Maps ↗</a>
+        <a href="https://www.opentable.com/r/licoreria-limantour-ciudad-de-mexico" target="_blank" class="link-btn">📅 Reservar ↗</a>
+      </div>
+    </div>
+
+    <div class="card night">
+      <div class="card-label">🌇 Noite — Rooftop</div>
+      <div class="card-name">Supra Roma Rooftop 🔥</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Pago • R$ 120–180</span>
+        <span class="note-tag">Vista panorâmica de Roma Norte • Entrada é por lista — reserva recomendada nos fins de semana</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Supra+Roma+Rooftop+CDMX" target="_blank" class="link-btn">📍 Google Maps ↗</a>
+        <a href="https://supraroma.com/book-an-event/" target="_blank" class="link-btn">📅 Reservar ↗</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section" id="dia20">
+  <div class="section-header">
+    <span class="day-badge dark">Dia 20</span>
+    <h2>✈️ Último Dia + Voo 00:40 — Saída ~21h</h2>
+  </div>
+  <div class="cards-grid">
+    <div class="card wide">
+      <div class="card-label">🛍️ Manhã — Perto do hotel</div>
+      <div class="card-name">Reforma 222 — compras + rooftop</div>
+      <div class="card-meta">
+        <span class="price-tag free">Entrada grátis</span>
+        <span class="note-tag">A poucos quarteirões do hotel • Shopping moderno com lojas, cinema e rooftop com vista pra Reforma • Malas ficam no hotel até a hora do aeroporto</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Reforma+222+Centro+Comercial+CDMX" target="_blank" class="link-btn">📍 Reforma 222 ↗</a>
+      </div>
+    </div>
+    <div class="card lunch">
+      <div class="card-label">🍽️ Almoço</div>
+      <div class="card-name">Restaurante Favorito da Viagem (em Roma Norte)</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Pago • R$ 60–150</span>
+        <span class="note-tag">Último almoço mexicano — capricha na escolha!</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Lardo+CDMX" target="_blank" class="link-btn">📍 Lardo ↗</a>
+        <a href="https://maps.google.com/?q=Mercado+Roma+CDMX" target="_blank" class="link-btn">📍 Mercado Roma ↗</a>
+      </div>
+    </div>
+    <div class="card coffee">
+      <div class="card-label">☕ Café da Tarde — Último da Viagem</div>
+      <div class="card-name">Escolha um dos Favoritos</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Pago • R$ 30–60</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Madre+Cafe+CDMX" target="_blank" class="link-btn">☕ Madre Café ↗</a>
+        <a href="https://maps.google.com/?q=Panaderia+Rosetta+CDMX" target="_blank" class="link-btn">☕ Rosetta ↗</a>
+        <a href="https://maps.google.com/?q=Cafe+de+Tacuba+CDMX" target="_blank" class="link-btn">☕ Café de Tacuba ↗</a>
+        <a href="https://maps.google.com/?q=Cafe+Avellaneda+Coyoacan" target="_blank" class="link-btn">☕ Avellaneda ↗</a>
+      </div>
+    </div>
+    <div class="card afternoon">
+      <div class="card-label">🎁 Tarde — Souvenirs</div>
+      <div class="card-name">Mercado de Artesanías La Ciudadela</div>
+      <div class="card-meta">
+        <span class="price-tag free">Grátis (entrada)</span>
+        <span class="note-tag">Melhor mercado de artesanato da cidade — barganhe!</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Mercado+de+Artesanias+La+Ciudadela+CDMX" target="_blank" class="link-btn">📍 Google Maps ↗</a>
+      </div>
+    </div>
+    <div class="card night wide">
+      <div class="card-label">🌙 Noite — Jantar Leve + Aeroporto</div>
+      <div class="card-name">Jantar Leve + Deslocamento ao Aeroporto NAICM ✈️</div>
+      <div class="card-meta">
+        <span class="price-tag paid">Jantar R$ 50–100 + transfer R$ 80–150</span>
+        <span class="reserve-tag">⚠ Reservar transfer</span>
+        <span class="note-tag">Jantar perto do hotel (Roma Norte/Condesa, a pé), depois buscar as malas • Voo 00:40 — sair do hotel ~21h, chegar 3h antes • Boa viagem! 🇧🇷</span>
+      </div>
+      <div class="links-row">
+        <a href="https://maps.google.com/?q=Aeropuerto+Internacional+Felipe+Angeles+NAICM" target="_blank" class="link-btn">✈️ NAICM no Maps ↗</a>
+        <a href="https://www.aicm.com.mx" target="_blank" class="link-btn">✈️ Site AICM ↗</a>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="modal-bg" id="modal-extra">
-  <div class="modal">
-    <h3>+ Receita Extra</h3>
-    <div class="form-grid">
-      <div class="form-group"><label>Descrição</label><input type="text" id="ext-desc" placeholder="Ex: PLR, Comissão..."></div>
-      <div class="form-group"><label>Valor (R$)</label><input type="number" id="ext-val" placeholder="0"></div>
-      <div class="form-group"><label>Mês</label><select id="ext-mes"></select></div>
+<div class="divider"></div>
+
+<div class="section" id="resumo">
+  <div class="section-header">
+    <h2>📋 Cafés • Restaurantes • Rooftops • Checklist</h2>
+  </div>
+  <div class="summary-grid">
+
+    <div class="summary-block">
+      <div class="summary-header gold">☕ Melhores Cafés</div>
+      <ul class="summary-list">
+        <li>☕ <a href="https://maps.google.com/?q=Cafe+de+Tacuba+CDMX" target="_blank">Café de Tacuba</a> — R$ 30–60 (Centro)</li>
+        <li>☕ <a href="https://maps.google.com/?q=Panaderia+Rosetta+CDMX" target="_blank">Panadería Rosetta</a> — R$ 30–60 (Roma) 🔥</li>
+        <li>☕ <a href="https://maps.google.com/?q=Cafe+Avellaneda+Coyoacan" target="_blank">Café Avellaneda</a> — R$ 30–50 (Coyoacán)</li>
+        <li>☕ <a href="https://maps.google.com/?q=Madre+Cafe+CDMX" target="_blank">Madre Café</a> — R$ 50–90 (Roma Norte) 🔥</li>
+      </ul>
     </div>
-    <div class="btn-row">
-      <button class="btn btn-primary" onclick="addExtra()">Salvar</button>
-      <button class="btn btn-ghost" onclick="closeModal('modal-extra')">Cancelar</button>
+
+    <div class="summary-block">
+      <div class="summary-header blue">🍽️ Melhores Restaurantes</div>
+      <ul class="summary-list">
+        <li>🍽️ <a href="https://maps.google.com/?q=Lardo+CDMX" target="_blank">Lardo CDMX</a> — Dia 13 (Roma)</li>
+        <li>🍽️ <a href="https://maps.google.com/?q=Azul+Historico+CDMX" target="_blank">Azul Histórico</a> — Dia 14 (Centro)</li>
+        <li>🍽️ <a href="https://lagruta.com.mx" target="_blank">La Gruta</a> — Dia 15 (Teotihuacán) 🔥</li>
+        <li>🍽️ <a href="https://www.opentable.com/r/altanera-ciudad-de-mexico" target="_blank">Altanera</a> — Dia 15 (Colonia Roma)</li>
+        <li>🍽️ <a href="https://maps.google.com/?q=El+Turix+Polanco+CDMX" target="_blank">El Turix</a> — Dia 16 (Polanco)</li>
+        <li>🍽️ <a href="https://maps.google.com/?q=Los+Danzantes+Coyoacan" target="_blank">Los Danzantes</a> — Dia 17 (Coyoacán)</li>
+        <li>🍽️ <a href="https://maps.google.com/?q=El+Mural+de+los+Poblanos+Puebla" target="_blank">El Mural de los Poblanos</a> — Dia 18 (Puebla)</li>
+        <li>🍽️ <a href="https://maps.google.com/?q=Sartoria+Orizaba+42+Roma+Norte" target="_blank">Sartoria</a> — Dia 18 (Roma) ⭐</li>
+        <li>🍽️ <a href="https://maps.google.com/?q=Mercado+Roma+CDMX" target="_blank">Mercado Roma</a> — Dia 19 (Roma)</li>
+      </ul>
     </div>
+
+    <div class="summary-block">
+      <div class="summary-header purple">🌇 Melhores Rooftops & Vistas</div>
+      <ul class="summary-list">
+        <li>🌇 <a href="https://maps.google.com/?q=Terraza+Cha+Cha+Cha+CDMX" target="_blank">Terraza Cha Cha Cha</a> — R$ 120–200 (Centro)</li>
+        <li>🌇 <a href="https://maps.google.com/?q=Supra+Roma+Rooftop+CDMX" target="_blank">Supra Roma Rooftop</a> — R$ 120–180 (Roma)</li>
+        <li>🌇 <a href="https://maps.google.com/?q=Torre+Latinoamericana+CDMX" target="_blank">Torre Latinoamericana</a> — Promo Noturna, já pago (Centro)</li>
+        <li>🌇 <a href="https://maps.google.com/?q=Castillo+de+Chapultepec+CDMX" target="_blank">Castelo de Chapultepec</a> — Vista panorâmica</li>
+        <li>🌇 <a href="https://maps.google.com/?q=Santuario+Nuestra+Senora+de+los+Remedios+Cholula" target="_blank">Cholula (topo da pirâmide)</a> — Vista do vulcão</li>
+        <li>🍸 <a href="https://maps.google.com/?q=Licoreria+Limantour+Roma+Norte+CDMX" target="_blank">Licorería Limantour</a> — Bar premiado (Dia 19)</li>
+      </ul>
+    </div>
+
+    <div class="summary-block">
+      <div class="summary-header red">💰 Custos Estimados</div>
+      <ul class="summary-list">
+        <li>🍽️ <span>Refeições: R$ 50–300 por dia</span></li>
+        <li>🎟️ <span>Museu Frida Kahlo: ~R$ 100</span></li>
+        <li>🏔️ <span>Entrada Teotihuacán: ~R$ 60</span></li>
+        <li>🚤 <span>Xochimilco: $700–800 MXN/hora (por trajinera, custo de grupo)</span></li>
+        <li>🥊 <span>Lucha Libre: R$ 80–200</span></li>
+        <li>🏛️ <span>Museu de Antropologia: ~R$ 60</span></li>
+        <li>🏰 <span>Castelo de Chapultepec: ~R$ 50</span></li>
+        <li>🎨 <span>MUCHO (Dia 19): ~R$ 30–50</span></li>
+        <li>🍸 <span>Limantour (Dia 19): R$ 80–130</span></li>
+        <li>🌆 <span>Cholula (zona arq.): ~R$ 50</span></li>
+        <li>🌇 <span>Torre Latinoamericana (promo noturna, já pago): MX$ 440,02 / 2 pessoas</span></li>
+        <li>🚗 <span>Transporte Puebla: R$ 200–400 (já pago)</span></li>
+        <li>✈️ <span>Transfer aeroporto: R$ 80–150</span></li>
+      </ul>
+    </div>
+
+    <div class="summary-block total-block" style="grid-column: 1 / -1;">
+      <div class="summary-header gold">🧮 Total Estimado da Viagem (somatório)</div>
+      <div class="total-body">
+        <p class="total-warning">⚠️ <strong>Todos os valores abaixo são POR PESSOA</strong>, exceto onde marcado — refeições, museus, ingressos e passeios individuais. Não inclui hospedagem nem passagens aéreas.</p>
+
+        <div class="total-row">
+          <div class="total-label">Essenciais + recomendados (refeições, museus, ingressos — sem opcionais)</div>
+          <div class="total-value">R$ 1.880 – R$ 3.020 <span>por pessoa</span></div>
+        </div>
+
+        <div class="total-row">
+          <div class="total-label">+ Se incluir todos os opcionais (Ecobici, Castelo, MUCHO, Limantour) — Torre Latino já pago à parte</div>
+          <div class="total-value">+ R$ 1.150 – R$ 1.550 <span>por pessoa</span></div>
+        </div>
+
+        <div class="total-row highlight">
+          <div class="total-label">Total por pessoa (com todos os opcionais)</div>
+          <div class="total-value">R$ 3.030 – R$ 4.570</div>
+        </div>
+
+        <p class="total-note">📌 <strong>Não entram nessa conta</strong> (porque são por grupo, não por pessoa):</p>
+        <ul class="total-group-list">
+          <li>🚤 <strong>Xochimilco:</strong> $700–800 MXN/hora por trajinera inteira (cabe até 18 pessoas) — divida pelo número de pessoas no grupo</li>
+          <li>🚗 <strong>Transporte Puebla:</strong> R$ 400 — já pago, custo de grupo (carro alugado)</li>
+        </ul>
+        <p class="total-note">Multiplique o "Total por pessoa" pelo número de viajantes pra ter o custo do grupo inteiro.</p>
+        <p class="total-note">✅ <strong>Atualizado:</strong> as trocas Contramar → Altanera e Máximo Bistrot → Sartoria reduziram o total em ~R$ 100–170 por pessoa.</p>
+      </div>
+    </div>
+
+    <div class="summary-block total-block" style="grid-column: 1 / -1;">
+      <div class="summary-header red">💰 Restante a Gastar (por pessoa)</div>
+      <div class="total-body">
+        <p class="total-warning">Já pagos e fora desta conta: <strong>Carro CDMX→Puebla, Torre Latinoamericana, Lucha Libre e Museu Frida Kahlo</strong>.</p>
+        <div class="total-row"><div class="total-label">🍽️ Alimentação (refeições + cafés restantes)</div><div class="total-value">R$ 1.060 – R$ 1.800</div></div>
+        <div class="total-row"><div class="total-label">🎟️ Lazer / Passeios (museus, ingressos, bares e rooftops)</div><div class="total-value">R$ 700 – R$ 940</div></div>
+        <div class="total-row"><div class="total-label">✈️ Transfer para o aeroporto</div><div class="total-value">R$ 80 – R$ 150</div></div>
+        <div class="total-row"><div class="total-label">🚕 Uber / transporte público (estimativa, 8 dias)</div><div class="total-value">R$ 400 – R$ 800</div></div>
+        <div class="total-row"><div class="total-label">🚤 Xochimilco (trajinera $700–800 MXN/h dividida por 2)</div><div class="total-value">R$ 102 – R$ 117</div></div>
+        <div class="total-row highlight">
+          <div class="total-label">Total restante por pessoa</div>
+          <div class="total-value">R$ 2.340 – R$ 3.610</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="summary-block" style="grid-column: 1 / -1;">
+      <div class="summary-header">✅ Checklist Pré-Viagem</div>
+      <ul class="summary-list">
+        <li>⚠️ <span><strong>Ainda falta reservar:</strong></span></li>
+        <li>🚤 <a href="https://trajineras.com" target="_blank">Xochimilco — reservar trajinera antes ou na hora ↗</a></li>
+        <li>✈️ <span>Transfer para o Aeroporto (Dia 20) — reservar, saída do hotel ~21h</span></li>
+      </ul>
+      <ul class="summary-list">
+        <li>✅ <span><strong>Já reservado / pago:</strong></span></li>
+        <li>✔ <span>Lardo (21h, WhatsApp) • Teotihuacán (feito via site) • Azul Histórico (13:00) • Terraza Cha Cha Cha (17h)</span></li>
+        <li>✔ <span>La Gruta (12:45) • Altanera (20:30)</span></li>
+        <li>✔ <span>Museu de Antropologia (9h) • Lucha Libre (20:30, pago)</span></li>
+        <li>✔ <span>Frida Kahlo — Casa Azul (11h, pago) • Los Danzantes (via WhatsApp)</span></li>
+        <li>✔ <span>Torre Latinoamericana — Promo Noturna (já pago, MX$ 440,02)</span></li>
+        <li>✔ <span>Carro/Tour CDMX → Puebla (pago) • El Mural de los Poblanos (13:30) • Sartoria</span></li>
+      </ul>
+    </div>
+
   </div>
 </div>
 
-<!-- MODAL VIAGEM ✈️ -->
-<div class="modal-bg" id="modal-viagem">
-  <div class="modal modal-viagem">
-    <h3 id="modal-viagem-titulo">✈️ Nova Viagem</h3>
+<footer>
+  <strong>🇲🇽 México — Roteiro de Viagem</strong><br>
+  Cidade do México • Teotihuacán • Puebla • Cholula &nbsp;|&nbsp; Dias 13–20 &nbsp;|&nbsp; Bom apetite e boa aventura! 🌮🎉
+</footer>
 
-    <div class="form-grid" style="grid-template-columns:1fr;">
-      <div class="form-group">
-        <label>Título da Viagem</label>
-        <input type="text" id="vi-titulo" placeholder="Ex: Cidade do México 2026">
-      </div>
-    </div>
-
-    <div class="vform-grid-2" style="margin-top:12px;">
-      <div class="form-group">
-        <label>Mês / Ano</label>
-        <input type="month" id="vi-mes">
-      </div>
-      <div class="form-group">
-        <label>Status</label>
-        <select id="vi-status">
-          <option value="planejando">🗓 Planejando</option>
-          <option value="confirmada">✅ Confirmada</option>
-          <option value="realizada">🏁 Realizada</option>
-          <option value="cancelada">❌ Cancelada</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="vform-section">💰 Orçamento & Gastos</div>
-
-    <div class="vform-grid-2">
-      <div class="form-group">
-        <label>Budget Total (R$)</label>
-        <input type="number" step="0.01" id="vi-budget" placeholder="0,00">
-      </div>
-      <div class="form-group">
-        <label>Passagens (R$)</label>
-        <input type="number" step="0.01" id="vi-passagens" placeholder="0,00">
-      </div>
-      <div class="form-group">
-        <label>Hospedagem (R$)</label>
-        <input type="number" step="0.01" id="vi-hospedagem" placeholder="0,00">
-      </div>
-      <div class="form-group">
-        <label>Transporte local (R$)</label>
-        <input type="number" step="0.01" id="vi-transporte" placeholder="0,00">
-      </div>
-      <div class="form-group">
-        <label>Alimentação (R$)</label>
-        <input type="number" step="0.01" id="vi-alimentacao" placeholder="0,00">
-      </div>
-      <div class="form-group">
-        <label>Lazer / Passeios (R$)</label>
-        <input type="number" step="0.01" id="vi-lazer" placeholder="0,00">
-      </div>
-      <div class="form-group">
-        <label>Seguro Viagem (R$)</label>
-        <input type="number" step="0.01" id="vi-seguro" placeholder="0,00">
-      </div>
-      <div class="form-group">
-        <label>Outros (R$)</label>
-        <input type="number" step="0.01" id="vi-outros" placeholder="0,00">
-      </div>
-    </div>
-
-    <div class="vform-section">📝 Observações</div>
-    <div class="form-group">
-      <textarea id="vi-obs" rows="2" placeholder="Código da reserva, links, notas importantes..."></textarea>
-    </div>
-
-    <div class="btn-row">
-      <button class="btn btn-primary" onclick="salvarViagem()">💾 Salvar</button>
-      <button class="btn btn-ghost" onclick="closeModal('modal-viagem')">Cancelar</button>
-    </div>
-  </div>
-</div>
-
-<div id="toast"></div>
-<div id="save-indicator"></div>
-
-<!-- Auth overlay -->
-<div id="auth-overlay" style="display:none;position:fixed;inset:0;background:#0a0b0eee;z-index:9999;flex-direction:column;align-items:center;justify-content:center;gap:24px;">
-  <div style="background:#111318;border:1px solid #1e2330;border-radius:16px;padding:40px 48px;text-align:center;max-width:380px;width:90%;">
-    <div style="font-size:36px;margin-bottom:16px;">💰</div>
-    <h2 style="color:#e8eaf0;font-size:22px;margin-bottom:8px;">Controle Financeiro</h2>
-    <p style="color:#6b7494;font-size:14px;margin-bottom:28px;">Entre com sua conta Google para sincronizar seus dados em qualquer dispositivo.</p>
-    <button onclick="iniciarLogin()" style="background:#4f8ef7;color:#fff;border:none;border-radius:10px;padding:13px 32px;font-size:15px;font-weight:600;cursor:pointer;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;">
-      <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.29-8.16 2.29-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-      Entrar com Google
-    </button>
-    <p style="color:#3a4055;font-size:12px;margin-top:20px;">Os dados ficam salvos no seu próprio Google Drive (pasta privada do app).</p>
-  </div>
-</div>
-
-<!-- Loading overlay -->
-<div id="loading-overlay" style="display:flex;position:fixed;inset:0;background:#0a0b0ecc;z-index:9998;align-items:center;justify-content:center;flex-direction:column;gap:16px;">
-  <div style="width:40px;height:40px;border:3px solid #1e2330;border-top-color:#4f8ef7;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
-  <span style="color:#6b7494;font-size:14px;" id="loading-msg">Carregando seus dados...</span>
-</div>
-<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
-
-<script src="https://accounts.google.com/gsi/client" async></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
-// ============================================================
-// CONSTANTES
-// ============================================================
-const MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-const ANO = 2026;
-const DATA_VERSION = 7;
-const GOOGLE_CLIENT_ID = '915295850372-s2h73h9u7l64gmim6s3drih37s8v9hoc.apps.googleusercontent.com';
-const DRIVE_FILENAME   = 'controle-financeiro-data.json';
-const DRIVE_SCOPE      = 'https://www.googleapis.com/auth/drive.file';
-
-// ============================================================
-// AUTH & TOKEN
-// ============================================================
-let gToken = null;
-let gFileId = null;
-let _tokenRefreshTimer = null;
-let _tokenRefreshing = false;
-
-function showAuthOverlay(show) {
-  document.getElementById('auth-overlay').style.display = show ? 'flex' : 'none';
-}
-
-function setSaveIndicator(state, msg) {
-  const el = document.getElementById('save-indicator');
-  el.className = state;
-  el.textContent = msg;
-  if (state === 'saved') {
-    setTimeout(() => { el.className = ''; el.textContent = ''; }, 3000);
+  function goTo(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
-}
 
-function iniciarLogin() {
-  try {
-    const client = google.accounts.oauth2.initTokenClient({
-      client_id: GOOGLE_CLIENT_ID,
-      scope: DRIVE_SCOPE,
-      callback: async (resp) => {
-        if (resp.error) { toast('Erro ao autenticar: ' + resp.error, true); return; }
-        gToken = resp.access_token;
-        localStorage.setItem('gToken', gToken);
-        localStorage.setItem('gTokenTime', Date.now().toString());
-        scheduleTokenRefresh();
-        showAuthOverlay(false);
-        toast('Conectado ao Google Drive!');
-        await initApp();
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.section').forEach(s => observer.observe(s));
+
+  const sectionIds = ['visao','dia13','dia14','dia15','dia16','dia17','dia18','dia19','dia20','resumo'];
+  const navBtns = document.querySelectorAll('.nav-btn');
+
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const idx = sectionIds.indexOf(e.target.id);
+        navBtns.forEach((b, i) => b.classList.toggle('active', i === idx));
       }
     });
-    client.requestAccessToken({ prompt: 'consent' });
-  } catch(e) {
-    const params = new URLSearchParams({
-      client_id: GOOGLE_CLIENT_ID,
-      redirect_uri: window.location.origin + window.location.pathname,
-      response_type: 'token',
-      scope: DRIVE_SCOPE,
-      include_granted_scopes: 'true',
-    });
-    window.location.href = 'https://accounts.google.com/o/oauth2/v2/auth?' + params.toString();
-  }
-}
+  }, { threshold: 0.4 });
 
-(function checkRedirectToken() {
-  const hash = window.location.hash;
-  if (hash && hash.includes('access_token')) {
-    const params = new URLSearchParams(hash.substring(1));
-    const token = params.get('access_token');
-    if (token) {
-      gToken = token;
-      localStorage.setItem('gToken', token);
-      localStorage.setItem('gTokenTime', Date.now().toString());
-      history.replaceState(null, '', window.location.pathname);
-    }
-  }
-})();
-
-function silentTokenRefresh() {
-  return new Promise((resolve, reject) => {
-    if (_tokenRefreshing) {
-      const check = setInterval(() => {
-        if (!_tokenRefreshing) { clearInterval(check); resolve(gToken); }
-      }, 200);
-      return;
-    }
-    _tokenRefreshing = true;
-    const timeout = setTimeout(() => {
-      _tokenRefreshing = false;
-      reject(new Error('Token refresh timeout'));
-    }, 8000);
-    function tryRefresh() {
-      if (typeof google === 'undefined' || !google.accounts || !google.accounts.oauth2) {
-        clearTimeout(timeout); _tokenRefreshing = false;
-        reject(new Error('Google SDK não carregado')); return;
-      }
-      try {
-        const client = google.accounts.oauth2.initTokenClient({
-          client_id: GOOGLE_CLIENT_ID, scope: DRIVE_SCOPE, prompt: '',
-          callback: (resp) => {
-            clearTimeout(timeout); _tokenRefreshing = false;
-            if (resp && resp.access_token) {
-              gToken = resp.access_token;
-              localStorage.setItem('gToken', gToken);
-              localStorage.setItem('gTokenTime', Date.now().toString());
-              resolve(gToken);
-            } else {
-              reject(new Error('Token refresh falhou: ' + (resp && resp.error)));
-            }
-          }
-        });
-        client.requestAccessToken();
-      } catch(e) { clearTimeout(timeout); _tokenRefreshing = false; reject(e); }
-    }
-    tryRefresh();
+  sectionIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) navObserver.observe(el);
   });
-}
-
-function scheduleTokenRefresh() {
-  if (_tokenRefreshTimer) clearTimeout(_tokenRefreshTimer);
-  _tokenRefreshTimer = setTimeout(async () => {
-    try { await silentTokenRefresh(); scheduleTokenRefresh(); }
-    catch(e) { console.warn('Auto refresh falhou:', e); }
-  }, 55 * 60 * 1000);
-}
-
-// ============================================================
-// DRIVE HELPERS
-// ============================================================
-async function driveRequest(method, url, body, isJson = true, retried = false) {
-  if (!gToken) { showAuthOverlay(true); throw new Error('Sem token'); }
-  const headers = { Authorization: 'Bearer ' + gToken };
-  if (isJson && body) headers['Content-Type'] = 'application/json';
-  const resp = await fetch(url, { method, headers, body: body ? (isJson ? JSON.stringify(body) : body) : undefined });
-  if (resp.status === 401 && !retried) {
-    try { await silentTokenRefresh(); return driveRequest(method, url, body, isJson, true); }
-    catch(e) { gToken = null; localStorage.removeItem('gToken'); showAuthOverlay(true); throw new Error('Autenticação expirada'); }
-  }
-  if (!resp.ok) { const errText = await resp.text().catch(() => ''); throw new Error(`Drive error ${resp.status}: ${errText}`); }
-  const text = await resp.text();
-  try { return JSON.parse(text); } catch { return text; }
-}
-
-async function findFile() {
-  const r = await driveRequest('GET', `https://www.googleapis.com/drive/v3/files?q=name%3D'${DRIVE_FILENAME}'%20and%20trashed%3Dfalse&fields=files(id)`, null);
-  return r && r.files && r.files.length ? r.files[0].id : null;
-}
-
-async function loadData() {
-  try {
-    gFileId = await findFile();
-    if (!gFileId) return null;
-    const data = await driveRequest('GET', `https://www.googleapis.com/drive/v3/files/${gFileId}?alt=media`, null);
-    if (!data || typeof data !== 'object') return null;
-    if (!data._version || data._version !== DATA_VERSION) {
-      const base = initState();
-      const merged = deepMerge(base, data);
-      merged._version = DATA_VERSION;
-      await saveData(merged);
-      return merged;
-    }
-    return data;
-  } catch(e) { console.error('loadData error:', e); return null; }
-}
-
-function deepMerge(base, override) {
-  if (override === null || override === undefined) return base;
-  if (typeof base !== 'object' || typeof override !== 'object') return override;
-  if (Array.isArray(override)) return override;
-  const result = Object.assign({}, base);
-  for (const key of Object.keys(override)) {
-    if (key in base && typeof base[key] === 'object' && !Array.isArray(base[key])) {
-      result[key] = deepMerge(base[key], override[key]);
-    } else { result[key] = override[key]; }
-  }
-  return result;
-}
-
-async function saveData(d) {
-  d._version = DATA_VERSION;
-  setSaveIndicator('saving', '💾 Salvando...');
-  try { await _saveDataInternal(d); setSaveIndicator('saved', '✓ Salvo'); }
-  catch(e) { console.error('saveData error:', e); setSaveIndicator('error', '✗ Erro ao salvar'); toast('Erro ao salvar no Drive. Tente novamente.', true); throw e; }
-}
-
-async function _saveDataInternal(d) {
-  const blob = new Blob([JSON.stringify(d)], { type: 'application/json' });
-  if (!gFileId) {
-    const meta = { name: DRIVE_FILENAME };
-    const form = new FormData();
-    form.append('metadata', new Blob([JSON.stringify(meta)], { type: 'application/json' }));
-    form.append('file', blob);
-    let resp = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id', { method: 'POST', headers: { Authorization: 'Bearer ' + gToken }, body: form });
-    if (resp.status === 401) { await silentTokenRefresh(); resp = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id', { method: 'POST', headers: { Authorization: 'Bearer ' + gToken }, body: form }); }
-    if (!resp.ok) throw new Error('Falha ao criar arquivo no Drive: ' + resp.status);
-    const j = await resp.json(); gFileId = j.id;
-  } else {
-    let resp = await fetch(`https://www.googleapis.com/upload/drive/v3/files/${gFileId}?uploadType=media`, { method: 'PATCH', headers: { Authorization: 'Bearer ' + gToken, 'Content-Type': 'application/json' }, body: JSON.stringify(d) });
-    if (resp.status === 401) { await silentTokenRefresh(); resp = await fetch(`https://www.googleapis.com/upload/drive/v3/files/${gFileId}?uploadType=media`, { method: 'PATCH', headers: { Authorization: 'Bearer ' + gToken, 'Content-Type': 'application/json' }, body: JSON.stringify(d) }); }
-    if (!resp.ok) throw new Error('Falha ao atualizar arquivo no Drive: ' + resp.status);
-  }
-}
-
-// ============================================================
-// INICIALIZAÇÃO
-// ============================================================
-async function initApp() {
-  document.getElementById('loading-overlay').style.display = 'flex';
-  document.getElementById('loading-msg').textContent = 'Carregando seus dados...';
-  try {
-    const saved = await loadData();
-    if (saved && typeof saved === 'object' && Object.keys(saved).length > 1) {
-      S = saved;
-      if (!S.viagens) S.viagens = []; // garante campo viagens em dados antigos
-      if (!S.pj) S.pj = {};           // garante campo pj em dados antigos
-    } else {
-      S = initState();
-      try { await saveData(S); } catch(e) { console.warn('Não foi possível criar arquivo inicial:', e); }
-    }
-  } catch(e) {
-    console.error('initApp error:', e);
-    if (!S) S = initState();
-    toast('Aviso: carregando dados locais. Verifique sua conexão.', true);
-  }
-  await syncInvAtualAsync();
-  document.getElementById('loading-overlay').style.display = 'none';
-  renderDashboard();
-}
-
-function waitForGoogleSDK(timeoutMs = 10000) {
-  return new Promise((resolve, reject) => {
-    if (typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) { resolve(); return; }
-    const start = Date.now();
-    const poll = setInterval(() => {
-      if (typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) { clearInterval(poll); resolve(); }
-      else if (Date.now() - start > timeoutMs) { clearInterval(poll); reject(new Error('Google SDK não carregou a tempo')); }
-    }, 100);
-  });
-}
-
-window.addEventListener('load', async () => {
-  const savedToken = localStorage.getItem('gToken');
-  const savedTokenTime = parseInt(localStorage.getItem('gTokenTime') || '0');
-  const tokenAge = Date.now() - savedTokenTime;
-  const TOKEN_MAX_AGE = 55 * 60 * 1000;
-  if (savedToken) {
-    if (tokenAge < TOKEN_MAX_AGE) {
-      const teste = await fetch('https://www.googleapis.com/drive/v3/files?pageSize=1', { headers: { Authorization: 'Bearer ' + savedToken } }).catch(() => null);
-      if (teste && teste.ok) { gToken = savedToken; scheduleTokenRefresh(); showAuthOverlay(false); await initApp(); return; }
-    }
-    gToken = savedToken;
-    document.getElementById('loading-overlay').style.display = 'flex';
-    document.getElementById('loading-msg').textContent = 'Renovando autenticação...';
-    try {
-      await waitForGoogleSDK(); await silentTokenRefresh(); scheduleTokenRefresh(); showAuthOverlay(false); await initApp();
-    } catch(e) {
-      localStorage.removeItem('gToken'); localStorage.removeItem('gTokenTime'); gToken = null;
-      document.getElementById('loading-overlay').style.display = 'none'; showAuthOverlay(true);
-    }
-  } else {
-    document.getElementById('loading-overlay').style.display = 'none'; showAuthOverlay(true);
-  }
-});
-
-// ============================================================
-// ESTADO GLOBAL
-// ============================================================
-let S = null;
-function calcSelMes() {
-  const hoje = new Date(); const dia = hoje.getDate();
-  let mes = hoje.getMonth(); let ano = hoje.getFullYear();
-  if (dia >= 21) { mes += 1; if (mes > 11) { mes = 0; ano += 1; } }
-  return ano + '-' + String(mes + 1).padStart(2,'0');
-}
-let selMes = calcSelMes();
-
-function initState() {
-  return {
-    _version: DATA_VERSION,
-    config: { salario: 8471, vt: 264, vale: 0, lume: 2800, jac: 1772 },
-    gastos_fixos: [
-      { id: 2, nome: 'Luz', valor: 95, tipo: '5º Dia Útil' },
-      { id: 3, nome: 'Habitação', valor: 650, tipo: '5º Dia Útil' },
-      { id: 6, nome: 'Inglês', valor: 256, tipo: '5º Dia Útil' },
-      { id: 8, nome: 'IPTU', valor: 86.3, tipo: '5º Dia Útil' },
-      { id: 10, nome: 'Condomínio', valor: 460, tipo: 'Vale' },
-      { id: 11, nome: 'Espanha', valor: 1000, tipo: 'Vale' },
-    ],
-    viagens: [],
-    pj: {},
-    meses: {
-      '2026-01': { entradas: [
-        { tipo: 'Salário (5º DU)', valor: 1051.12 },{ tipo: 'VT (Vale Transporte)', valor: 264.00 },
-        { tipo: 'Comissão', valor: 734.00 },{ tipo: 'Lume+CS', valor: 3600.00 },
-        { tipo: 'JAC', valor: 1856.00 },{ tipo: 'PLR (1ª parcela — fev/26)', valor: 13945.00, obs: 'Embutido no subtotal 5ºDU' },
-        { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 2139.84 },
-      ], saidas: [
-        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },{ categoria: 'Luz', valor: 60.00, obs: '5º DU' },
-        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },{ categoria: 'Nubank', valor: 960.00, obs: '5º DU' },
-        { categoria: 'XP', valor: 4348.00, obs: '5º DU — META 300' },{ categoria: 'Inglês', valor: 800.00, obs: '5º DU — Pai da Poli + mal-comida' },
-        { categoria: 'C6 Lucas', valor: 250.00, obs: '5º DU' },{ categoria: 'IPTU', valor: 86.93, obs: '5º DU — parcela 1/10' },
-        { categoria: 'Santander', valor: 1155.00, obs: '5º DU' },{ categoria: 'Itaú', valor: 1519.00, obs: 'Vale (dia 20)' },
-        { categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
-      ], patrimonio: { cash: 400, espanha: 9000, xp: 84773.16, nu: 1541.1 } },
-      '2026-02': { entradas: [
-        { tipo: 'Salário (5º DU)', valor: 1542.12 },{ tipo: 'VT (Vale Transporte)', valor: 264.00 },
-        { tipo: 'Comissão', valor: 95.00 },{ tipo: 'Lume+CS', valor: 2200.00 },
-        { tipo: 'JAC', valor: 1896.00 },{ tipo: 'Vale (Adiant. 40% — dia 20)', valor: 2139.84, obs: '2000 pra Espanha (fev e mar)' },
-      ], saidas: [
-        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },{ categoria: 'Luz', valor: 270.00, obs: '5º DU — 3 meses atrasada' },
-        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },{ categoria: 'Nubank', valor: 1612.00, obs: '5º DU' },
-        { categoria: 'XP', valor: 4416.00, obs: '5º DU — meta' },{ categoria: 'C6 Lucas', valor: 505.02, obs: '5º DU' },
-        { categoria: 'Santander', valor: 994.00, obs: '5º DU' },{ categoria: 'Itaú', valor: 1214.00, obs: 'Vale (dia 20)' },
-        { categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },{ categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },
-      ], patrimonio: { cash: 400, espanha: 9000, xp: 83739.15, nu: 1541.0 } },
-      '2026-03': { entradas: [
-        { tipo: 'Salário (5º DU)', valor: 1542.12 },{ tipo: 'VT (Vale Transporte)', valor: 264.00 },
-        { tipo: 'Comissão', valor: 748.00 },{ tipo: 'Lume+CS', valor: 4900.00 },
-        { tipo: 'JAC', valor: 1713.00 },{ tipo: 'Vale (Adiant. 40% — dia 20)', valor: 2139.84 },
-      ], saidas: [
-        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },{ categoria: 'Habitação', valor: 650.00, obs: '5º DU' },
-        { categoria: 'Nubank', valor: 1304.29, obs: '5º DU' },{ categoria: 'XP', valor: 5011.22, obs: '5º DU' },
-        { categoria: 'Inglês', valor: 256.00, obs: '5º DU' },{ categoria: 'C6 Lucas', valor: 83.00, obs: '5º DU' },
-        { categoria: 'IPTU', valor: 86.30, obs: '5º DU' },{ categoria: 'Itaú', valor: 917.00, obs: 'Vale (dia 20)' },
-        { categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },{ categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },
-        { categoria: 'Espanha (RGB)', valor: 800.00, obs: 'Vale (dia 20)' },
-      ], patrimonio: { cash: 400, espanha: 9000, xp: 82187.98, nu: 1541.10 } },
-      '2026-04': { entradas: [
-        { tipo: 'Salário (5º DU)', valor: 2594.12 },{ tipo: 'VT (Vale Transporte)', valor: 264.00 },
-        { tipo: 'Comissão', valor: 761.00 },{ tipo: 'Lume+CS', valor: 2800.00 },
-        { tipo: 'JAC', valor: 1772.00 },{ tipo: 'Vale (Adiant. 40% — dia 20)', valor: 3360.34, obs: 'ativa (denner)' },
-      ], saidas: [
-        { categoria: 'Acidente', valor: 334.00, obs: '5º DU' },{ categoria: 'Luz', valor: 95.00, obs: '5º DU' },
-        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },{ categoria: 'Nubank', valor: 1760.06, obs: '5º DU' },
-        { categoria: 'XP', valor: 4100.00, obs: '5º DU' },{ categoria: 'Inglês', valor: 256.00, obs: '5º DU' },
-        { categoria: 'IPTU', valor: 86.30, obs: '5º DU' },{ categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
-        { categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
-      ], patrimonio: { cash: 20, espanha: 10000, xp: 82324, nu: 3149.70 } },
-      '2026-05': { entradas: [
-        { tipo: 'Salário (5º DU)', valor: 6894.12, obs: 'Inclui PLR 2ª parcela do PLR' },
-        { tipo: 'VT (Vale Transporte)', valor: 264.00 },{ tipo: 'Comissão', valor: 761.00 },
-        { tipo: 'Lume+CS', valor: 2800.00 },{ tipo: 'JAC', valor: 1772.00 },
-        { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 2560.34 },
-      ], saidas: [
-        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },{ categoria: 'Luz', valor: 95.00, obs: '5º DU' },
-        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },{ categoria: 'Nubank', valor: 398.00, obs: '5º DU' },
-        { categoria: 'XP', valor: 3000.00, obs: '5º DU' },{ categoria: 'Inglês', valor: 256.00, obs: '5º DU' },
-        { categoria: 'C6 Lucas', valor: 500.00, obs: '5º DU' },{ categoria: 'IPTU', valor: 86.30, obs: '5º DU' },
-        { categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },{ categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },
-        { categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
-      ], patrimonio: null },
-      '2026-06': { entradas: [
-        { tipo: 'Salário (5º DU)', valor: 2594.12 },{ tipo: 'VT (Vale Transporte)', valor: 264.00 },
-        { tipo: 'Comissão', valor: 761.00 },{ tipo: 'Lume+CS', valor: 2800.00 },
-        { tipo: 'JAC', valor: 1772.00 },{ tipo: 'Vale (Adiant. 40% — dia 20)', valor: 2560.34 },
-      ], saidas: [
-        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },{ categoria: 'Luz', valor: 95.00, obs: '5º DU' },
-        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },{ categoria: 'Nubank', valor: 398.00, obs: '5º DU' },
-        { categoria: 'XP', valor: 3000.00, obs: '5º DU' },{ categoria: 'Inglês', valor: 256.00, obs: '5º DU' },
-        { categoria: 'C6 Lucas', valor: 500.00, obs: '5º DU' },{ categoria: 'IPTU', valor: 86.30, obs: '5º DU' },
-        { categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },{ categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },
-        { categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
-      ], patrimonio: null },
-      '2026-07': { entradas: [
-        { tipo: 'Salário (5º DU)', valor: 2594.12 },{ tipo: 'VT (Vale Transporte)', valor: 264.00 },
-        { tipo: 'Comissão', valor: 190.00 },{ tipo: 'Lume+CS', valor: 2800.00 },
-        { tipo: 'JAC', valor: 1772.00 },{ tipo: 'Vale (Adiant. 40% — dia 20)', valor: 2560.34 },
-      ], saidas: [
-        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },{ categoria: 'Luz', valor: 95.00, obs: '5º DU' },
-        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },{ categoria: 'XP', valor: 3000.00, obs: '5º DU' },
-        { categoria: 'Inglês', valor: 256.00, obs: '5º DU' },{ categoria: 'C6 Lucas', valor: 500.00, obs: '5º DU' },
-        { categoria: 'IPTU', valor: 86.30, obs: '5º DU' },{ categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
-        { categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },{ categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
-      ], patrimonio: null },
-      '2026-08': { entradas: [
-        { tipo: 'Salário (5º DU)', valor: 2594.12 },{ tipo: 'VT (Vale Transporte)', valor: 264.00 },
-        { tipo: 'Comissão', valor: 190.00 },{ tipo: 'Lume+CS', valor: 2800.00 },
-        { tipo: 'JAC', valor: 1772.00 },{ tipo: 'Vale (Adiant. 40% — dia 20)', valor: 2560.34 },
-      ], saidas: [
-        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },{ categoria: 'Luz', valor: 95.00, obs: '5º DU' },
-        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },{ categoria: 'XP', valor: 3000.00, obs: '5º DU' },
-        { categoria: 'Inglês', valor: 256.00, obs: '5º DU' },{ categoria: 'C6 Lucas', valor: 500.00, obs: '5º DU' },
-        { categoria: 'IPTU', valor: 86.30, obs: '5º DU' },{ categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
-        { categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },{ categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
-      ], patrimonio: null },
-      '2026-09': { entradas: [
-        { tipo: 'Salário (5º DU)', valor: 2594.12 },{ tipo: 'VT (Vale Transporte)', valor: 264.00 },
-        { tipo: 'Lume+CS', valor: 2800.00 },{ tipo: 'JAC', valor: 1772.00 },
-        { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 4355.83, obs: 'VALE maior — 13º antecipado' },
-      ], saidas: [
-        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },{ categoria: 'Luz', valor: 95.00, obs: '5º DU' },
-        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },{ categoria: 'XP', valor: 3000.00, obs: '5º DU' },
-        { categoria: 'Inglês', valor: 256.00, obs: '5º DU' },{ categoria: 'C6 Lucas', valor: 500.00, obs: '5º DU' },
-        { categoria: 'IPTU', valor: 86.30, obs: '5º DU' },{ categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
-        { categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },{ categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
-      ], patrimonio: null },
-      '2026-10': { entradas: [
-        { tipo: 'Salário (5º DU)', valor: 2594.12 },{ tipo: 'VT (Vale Transporte)', valor: 264.00 },
-        { tipo: 'Lume+CS', valor: 2800.00 },{ tipo: 'JAC', valor: 1772.00 },
-        { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 5829.22, obs: 'Férias + 13º' },
-      ], saidas: [
-        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },{ categoria: 'Luz', valor: 95.00, obs: '5º DU' },
-        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },{ categoria: 'XP', valor: 3000.00, obs: '5º DU' },
-        { categoria: 'Inglês', valor: 256.00, obs: '5º DU' },{ categoria: 'C6 Lucas', valor: 500.00, obs: '5º DU' },
-        { categoria: 'IPTU', valor: 86.30, obs: '5º DU' },{ categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
-        { categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },{ categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
-      ], patrimonio: null },
-      '2026-11': { entradas: [
-        { tipo: 'Salário (5º DU)', valor: 2594.12 },{ tipo: 'VT (Vale Transporte)', valor: 264.00 },
-        { tipo: 'Lume+CS', valor: 2800.00 },{ tipo: 'JAC', valor: 1772.00 },
-        { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 6951.00, obs: '13º salário' },
-      ], saidas: [
-        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },{ categoria: 'Luz', valor: 95.00, obs: '5º DU' },
-        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },{ categoria: 'XP', valor: 3000.00, obs: '5º DU' },
-        { categoria: 'Inglês', valor: 256.00, obs: '5º DU' },{ categoria: 'C6 Lucas', valor: 500.00, obs: '5º DU' },
-        { categoria: 'IPTU', valor: 86.30, obs: '5º DU' },{ categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
-        { categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },{ categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
-      ], patrimonio: null },
-      '2026-12': { entradas: [
-        { tipo: 'Salário (5º DU)', valor: 2594.12 },{ tipo: 'VT (Vale Transporte)', valor: 264.00 },
-        { tipo: 'Lume+CS', valor: 2800.00 },{ tipo: 'JAC', valor: 1772.00 },
-        { tipo: 'Vale (Adiant. 40% — dia 20)', valor: 6951.00, obs: '13º salário' },
-      ], saidas: [
-        { categoria: 'Acidente', valor: 164.00, obs: '5º DU' },{ categoria: 'Luz', valor: 95.00, obs: '5º DU' },
-        { categoria: 'Habitação', valor: 650.00, obs: '5º DU' },{ categoria: 'XP', valor: 3000.00, obs: '5º DU' },
-        { categoria: 'Inglês', valor: 256.00, obs: '5º DU' },{ categoria: 'C6 Lucas', valor: 500.00, obs: '5º DU' },
-        { categoria: 'IPTU', valor: 86.30, obs: '5º DU' },{ categoria: 'Condomínio', valor: 460.00, obs: 'Vale (dia 20)' },
-        { categoria: 'IPTU', valor: 80.00, obs: 'Vale (dia 20)' },{ categoria: 'Espanha (RGB)', valor: 1000.00, obs: 'Vale (dia 20)' },
-      ], patrimonio: null },
-    },
-    c6: [],
-    extras: [],
-    inv_atual: { cash: 20, espanha: 10000, xp: 82324, nu: 3149.70 },
-    plr: { sal_baixo: 6952, sal_alto: 7378, meta: 5300000000, churn: 0.30, mult: 3, ating: 100 },
-    historico: [
-      { mes: '2025-08', total: 59876.00, guardar: 3470, realizado: true },
-      { mes: '2025-09', total: 61788.00, guardar: 2100, realizado: true },
-      { mes: '2025-10', total: 65851.88, guardar: 4800, realizado: true },
-      { mes: '2025-11', total: 77316.00, guardar: 4300, realizado: true },
-      { mes: '2025-12', total: 80436.02, guardar: 1300, realizado: true },
-      { mes: '2026-01', total: 95714.26, guardar: 900, realizado: true },
-      { mes: '2026-02', total: 94680.15, guardar: 12200, realizado: true },
-      { mes: '2026-03', total: 93128.10, guardar: 0, realizado: true },
-      { mes: '2026-04', total: 95493.70, guardar: 2600, realizado: true },
-      { mes: '2026-05', total: null, guardar: 8794.07, realizado: false },
-      { mes: '2026-06', total: null, guardar: 4494.07, realizado: false },
-      { mes: '2026-07', total: null, guardar: 4321.07, realizado: false },
-      { mes: '2026-08', total: null, guardar: 4321.07, realizado: false },
-      { mes: '2026-09', total: null, guardar: 4131.07, realizado: false },
-      { mes: '2026-10', total: null, guardar: 4131.07, realizado: false },
-      { mes: '2026-11', total: null, guardar: 4131.07, realizado: false },
-    ]
-  };
-}
-
-// ============================================================
-// SYNC INV ATUAL
-// ============================================================
-function syncInvAtual() {
-  if (!S) return;
-  const mesesComPat = Object.keys(S.meses).filter(k => S.meses[k] && S.meses[k].patrimonio).sort();
-  if (mesesComPat.length > 0) {
-    const maisRecente = mesesComPat[mesesComPat.length - 1];
-    S.inv_atual = Object.assign({}, S.meses[maisRecente].patrimonio);
-    const tot = (S.inv_atual.cash||0)+(S.inv_atual.espanha||0)+(S.inv_atual.xp||0)+(S.inv_atual.nu||0);
-    const hi = S.historico.find(h => h.mes === maisRecente);
-    if (hi) { hi.total = tot; hi.realizado = true; }
-    else { S.historico.push({ mes: maisRecente, total: tot, guardar: 0, realizado: true }); S.historico.sort((a,b) => a.mes.localeCompare(b.mes)); }
-  }
-}
-
-async function syncInvAtualAsync() {
-  if (!S) return;
-  const mesesComPat = Object.keys(S.meses).filter(k => S.meses[k] && S.meses[k].patrimonio).sort();
-  if (mesesComPat.length === 0) return;
-  const maisRecente = mesesComPat[mesesComPat.length - 1];
-  const novoInv = Object.assign({}, S.meses[maisRecente].patrimonio);
-  const tot = (novoInv.cash||0)+(novoInv.espanha||0)+(novoInv.xp||0)+(novoInv.nu||0);
-  const hi = S.historico.find(h => h.mes === maisRecente);
-  let precisaSalvar = false;
-  if (JSON.stringify(S.inv_atual) !== JSON.stringify(novoInv)) { S.inv_atual = novoInv; precisaSalvar = true; }
-  if (hi) { if (hi.total !== tot || !hi.realizado) { hi.total = tot; hi.realizado = true; precisaSalvar = true; } }
-  else { S.historico.push({ mes: maisRecente, total: tot, guardar: 0, realizado: true }); S.historico.sort((a,b) => a.mes.localeCompare(b.mes)); precisaSalvar = true; }
-  if (precisaSalvar) { try { await saveData(S); } catch(e) { console.warn('syncInvAtualAsync: erro ao salvar', e); } }
-}
-
-function getMesData(key) {
-  if (!S.meses[key]) S.meses[key] = { entradas: [], saidas: [], patrimonio: null };
-  return S.meses[key];
-}
-
-function fmtR(v) {
-  if (v == null || isNaN(v)) return 'R$ -';
-  return 'R$ ' + Number(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
-function fmtPct(v) {
-  if (v == null || isNaN(v)) return '-';
-  return (v >= 0 ? '+' : '') + (v * 100).toFixed(2) + '%';
-}
-
-// ============================================================
-// NAVEGAÇÃO
-// ============================================================
-const pageInfos = {
-  dashboard:    { title: 'Dashboard',            sub: 'Visão geral do seu patrimônio' },
-  mensal:       { title: 'Lançamentos Mensais',  sub: 'Entradas e saídas por mês' },
-  projecao:     { title: 'Projeção 2026',         sub: 'Cenários CLT e PJ' },
-  investimentos:{ title: 'Investimentos',         sub: 'Carteira e evolução patrimonial' },
-  plr:          { title: 'PLR & Bônus',           sub: 'Calculadora e projeção de PLR' },
-  viagens:      { title: 'Viagens',               sub: 'Planejamento e controle de gastos em viagens' },
-  config:       { title: 'Configurações',         sub: 'Parâmetros e gastos fixos' },
-};
-
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
-  document.querySelector(`[onclick="showPage('${id}')"]`).classList.add('active');
-  document.getElementById('topbar-title').textContent = pageInfos[id].title;
-  document.getElementById('topbar-sub').textContent = pageInfos[id].sub;
-  if (id === 'dashboard')     renderDashboard();
-  if (id === 'mensal')        renderMensal();
-  if (id === 'projecao')      renderProjecao();
-  if (id === 'investimentos') renderInvestimentos();
-  if (id === 'plr')           { loadPLRInputs(); calcPLR(); renderExtras(); }
-  if (id === 'viagens')       renderViagens();
-  if (id === 'config')        renderConfig();
-}
-
-function showTab(tabGroupId, tabId) {
-  const group = document.getElementById(tabGroupId);
-  group.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tabId));
-  document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === tabId));
-}
-
-// ============================================================
-// MODALS
-// ============================================================
-function openModal(id, etapaPreSel) {
-  document.getElementById(id).classList.add('open');
-  if (id === 'modal-patrimonio') {
-    const md = getMesData(selMes);
-    if (md.patrimonio) {
-      document.getElementById('pat-cash').value = md.patrimonio.cash || '';
-      document.getElementById('pat-espanha').value = md.patrimonio.espanha || '';
-      document.getElementById('pat-xp').value = md.patrimonio.xp || '';
-      document.getElementById('pat-nu').value = md.patrimonio.nu || '';
-    }
-  }
-  if (id === 'modal-inv-saldo') {
-    document.getElementById('is-cash').value = S.inv_atual.cash || '';
-    document.getElementById('is-esp').value = S.inv_atual.espanha || '';
-    document.getElementById('is-xp').value = S.inv_atual.xp || '';
-    document.getElementById('is-nu').value = S.inv_atual.nu || '';
-  }
-  if (id === 'modal-entrada') { document.getElementById('ent-etapa').value = etapaPreSel || '5DU'; }
-  if (id === 'modal-saida') { document.getElementById('sai-etapa').value = etapaPreSel || '5DU'; }
-}
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-document.querySelectorAll('.modal-bg').forEach(m => m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); }));
-
-// ============================================================
-// DASHBOARD
-// ============================================================
-function renderDashboard() {
-  syncInvAtual();
-  const inv = S.inv_atual;
-  const total = (inv.cash||0)+(inv.espanha||0)+(inv.xp||0)+(inv.nu||0);
-  const hist = S.historico;
-  const reais = hist.filter(h => h.total != null && h.realizado).sort((a,b) => a.mes.localeCompare(b.mes));
-  const last = reais[reais.length - 1];
-  const prev = reais[reais.length - 2];
-  const var_pat = last && prev && prev.total ? (last.total - prev.total) / prev.total : null;
-
-  document.getElementById('dash-cards').innerHTML = `
-    <div class="card blue"><div class="card-label">Patrimônio Atual</div><div class="card-value">${fmtR(total)}</div><div class="card-sub">soma de todas as posições</div></div>
-    <div class="card ${var_pat === null ? '' : var_pat >= 0 ? 'green' : 'red'}"><div class="card-label">Variação Último Mês</div><div class="card-value">${var_pat === null ? '—' : fmtPct(var_pat)}</div><div class="card-sub">${last ? mesLabel(last.mes) : ''}</div></div>
-    <div class="card"><div class="card-label">Meta Anual Guardar</div><div class="card-value" style="font-size:16px">R$ 100k+</div><div class="card-sub">crescimento consistente</div></div>
-    <div class="card yellow"><div class="card-label">Salário Base</div><div class="card-value">${fmtR(S.config.salario)}</div><div class="card-sub">+ VT + comissões</div></div>
-  `;
-  document.getElementById('patrimonio-total').textContent = fmtR(total);
-  const items = [
-    { nome: 'Cash',     tipo: 'Reserva líquida',            val: inv.cash },
-    { nome: 'Espanha',  tipo: 'RGB — Fundo de investimento', val: inv.espanha },
-    { nome: 'XP Invest',tipo: 'Tesouro + RF + Fundos',      val: inv.xp },
-    { nome: 'Nubank',   tipo: 'Conta corrente',             val: inv.nu },
-  ];
-  document.getElementById('inv-breakdown').innerHTML = items.map(i => `
-    <div class="inv-row">
-      <div><div class="inv-name">${i.nome}</div><div class="inv-type">${i.tipo}</div></div>
-      <div>
-        <div class="inv-value ${i.nome==='XP Invest'?'pos':''}">${fmtR(i.val)}</div>
-        <div style="font-size:11px;color:var(--muted);text-align:right">${total ? ((i.val/total)*100).toFixed(1) : 0}%</div>
-      </div>
-    </div>`).join('');
-
-  const sel = document.getElementById('dash-mes-sel');
-  sel.innerHTML = Object.keys(S.meses).sort().reverse().map(k => `<option value="${k}" ${k===selMes?'selected':''}>${mesLabel(k)}</option>`).join('');
-  renderDashMes();
-  renderHistorico();
-}
-
-function renderDashMes() {
-  const k = document.getElementById('dash-mes-sel').value;
-  const md = getMesData(k);
-  const entTotal = md.entradas.reduce((s,e) => s+(+e.valor||0), 0);
-  const saiTotal = md.saidas.reduce((s,e) => s+(+e.valor||0), 0);
-  const sobra = entTotal - saiTotal;
-  document.getElementById('dash-mes-content').innerHTML = `
-    <div class="inv-row"><div class="inv-name">Total Entradas</div><span class="pos" style="font-family:var(--mono)">${fmtR(entTotal)}</span></div>
-    <div class="inv-row"><div class="inv-name">Total Saídas</div><span class="neg" style="font-family:var(--mono)">${fmtR(saiTotal)}</span></div>
-    <div class="inv-row" style="font-weight:700"><div class="inv-name">Sobra / Guardado</div><span class="${sobra>=0?'pos':'neg'}" style="font-family:var(--mono)">${fmtR(sobra)}</span></div>
-    ${md.patrimonio ? `
-      <hr class="divider">
-      <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Posição registrada no mês</div>
-      ${['cash','espanha','xp','nu'].map(k2=>`<div class="inv-row"><div class="inv-name" style="font-size:12px">${k2.toUpperCase()}</div><span style="font-family:var(--mono);font-size:13px">${fmtR(md.patrimonio[k2])}</span></div>`).join('')}
-    ` : '<div style="font-size:12px;color:var(--muted);margin-top:12px">Posição de investimento não registrada para este mês.</div>'}
-  `;
-}
-
-function renderHistorico() {
-  const rows = S.historico.slice().sort((a,b) => a.mes.localeCompare(b.mes));
-  document.getElementById('historico-tbody').innerHTML = rows.map((r,i) => {
-    const prev = rows[i-1];
-    const v = (prev && prev.total && r.total) ? (r.total-prev.total)/prev.total : null;
-    const isProj = !r.realizado;
-    return `<tr style="${isProj?'color:var(--accent);opacity:0.75':''}">
-      <td class="label" style="${isProj?'color:var(--accent)':''}">${mesLabel(r.mes)}${isProj?' <span class="badge badge-blue" style="font-size:10px">proj.</span>':''}</td>
-      <td>${r.total ? fmtR(r.total) : '<span style="color:var(--muted)">—</span>'}</td>
-      <td class="${v===null?'':v>=0?'pos':'neg'}">${v===null?'-':fmtPct(v)}</td>
-      <td class="${r.guardar>0?'pos':''}">${fmtR(r.guardar)}</td>
-    </tr>`;
-  }).join('');
-}
-
-// ============================================================
-// MENSAL — Tabela Planilha (CLT Jan-Ago/26 + PJ Set/26-Dez/27)
-// ============================================================
-
-// Colunas da tabela
-const TL_COLS = [
-  // Entradas
-  { id:'sal',       label:'Salário',       group:'ent',   pj:true,  clt:true  },
-  { id:'adicionais',label:'Adicionais',    group:'ent',   pj:true,  clt:false },
-  { id:'comissao',  label:'Comissão',      group:'ent',   pj:true,  clt:true  },
-  { id:'lume',      label:'Lume+CS',       group:'ent',   pj:true,  clt:true  },
-  { id:'jac',       label:'JAC',           group:'ent',   pj:true,  clt:true  },
-  { id:'_sub5du',   label:'Subtotal 5ºDU', group:'sub',   pj:false, clt:false, calc:true },
-  { id:'carro',     label:'Carro',         group:'ent',   pj:true,  clt:false },
-  { id:'ingles',    label:'Inglês',        group:'ent',   pj:true,  clt:true  },
-  { id:'suportepj', label:'Suporte PJ',    group:'ent',   pj:true,  clt:false },
-  { id:'extras',    label:'Extras',        group:'ent',   pj:true,  clt:true  },
-  // Gastos
-  { id:'luz',       label:'Luz',           group:'gasto', pj:true,  clt:true  },
-  { id:'habitacao', label:'Habitação',     group:'gasto', pj:true,  clt:true  },
-  { id:'condominio',label:'Condomínio',    group:'gasto', pj:true,  clt:true  },
-  { id:'iptu',      label:'IPTU',          group:'gasto', pj:true,  clt:true  },
-  { id:'nubank',    label:'Nubank',        group:'gasto', pj:true,  clt:true  },
-  { id:'xp',        label:'XP',            group:'gasto', pj:true,  clt:true  },
-  { id:'c6lucas',   label:'C6 Lucas',      group:'gasto', pj:true,  clt:true  },
-  { id:'itau',      label:'Itaú',          group:'gasto', pj:true,  clt:true  },
-  { id:'santander', label:'Santander',     group:'gasto', pj:true,  clt:true  },
-  { id:'inss',      label:'INSS',          group:'gasto', pj:true,  clt:false },
-  { id:'fgts',      label:'FGTS+Férias',   group:'gasto', pj:true,  clt:false },
-  { id:'espanha',   label:'Espanha',       group:'gasto', pj:true,  clt:true  },
-  // Totais
-  { id:'_subtgasto',label:'Subtotal Gastos',group:'res',  pj:false, clt:false, calc:true },
-  { id:'_sobra',    label:'Sobra',          group:'res',  pj:false, clt:false, calc:true },
-  { id:'_guardar',  label:'Guardar',        group:'meta', pj:true,  clt:true  },
-];
-
-// Meses que aparecem na tabela
-const TL_MESES_CLT = [
-  '2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07','2026-08'
-];
-const TL_MESES_PJ = [
-  '2026-09','2026-10','2026-11','2026-12',
-  '2027-01','2027-02','2027-03','2027-04','2027-05','2027-06','2027-07','2027-08','2027-09','2027-10','2027-11','2027-12'
-];
-
-// Garante que S.pj existe
-function getPJ() {
-  if (!S.pj) S.pj = {};
-  return S.pj;
-}
-
-// Lê valor PJ de um mês/coluna
-function getPJVal(mes, col) {
-  const pj = getPJ();
-  return (pj[mes] && pj[mes][col] !== undefined) ? +pj[mes][col] : 0;
-}
-
-// Extrai valor CLT de um mês a partir dos dados existentes (entradas/saídas)
-function getCLTVal(mes, col) {
-  const md = S.meses[mes];
-  if (!md) return 0;
-  const ents = md.entradas || [];
-  const sais = md.saidas || [];
-
-  const sumEnt = (...keys) => ents.filter(e => keys.some(k => (e.tipo||'').toLowerCase().includes(k))).reduce((s,e)=>s+(+e.valor||0),0);
-  const sumSai = (...keys) => sais.filter(e => keys.some(k => (e.categoria||'').toLowerCase().includes(k))).reduce((s,e)=>s+(+e.valor||0),0);
-
-  switch(col) {
-    case 'sal':       return sumEnt('salário','vale (adiant');
-    case 'comissao':  return sumEnt('comissão');
-    case 'lume':      return sumEnt('lume');
-    case 'jac':       return sumEnt('jac');
-    case 'ingles':    return sumSai('inglês');
-    case 'extras':    return sumEnt('plr','13º');
-    case 'luz':       return sumSai('luz');
-    case 'habitacao': return sumSai('habitação');
-    case 'condominio':return sumSai('condomínio');
-    case 'iptu':      return sumSai('iptu');
-    case 'nubank':    return sumSai('nubank');
-    case 'xp':        return sumSai('xp');
-    case 'c6lucas':   return sumSai('c6');
-    case 'itau':      return sumSai('itaú');
-    case 'santander': return sumSai('santander');
-    case 'espanha':   return sumSai('espanha');
-    default:          return 0;
-  }
-}
-
-// Calcula colunas derivadas
-function calcDerived(vals) {
-  // Subtotal 5ºDU = sal + adicionais + comissao + lume + jac
-  vals._sub5du = (vals.sal||0)+(vals.adicionais||0)+(vals.comissao||0)+(vals.lume||0)+(vals.jac||0);
-  // total entradas = _sub5du + carro + ingles + suportepj + extras
-  const totalEnt = vals._sub5du + (vals.carro||0)+(vals.ingles||0)+(vals.suportepj||0)+(vals.extras||0);
-  // Subtotal gastos
-  vals._subtgasto = (vals.luz||0)+(vals.habitacao||0)+(vals.condominio||0)+(vals.iptu||0)+(vals.nubank||0)+(vals.xp||0)+(vals.c6lucas||0)+(vals.itau||0)+(vals.santander||0)+(vals.inss||0)+(vals.fgts||0)+(vals.espanha||0);
-  // Sobra subtotal = total entradas - subtotal gastos
-  vals._sobra = totalEnt - vals._subtgasto;
-  return vals;
-}
-
-function fmtTL(v) {
-  if (!v) return '';
-  return 'R$ '+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
-}
-
-function renderMensal() {
-  const GRUPOS = {
-    ent:   { label:'💰 ENTRADAS',      cls:'th-group-ent'   },
-    sub:   { label:'📊 SUBTOTAL',       cls:'th-group-sub'   },
-    gasto: { label:'💸 GASTOS',         cls:'th-group-gasto' },
-    res:   { label:'📈 RESULTADO',      cls:'th-group-res'   },
-    meta:  { label:'🎯 META',           cls:'th-group-meta'  },
-  };
-
-  // ---------- THEAD ----------
-  // Linha 1: grupos
-  let grpRow = '<tr><th class="th-ref" style="border:1px solid var(--border)">REF.</th><th class="th-data" style="border:1px solid var(--border)">DATA</th>';
-  let lastGrp = null; let grpSpan = 0; let grpCells = [];
-  TL_COLS.forEach((c,i) => {
-    if (c.group !== lastGrp) {
-      if (lastGrp) grpCells.push({g:lastGrp, span:grpSpan});
-      lastGrp = c.group; grpSpan = 1;
-    } else grpSpan++;
-    if (i === TL_COLS.length-1) grpCells.push({g:lastGrp, span:grpSpan});
-  });
-  grpCells.forEach(gc => {
-    const g = GRUPOS[gc.g];
-    grpRow += `<th colspan="${gc.span}" class="${g.cls}" style="border:1px solid var(--border);padding:5px 8px;text-align:center;">${g.label}</th>`;
-  });
-  grpRow += '</tr>';
-
-  // Linha 2: colunas
-  let colRow = '<tr><th class="th-ref" style="border:1px solid var(--border)">REF.A:</th><th class="th-data" style="border:1px solid var(--border)">DATA</th>';
-  TL_COLS.forEach(c => {
-    const grp = GRUPOS[c.group];
-    colRow += `<th class="${grp.cls}" style="border:1px solid var(--border);padding:5px 8px;text-align:center;">${c.label}</th>`;
-  });
-  colRow += '</tr>';
-  document.getElementById('tabela-thead').innerHTML = grpRow + colRow;
-
-  // ---------- TBODY ----------
-  const mesAtual = calcSelMes();
-  let html = '';
-
-  const buildRow = (mes, isPJ) => {
-    const [ano, mm] = mes.split('-');
-    const mesNum = +mm;
-    const refLabel = MESES[mesNum-1]+'/'+ano;
-    // Data do 5º DU aproximado (dia 07)
-    const dataLabel = `05/${mm.padStart(2,'0')}/${ano}`;
-
-    // Monta valores
-    let vals = {};
-    if (isPJ) {
-      const pjData = getPJ()[mes] || {};
-      TL_COLS.forEach(c => { if (!c.calc) vals[c.id] = pjData[c.id] !== undefined ? +pjData[c.id] : 0; });
-    } else {
-      TL_COLS.forEach(c => { if (!c.calc) vals[c.id] = getCLTVal(mes, c.id); });
-    }
-    calcDerived(vals);
-
-    const isCurrent = mes === mesAtual;
-    const rowCls = isPJ ? 'tl-row-pj' : 'tl-row-clt';
-    const badgeCls = isPJ ? 'tl-badge-pj' : 'tl-badge-clt';
-    const badgeTxt = isPJ ? 'PJ' : 'CLT';
-    const highlightStyle = isCurrent ? 'outline:2px solid var(--accent);outline-offset:-2px;' : '';
-
-    let tr = `<tr class="${rowCls}" style="${highlightStyle}">`;
-    tr += `<td class="tl-ref" style="border:1px solid var(--border);">${refLabel}<span class="tl-badge ${badgeCls}">${badgeTxt}</span></td>`;
-    tr += `<td class="tl-data" style="border:1px solid var(--border);padding:5px 8px;color:var(--muted);font-size:11px;">${dataLabel}</td>`;
-
-    TL_COLS.forEach(c => {
-      const v = vals[c.id] || 0;
-      if (c.calc) {
-        // Coluna calculada — sempre somente leitura
-        let tdCls = 'tl-val';
-        if (c.id === '_sub5du') tdCls += ' sub';
-        else if (c.id === '_subtgasto') tdCls += ' subtotal-gasto';
-        else if (c.id === '_sobra') tdCls += v >= 0 ? ' sobra-pos' : ' sobra-neg';
-        tr += `<td class="${tdCls}" data-mes="${mes}" data-col="${c.id}" style="border:1px solid var(--border);">${v ? fmtTL(v) : ''}</td>`;
-      } else if (isPJ) {
-        // Editável inline
-        const placeholder = c.id === '_guardar' ? '0' : '';
-        tr += `<td style="border:1px solid var(--border);padding:0;">
-          <input class="tl-input" type="number" step="0.01" min="0"
-            value="${v || ''}"
-            placeholder="${placeholder}"
-            data-mes="${mes}" data-col="${c.id}"
-            onchange="tlSalvar(this)"
-            onkeydown="tlNavKey(event,this)"
-          >
-        </td>`;
-      } else {
-        // CLT leitura
-        let tdCls = 'tl-val';
-        if (c.group === 'ent' || c.group === 'sub') tdCls += v > 0 ? ' pos' : '';
-        if (c.group === 'gasto') tdCls += v > 0 ? ' neg' : '';
-        if (c.id === '_guardar') tdCls = 'tl-val guardar';
-        tr += `<td class="${tdCls}" style="border:1px solid var(--border);">${v ? fmtTL(v) : ''}</td>`;
-      }
-    });
-    tr += '</tr>';
-    return tr;
-  };
-
-  // Linha de totais anuais
-  const buildTotalRow = (label, mesesLista, isPJ) => {
-    let totals = {};
-    TL_COLS.forEach(c => { if (!c.calc) totals[c.id] = 0; });
-    mesesLista.forEach(mes => {
-      let vals = {};
-      if (isPJ) {
-        const pjData = getPJ()[mes] || {};
-        TL_COLS.forEach(c => { if (!c.calc) vals[c.id] = pjData[c.id] !== undefined ? +pjData[c.id] : 0; });
-      } else {
-        TL_COLS.forEach(c => { if (!c.calc) vals[c.id] = getCLTVal(mes, c.id); });
-      }
-      TL_COLS.forEach(c => { if (!c.calc) totals[c.id] = (totals[c.id]||0)+(vals[c.id]||0); });
-    });
-    calcDerived(totals);
-
-    let tr = `<tr style="background:#0a0b0e;border-top:2px solid var(--border2);">`;
-    tr += `<td colspan="2" style="border:1px solid var(--border);padding:6px 10px;font-size:11px;font-weight:700;color:var(--yellow);text-align:center;position:sticky;left:0;background:#0a0b0e;">${label}</td>`;
-    TL_COLS.forEach(c => {
-      const v = totals[c.id] || 0;
-      let tdCls = 'tl-val';
-      if (c.id === '_sub5du') tdCls += ' sub';
-      else if (c.id === '_subtgasto') tdCls += ' subtotal-gasto';
-      else if (c.id === '_sobra') tdCls += v >= 0 ? ' sobra-pos' : ' sobra-neg';
-      else if (c.id === '_guardar') tdCls = 'tl-val guardar';
-      else if (c.group === 'ent' || c.group === 'sub') tdCls += v > 0 ? ' pos' : '';
-      else if (c.group === 'gasto') tdCls += v > 0 ? ' neg' : '';
-      tr += `<td class="${tdCls}" style="border:1px solid var(--border);font-weight:700;">${v ? fmtTL(v) : ''}</td>`;
-    });
-    tr += '</tr>';
-    return tr;
-  };
-
-  // Separador visual
-  const sep = (txt, color) => `<tr><td colspan="${TL_COLS.length+2}" style="background:${color};padding:4px 12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#fff;border:none;">${txt}</td></tr>`;
-
-  html += sep('📋 CLT — Janeiro a Agosto/2026', 'rgba(79,142,247,.35)');
-  TL_MESES_CLT.forEach(m => { html += buildRow(m, false); });
-  html += buildTotalRow('▶ TOTAL CLT 2026', TL_MESES_CLT, false);
-
-  html += sep('🚀 PJ — Setembro/2026 em diante', 'rgba(124,92,252,.35)');
-  TL_MESES_PJ.forEach(m => { html += buildRow(m, true); });
-  html += buildTotalRow('▶ TOTAL PJ 2026', TL_MESES_PJ.filter(m=>m.startsWith('2026')), true);
-  html += buildTotalRow('▶ TOTAL PJ 2027', TL_MESES_PJ.filter(m=>m.startsWith('2027')), true);
-
-  document.getElementById('tabela-tbody').innerHTML = html;
-}
-
-// Salva célula PJ ao mudar valor
-async function tlSalvar(input) {
-  const mes = input.dataset.mes;
-  const col = input.dataset.col;
-  const val = parseFloat(input.value) || 0;
-  if (!S.pj) S.pj = {};
-  if (!S.pj[mes]) S.pj[mes] = {};
-  S.pj[mes][col] = val;
-
-  // Recalcula a linha e atualiza células calculadas
-  const pjData = S.pj[mes];
-  let vals = {};
-  TL_COLS.forEach(c => { if (!c.calc) vals[c.id] = pjData[c.id] !== undefined ? +pjData[c.id] : 0; });
-  calcDerived(vals);
-  // Atualiza todas as células calculadas da mesma linha
-  document.querySelectorAll(`td[data-mes="${mes}"]`).forEach(td => {
-    const c = td.dataset.col;
-    if (c && vals[c] !== undefined) {
-      const v = vals[c];
-      let cls = 'tl-val';
-      if (c === '_sub5du') cls += ' sub';
-      else if (c === '_subtgasto') cls += ' subtotal-gasto';
-      else if (c === '_sobra') cls += v >= 0 ? ' sobra-pos' : ' sobra-neg';
-      td.className = cls;
-      td.textContent = v ? fmtTL(v) : '';
-    }
-  });
-  try { await saveData(S); setSaveIndicator('saved','✓ Salvo'); } catch(e) { setSaveIndicator('error','✗ Erro'); }
-}
-
-// Navega com Enter/Tab entre células da tabela
-function tlNavKey(e, input) {
-  if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
-}
-
-// Mantém compatibilidade das funções antigas que podem ser chamadas por outros módulos
-function buildMesSel() {}
-function getEtapa(item) {
-  if (item.etapa === '5DU' || item.etapa === 'VALE') return item.etapa;
-  const obs = (item.obs || '').toLowerCase();
-  if (obs.includes('vale (dia 20)') || obs.includes('vale(dia 20)')) return 'VALE';
-  const tipo = (item.tipo || '').toLowerCase();
-  if (tipo.startsWith('vale (adiant')) return 'VALE';
-  return '5DU';
-}
-
-async function togglePagoSaida(i) {}
-async function addEntrada() {}
-async function delEntrada(i) {}
-async function addSaida() {}
-async function delSaida(i) {}
-let _editTipo = null; let _editIdx = null;
-function editEntrada(i) {}
-function editSaida(i) {}
-async function salvarEdicao() {}
-
-async function savePatrimonio() {
-  const cash = +document.getElementById('pat-cash').value||0;
-  const espanha = +document.getElementById('pat-espanha').value||0;
-  const xp = +document.getElementById('pat-xp').value||0;
-  const nu = +document.getElementById('pat-nu').value||0;
-  getMesData(selMes).patrimonio = { cash, espanha, xp, nu };
-  syncInvAtual();
-  const tot = cash+espanha+xp+nu;
-  const hi = S.historico.find(h => h.mes===selMes);
-  if (hi) { hi.total = tot; hi.realizado = true; }
-  else S.historico.push({ mes: selMes, total: tot, guardar: 0, realizado: true });
-  S.historico.sort((a,b) => a.mes.localeCompare(b.mes));
-  closeModal('modal-patrimonio');
-  try { await saveData(S); toast('Posição registrada!'); } catch(e) { toast('Erro ao salvar. Verifique sua conexão.', true); }
-}
-
-// ============================================================
-// PROJEÇÃO
-// ============================================================
-function renderProjecao() {
-  const clt_data = [
-    { mes:'Jan', sal:1712.12, vt:264, vale:3995, com:1445, lume:1700, jac:1854.5, gastos:7141.77, guardar:900, pat:78678.03 },
-    { mes:'Fev', sal:1051.12, vt:264, vale:2139.84, com:734, lume:3600, jac:1856, extra:10566.57, gastos:9511.68, guardar:12200, pat:95314 },
-    { mes:'Mar', sal:1542.12, vt:264, vale:2139.84, com:95, lume:2200, jac:1896, gastos:9423.77, guardar:0, pat:94680.15 },
-    { mes:'Abr', sal:1542.12, vt:264, vale:2139.84, com:748, lume:4900, jac:1713, gastos:8870.56, guardar:2600, pat:93128.1 },
-    { mes:'Mai', sal:2594.12, vt:264, vale:3360.34, com:761, lume:2800, jac:1772, gastos:7800.11, guardar:1962.01, pat:93128.1 },
-    { mes:'Jun', sal:6894.12, vt:264, vale:2560.34, com:761, lume:2800, jac:1772, extra:4226.63, gastos:5748.05, guardar:8794.07, pat:null },
-    { mes:'Jul', sal:2594.12, vt:264, vale:2560.34, com:761, lume:2800, jac:1772, gastos:5748.05, guardar:4494.07, pat:null },
-    { mes:'Ago', sal:2594.12, vt:264, vale:2560.34, com:190, lume:2800, jac:1772, gastos:5350.05, guardar:4321.07, pat:null },
-    { mes:'Set', sal:2594.12, vt:264, vale:2560.34, com:190, lume:2800, jac:1772, gastos:5350.05, guardar:4321.07, pat:null },
-    { mes:'Out', sal:2594.12, vt:264, vale:4355.83, com:0, lume:2800, jac:1772, gastos:5350.05, guardar:4131.07, pat:null, obs:'Férias' },
-    { mes:'Nov', sal:2594.12, vt:264, vale:5829.22, com:0, lume:2800, jac:1772, gastos:5350.05, guardar:4131.07, pat:null, obs:'13º' },
-    { mes:'Dez', sal:2594.12, vt:264, vale:6951, com:0, lume:2800, jac:1772, gastos:5350.05, guardar:4131.07, pat:null, obs:'13º' },
-  ];
-  const realizados = ['Jan','Fev','Mar','Abr'];
-  document.getElementById('tbody-projecao-clt').innerHTML = clt_data.map(r => {
-    const isReal = realizados.includes(r.mes);
-    const total_ent = r.sal+r.vt+(r.vale||0)+r.com+r.lume+r.jac+(r.extra||0);
-    const color = isReal ? '' : 'color:var(--accent)';
-    return `<tr style="${color}"><td class="label" style="color:inherit">${r.mes}${r.obs?` <span class="badge badge-yellow" style="font-size:10px">${r.obs}</span>`:''}${isReal?' <span class="badge badge-green" style="font-size:10px">✓</span>':''}</td><td>${fmtR(r.sal)}</td><td>${fmtR(r.vt)}</td><td>${fmtR(r.vale||0)}</td><td>${fmtR(r.com)}</td><td>${fmtR(r.lume)}</td><td>${fmtR(r.jac)}</td><td style="font-weight:600">${fmtR(total_ent)}</td><td class="neg">${fmtR(r.gastos)}</td><td class="pos">${fmtR(r.guardar)}</td><td>${r.pat?fmtR(r.pat):'-'}</td><td class="${(()=>{const prev=clt_data[clt_data.indexOf(r)-1];if(!r.pat||!prev||!prev.pat)return '';return r.pat>=prev.pat?'pos':'neg';})()}">${(()=>{const prev=clt_data[clt_data.indexOf(r)-1];if(!r.pat||!prev||!prev.pat)return '-';const v=(r.pat-prev.pat)/prev.pat;return (v>=0?'+':'')+(v*100).toFixed(2)+'%';})()}</td></tr>`;
-  }).join('');
-  const pj_data = [
-    { mes:'Mai', sal:13650, add:800, com:761, gastos:11803.3, guardar:10429.7, pat:104432.8 },
-    { mes:'Jun', sal:13650, add:4300, com:761, gastos:10229.3, guardar:15503.7, pat:119936.5, obs:'PLR' },
-    { mes:'Jul', sal:13650, add:0, com:761, gastos:10229.3, guardar:11203.7, pat:131140.2 },
-    { mes:'Ago', sal:13650, add:0, com:190, gastos:9831.3, guardar:11030.7, pat:142170.9 },
-    { mes:'Set', sal:13650, add:0, com:190, gastos:9667.3, guardar:11194.7, pat:153365.6 },
-    { mes:'Out', sal:13650, add:0, com:0, gastos:9667.3, guardar:11004.7, pat:164370.3, obs:'Férias' },
-    { mes:'Nov', sal:13650, add:0, com:0, gastos:9667.3, guardar:11004.7, pat:175375 },
-    { mes:'Dez', sal:13650, add:0, com:0, gastos:9667.3, guardar:11004.7, pat:186379.7 },
-  ];
-  document.getElementById('tbody-projecao-pj').innerHTML = pj_data.map(r => `<tr style="color:var(--accent)"><td class="label" style="color:var(--accent)">${r.mes}${r.obs?` <span class="badge badge-yellow" style="font-size:10px">${r.obs}</span>`:''}</td><td>${fmtR(r.sal)}</td><td>${fmtR(r.add)}</td><td>${fmtR(r.com)}</td><td style="font-weight:600">${fmtR(r.sal+r.add+r.com)}</td><td class="neg">${fmtR(r.gastos)}</td><td class="pos">${fmtR(r.guardar)}</td><td>${fmtR(r.pat)}</td></tr>`).join('');
-}
-
-// ============================================================
-// INVESTIMENTOS
-// ============================================================
-function renderInvestimentos() {
-  syncInvAtual();
-  const inv = S.inv_atual;
-  const total = (inv.cash||0)+(inv.espanha||0)+(inv.xp||0)+(inv.nu||0);
-  document.getElementById('inv-cards').innerHTML = `
-    <div class="card blue"><div class="card-label">Total Patrimônio</div><div class="card-value">${fmtR(total)}</div></div>
-    <div class="card"><div class="card-label">Cash</div><div class="card-value" style="font-size:17px">${fmtR(inv.cash)}</div></div>
-    <div class="card"><div class="card-label">Espanha</div><div class="card-value" style="font-size:17px">${fmtR(inv.espanha)}</div></div>
-    <div class="card green"><div class="card-label">XP Invest</div><div class="card-value" style="font-size:17px">${fmtR(inv.xp)}</div></div>
-    <div class="card"><div class="card-label">Nubank</div><div class="card-value" style="font-size:17px">${fmtR(inv.nu)}</div></div>
-  `;
-  document.getElementById('saldos-conta').innerHTML = `
-    <div class="inv-row"><div><div class="inv-name">Cash</div><div class="inv-type">Reserva líquida</div></div><span class="inv-value">${fmtR(inv.cash)}</span></div>
-    <div class="inv-row"><div><div class="inv-name">Espanha (RGB)</div><div class="inv-type">Fundo de investimento</div></div><span class="inv-value">${fmtR(inv.espanha)}</span></div>
-    <div class="inv-row"><div><div class="inv-name">XP Invest</div><div class="inv-type">Tesouro Selic + RF + Fundos</div></div><span class="inv-value pos">${fmtR(inv.xp)}</span></div>
-    <div class="inv-row"><div><div class="inv-name">Nubank</div><div class="inv-type">Conta corrente / reserva</div></div><span class="inv-value">${fmtR(inv.nu)}</span></div>
-    <div class="inv-row" style="font-weight:700"><div><div class="inv-name">TOTAL</div></div><span class="inv-value pos">${fmtR(total)}</span></div>
-  `;
-  document.getElementById('xp-detalhada').innerHTML = `
-    <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Posição em 18/04/2026 — R$ 82.187,98 total</div>
-    <div class="inv-row"><div class="inv-name">Tesouro Selic LFT (mar/27, mar/28, mar/29)</div><div class="inv-type">41% — Pós-fixado</div><span style="font-family:var(--mono);color:var(--green)">R$ 33.686,31</span></div>
-    <div class="inv-row"><div class="inv-name">CDB Picpay ago/27 (R$ 28k aplicado)</div><div class="inv-type">103,25% CDI</div><span style="font-family:var(--mono)">R$ 28.492,99</span></div>
-    <div class="inv-row"><div class="inv-name">CDB Picpay fev/28 (R$ 4k)</div><div class="inv-type">104,25% CDI</div><span style="font-family:var(--mono)">R$ 4.101,64</span></div>
-    <div class="inv-row"><div class="inv-name">CDB Magalupay abr/28 (R$ 3k)</div><div class="inv-type">104,75% CDI</div><span style="font-family:var(--mono)">R$ 3.005,12</span></div>
-    <div class="inv-row"><div class="inv-name">CDB CNH Capital mar/27</div><div class="inv-type">100,50% CDI</div><span style="font-family:var(--mono)">R$ 2.339,13</span></div>
-    <div class="inv-row"><div class="inv-name">CDB BV, Picpay, Portoseg (menores)</div><div class="inv-type">Pós e pré-fixados</div><span style="font-family:var(--mono)">R$ 2.570,46</span></div>
-    <div class="inv-row"><div class="inv-name">Fundos RF DI (XP Ref. + Trend)</div><div class="inv-type">Pós-fixado</div><span style="font-family:var(--mono)">R$ 2.390,92</span></div>
-    <div class="inv-row"><div class="inv-name">LTN Prefixado (jan/27, jan/28, jan/29)</div><div class="inv-type">2% da carteira</div><span style="font-family:var(--mono)">R$ 1.626,64</span></div>
-    <div class="inv-row"><div class="inv-name">NTN-B1 IPCA+ (dez/30, dez/31)</div><div class="inv-type">Inflação</div><span style="font-family:var(--mono)">R$ 333,90</span></div>
-    <div class="inv-row"><div class="inv-name">CDB PAN IPCA+8,5% dez/26</div><div class="inv-type">Inflação</div><span style="font-family:var(--mono)">R$ 1.546,78</span></div>
-    <div class="inv-row"><div class="inv-name">CDB Picpay Prefixado jan/27</div><div class="inv-type">+14,11% a.a.</div><span style="font-family:var(--mono)">R$ 1.030,85</span></div>
-    <div style="font-size:11px;color:var(--muted);margin-top:8px">⚠️ Atualize a posição XP manualmente clicando em "Atualizar" nas contas.</div>
-  `;
-  const hist = S.historico.slice().sort((a,b) => a.mes.localeCompare(b.mes));
-  document.getElementById('tbody-inv-hist').innerHTML = hist.map(r => {
-    const md = S.meses[r.mes]; const pat = md && md.patrimonio;
-    return `<tr><td class="label">${mesLabel(r.mes)}</td><td>${pat?fmtR(pat.cash):'-'}</td><td>${pat?fmtR(pat.espanha):'-'}</td><td>${pat?fmtR(pat.xp):'-'}</td><td>${pat?fmtR(pat.nu):'-'}</td><td style="font-weight:600">${fmtR(r.total)}</td><td>-</td></tr>`;
-  }).join('');
-}
-
-async function salvarInvSaldo() {
-  const vCash = document.getElementById('is-cash').value.trim();
-  const vEsp  = document.getElementById('is-esp').value.trim();
-  const vXp   = document.getElementById('is-xp').value.trim();
-  const vNu   = document.getElementById('is-nu').value.trim();
-  const novaPos = {
-    cash:    vCash !== '' ? +vCash : S.inv_atual.cash,
-    espanha: vEsp  !== '' ? +vEsp  : S.inv_atual.espanha,
-    xp:      vXp   !== '' ? +vXp   : S.inv_atual.xp,
-    nu:      vNu   !== '' ? +vNu   : S.inv_atual.nu,
-  };
-
-  // Salva sempre no mês calendário atual — assim syncInvAtual pega este como o mais recente
-  const mesAtual = calcSelMes();
-  getMesData(mesAtual).patrimonio = { ...novaPos };
-  S.inv_atual = { ...novaPos };
-
-  const tot = novaPos.cash + novaPos.espanha + novaPos.xp + novaPos.nu;
-  const hi = S.historico.find(h => h.mes === mesAtual);
-  if (hi) { hi.total = tot; hi.realizado = true; }
-  else { S.historico.push({ mes: mesAtual, total: tot, guardar: 0, realizado: true }); }
-  S.historico.sort((a, b) => a.mes.localeCompare(b.mes));
-
-  closeModal('modal-inv-saldo');
-  renderInvestimentos();
-  try { await saveData(S); toast('Posição atualizada!'); } catch(e) { toast('Erro ao salvar', true); }
-}
-
-// ============================================================
-// PLR
-// ============================================================
-function loadPLRInputs() {
-  document.getElementById('plr-sal-baixo').value = S.plr.sal_baixo;
-  document.getElementById('plr-sal-alto').value = S.plr.sal_alto;
-  document.getElementById('plr-meta').value = S.plr.meta;
-  document.getElementById('plr-churn').value = S.plr.churn;
-  document.getElementById('plr-mult').value = S.plr.mult;
-  document.getElementById('plr-ating').value = S.plr.ating!=null ? S.plr.ating : 100;
-}
-
-async function calcPLR() {
-  S.plr.sal_baixo = +document.getElementById('plr-sal-baixo').value||6952;
-  S.plr.sal_alto  = +document.getElementById('plr-sal-alto').value||7378;
-  S.plr.meta      = +document.getElementById('plr-meta').value||5300000000;
-  let churnInput  = +document.getElementById('plr-churn').value||0.30;
-  if (churnInput>1) churnInput=churnInput/100;
-  S.plr.churn     = churnInput;
-  document.getElementById('plr-churn').value = churnInput;
-  S.plr.mult      = +document.getElementById('plr-mult').value||3;
-  S.plr.ating     = +document.getElementById('plr-ating').value;
-  if (S.plr.ating==null||isNaN(S.plr.ating)) S.plr.ating=100;
-  const sal_medio   = ((S.plr.sal_baixo*9)+(S.plr.sal_alto*3))/12;
-  const plr_bruto   = sal_medio*S.plr.mult;
-  const plr_real    = plr_bruto*(S.plr.ating/100);
-  const plr1        = plr_real/2;
-  const plr_apos_churn = plr_real*(1-S.plr.churn);
-  const plr2        = plr_apos_churn-plr1;
-  document.getElementById('plr-1a').textContent    = fmtR(plr1);
-  document.getElementById('plr-2a').textContent    = fmtR(plr2);
-  document.getElementById('plr-total').textContent = fmtR(plr1+plr2);
-  document.getElementById('plr-detalhes').innerHTML = `
-    <div class="inv-row"><div class="inv-name">Salário médio anual</div><span style="font-family:var(--mono)">${fmtR(sal_medio)}</span></div>
-    <div class="inv-row"><div class="inv-name">Multiplicador PLR</div><span style="font-family:var(--mono)">${S.plr.mult}x</span></div>
-    <div class="inv-row"><div class="inv-name">PLR bruto (3x salário médio)</div><span style="font-family:var(--mono)">${fmtR(plr_bruto)}</span></div>
-    <div class="inv-row"><div class="inv-name">% atingimento GRE</div><span style="font-family:var(--mono);color:var(--accent)">${S.plr.ating.toFixed(1)}%</span></div>
-    <div class="inv-row"><div class="inv-name">PLR real (após atingimento)</div><span style="font-family:var(--mono);font-weight:600">${fmtR(plr_real)}</span></div>
-    <div class="inv-row"><div class="inv-name">% cancelamento (churn)</div><span style="font-family:var(--mono)">${(S.plr.churn*100).toFixed(1)}%</span></div>
-    <div class="inv-row"><div class="inv-name">PLR após churn</div><span style="font-family:var(--mono)">${fmtR(plr_apos_churn)}</span></div>
-    <div class="inv-row"><div class="inv-name">1ª parcela (Fevereiro)</div><span class="pos" style="font-family:var(--mono);font-weight:700">${fmtR(plr1)}</span></div>
-    <div class="inv-row"><div class="inv-name">2ª parcela = após churn − 1ª parcela</div><span class="neutral" style="font-family:var(--mono);font-weight:700">${fmtR(plr2)}</span></div>
-    <hr class="divider">
-    <div style="font-size:11px;color:var(--muted)">💡 A 2ª parcela abate o churn da carteira. Meta: ${(S.plr.meta/1e9).toFixed(1).replace('.',',')} bilhões.</div>
-  `;
-  try { await saveData(S); toast('PLR salvo!'); } catch(e) { /* silencioso */ }
-}
-
-function renderExtras() {
-  const el = document.getElementById('extras-list');
-  if (!el) return;
-  el.innerHTML = S.extras.length===0
-    ? '<div style="color:var(--muted);font-size:13px">Nenhuma receita extra registrada.</div>'
-    : S.extras.map((e,i) => `<div class="c6-item"><div><div style="font-size:13px;font-weight:500">${e.desc}</div><div style="font-size:11px;color:var(--muted)">${mesLabel(e.mes)}</div></div><div style="display:flex;align-items:center;gap:10px"><span class="pos" style="font-family:var(--mono)">${fmtR(e.valor)}</span><button class="btn btn-danger btn-small" onclick="delExtra(${i})">×</button></div></div>`).join('');
-  const sel = document.getElementById('ext-mes');
-  if (sel) {
-    sel.innerHTML = '';
-    for (let m=1;m<=12;m++) { const k=`${ANO}-${String(m).padStart(2,'0')}`; sel.innerHTML+=`<option value="${k}">${MESES[m-1]}</option>`; }
-  }
-}
-
-async function addExtra() {
-  const desc = document.getElementById('ext-desc').value.trim();
-  const valor = +document.getElementById('ext-val').value;
-  const mes = document.getElementById('ext-mes').value;
-  if (!desc||!valor) { toast('Preencha descrição e valor', true); return; }
-  S.extras.push({ desc, valor, mes });
-  closeModal('modal-extra'); renderExtras();
-  try { await saveData(S); toast('Receita extra adicionada!'); } catch(e) { toast('Erro ao salvar', true); }
-}
-
-async function delExtra(i) {
-  S.extras.splice(i,1); renderExtras();
-  try { await saveData(S); } catch(e) { toast('Erro ao salvar', true); }
-}
-
-// ============================================================
-// ✈️ VIAGENS
-// ============================================================
-let _viagemEditIdx = null;
-
-function abrirModalViagem(idx) {
-  _viagemEditIdx = (idx !== undefined) ? idx : null;
-  if (!S.viagens) S.viagens = [];
-  const v = (_viagemEditIdx !== null) ? S.viagens[_viagemEditIdx] : {};
-  document.getElementById('modal-viagem-titulo').textContent = (_viagemEditIdx !== null) ? '✏️ Editar Viagem' : '✈️ Nova Viagem';
-  document.getElementById('vi-titulo').value      = v.titulo      || '';
-  document.getElementById('vi-mes').value         = v.mes         || '';
-  document.getElementById('vi-status').value      = v.status      || 'planejando';
-  document.getElementById('vi-budget').value      = v.budget      || '';
-  document.getElementById('vi-passagens').value   = v.passagens   || '';
-  document.getElementById('vi-hospedagem').value  = v.hospedagem  || '';
-  document.getElementById('vi-transporte').value  = v.transporte  || '';
-  document.getElementById('vi-alimentacao').value = v.alimentacao || '';
-  document.getElementById('vi-lazer').value       = v.lazer       || '';
-  document.getElementById('vi-seguro').value      = v.seguro      || '';
-  document.getElementById('vi-outros').value      = v.outros      || '';
-  document.getElementById('vi-obs').value         = v.obs         || '';
-  openModal('modal-viagem');
-}
-
-async function salvarViagem() {
-  const titulo = document.getElementById('vi-titulo').value.trim();
-  if (!titulo) { toast('Informe o título da viagem', true); return; }
-  if (!S.viagens) S.viagens = [];
-  const viagem = {
-    titulo,
-    mes:         document.getElementById('vi-mes').value,
-    status:      document.getElementById('vi-status').value,
-    budget:      parseFloat(document.getElementById('vi-budget').value)      || 0,
-    passagens:   parseFloat(document.getElementById('vi-passagens').value)   || 0,
-    hospedagem:  parseFloat(document.getElementById('vi-hospedagem').value)  || 0,
-    transporte:  parseFloat(document.getElementById('vi-transporte').value)  || 0,
-    alimentacao: parseFloat(document.getElementById('vi-alimentacao').value) || 0,
-    lazer:       parseFloat(document.getElementById('vi-lazer').value)       || 0,
-    seguro:      parseFloat(document.getElementById('vi-seguro').value)      || 0,
-    outros:      parseFloat(document.getElementById('vi-outros').value)      || 0,
-    obs:         document.getElementById('vi-obs').value.trim(),
-  };
-  if (_viagemEditIdx !== null) { S.viagens[_viagemEditIdx] = viagem; }
-  else { S.viagens.push(viagem); }
-  closeModal('modal-viagem');
-  renderViagens();
-  try { await saveData(S); toast('Viagem salva!'); }
-  catch(e) { toast('Erro ao salvar', true); }
-}
-
-async function deletarViagem(idx) {
-  if (!confirm('Remover esta viagem?')) return;
-  S.viagens.splice(idx, 1);
-  renderViagens();
-  try { await saveData(S); toast('Viagem removida.'); }
-  catch(e) { toast('Erro ao salvar', true); }
-}
-
-function fmtMesViagem(mes) {
-  if (!mes) return '—';
-  const [y,m] = mes.split('-');
-  return MESES[parseInt(m)-1]+'/'+y;
-}
-
-function renderViagens() {
-  if (!S.viagens) S.viagens = [];
-
-  // ---- Cards de resumo ----
-  const total_viagens   = S.viagens.length;
-  const confirmadas     = S.viagens.filter(v => v.status==='confirmada').length;
-  const total_gasto     = S.viagens.reduce((s,v) => s+(v.passagens||0)+(v.hospedagem||0)+(v.transporte||0)+(v.alimentacao||0)+(v.lazer||0)+(v.seguro||0)+(v.outros||0), 0);
-  const total_budget    = S.viagens.reduce((s,v) => s+(v.budget||0), 0);
-  document.getElementById('viagens-resumo-cards').innerHTML = `
-    <div class="card blue"><div class="card-label">Total de Viagens</div><div class="card-value" style="font-size:20px">${total_viagens}</div><div class="card-sub">cadastradas</div></div>
-    <div class="card green"><div class="card-label">Confirmadas</div><div class="card-value" style="font-size:20px">${confirmadas}</div><div class="card-sub">prontas para ir</div></div>
-    <div class="card yellow"><div class="card-label">Total Budget</div><div class="card-value" style="font-size:16px">${fmtR(total_budget)}</div><div class="card-sub">soma de todas as viagens</div></div>
-    <div class="card ${total_gasto>total_budget&&total_budget>0?'red':''}"><div class="card-label">Total Gasto</div><div class="card-value" style="font-size:16px">${fmtR(total_gasto)}</div><div class="card-sub">${total_budget>0?((total_gasto/total_budget)*100).toFixed(0)+'% do budget':''}</div></div>
-  `;
-
-  // ---- Grid de cards ----
-  const lista = document.getElementById('viagens-lista');
-  if (S.viagens.length === 0) {
-    lista.innerHTML = `<div class="viagens-empty"><div class="viagens-empty-icon">✈️</div><strong>Nenhuma viagem cadastrada ainda.</strong><br>Clique em <strong>+ Nova Viagem</strong> para começar a planejar.</div>`;
-    return;
-  }
-
-  const badgeClass = { planejando:'vbadge-planejando', confirmada:'vbadge-confirmada', realizada:'vbadge-realizada', cancelada:'vbadge-cancelada' };
-  const badgeLabel = { planejando:'🗓 Planejando', confirmada:'✅ Confirmada', realizada:'🏁 Realizada', cancelada:'❌ Cancelada' };
-
-  const ordenadas = S.viagens.map((v,i) => ({...v, _idx:i})).sort((a,b) => (b.mes||'').localeCompare(a.mes||''));
-
-  lista.innerHTML = ordenadas.map(v => {
-    const total = (v.passagens||0)+(v.hospedagem||0)+(v.transporte||0)+(v.alimentacao||0)+(v.lazer||0)+(v.seguro||0)+(v.outros||0);
-    const budget = v.budget || 0;
-    const pct    = budget>0 ? Math.min((total/budget)*100, 100) : 0;
-    const sobra  = budget - total;
-    const over   = budget>0 && total>budget;
-    const fillCls = pct<70 ? 'vpfill-ok' : pct<95 ? 'vpfill-warn' : 'vpfill-over';
-
-    const itens = [
-      ['✈️ Passagens',    v.passagens],
-      ['🏨 Hospedagem',   v.hospedagem],
-      ['🚌 Transporte',   v.transporte],
-      ['🍽️ Alimentação',  v.alimentacao],
-      ['🎭 Lazer',        v.lazer],
-      ['🛡️ Seguro',       v.seguro],
-      ['📦 Outros',       v.outros],
-    ].filter(([,val]) => val>0);
-
-    return `
-    <div class="viagem-card">
-      <div class="viagem-card-header">
-        <div>
-          <div class="viagem-card-titulo">${v.titulo}</div>
-          <div class="viagem-card-mes">${fmtMesViagem(v.mes)}</div>
-        </div>
-        <span class="vbadge ${badgeClass[v.status]||''}">${badgeLabel[v.status]||v.status}</span>
-      </div>
-
-      ${budget>0 ? `
-      <div class="viagem-progress-wrap">
-        <div class="viagem-progress-label"><span>Gasto vs Budget</span><span>${pct.toFixed(0)}% — ${fmtR(total)} de ${fmtR(budget)}</span></div>
-        <div class="viagem-progress-bar"><div class="viagem-progress-fill ${fillCls}" style="width:${pct}%"></div></div>
-      </div>` : ''}
-
-      ${itens.length>0 ? `
-      <div class="viagem-itens">
-        ${itens.map(([label,val]) => `<div class="viagem-item-row"><span>${label}</span><span>${fmtR(val)}</span></div>`).join('')}
-      </div>` : `<div style="font-size:12px;color:var(--muted);padding:10px 0">Nenhum valor lançado ainda.</div>`}
-
-      <div class="viagem-totals">
-        <div class="viagem-total-row">
-          <span>Total Gastos</span>
-          <span class="${over?'vtotal-over':'vtotal-neu'}">${fmtR(total)}</span>
-        </div>
-        ${budget>0 ? `
-        <div class="viagem-total-row sub">
-          <span>${over?'⚠️ Excedeu em':'💚 Disponível'}</span>
-          <span class="${over?'vtotal-over':'vtotal-ok'}">${fmtR(Math.abs(sobra))}</span>
-        </div>` : ''}
-      </div>
-
-      ${v.obs ? `<div class="viagem-obs">📝 ${v.obs}</div>` : ''}
-
-      <div class="viagem-card-actions">
-        <button class="vbtn-edit" onclick="abrirModalViagem(${v._idx})">✏️ Editar</button>
-        <button class="vbtn-del"  onclick="deletarViagem(${v._idx})">🗑 Remover</button>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-// ============================================================
-// CONFIG
-// ============================================================
-async function saveConfig() {
-  S.config.salario = +document.getElementById('cfg-salario').value||8471;
-  S.config.vt      = +document.getElementById('cfg-vt').value||264;
-  S.config.lume    = +document.getElementById('cfg-lume').value||2800;
-  S.config.jac     = +document.getElementById('cfg-jac').value||1772;
-  try { await saveData(S); } catch(e) { toast('Erro ao salvar', true); }
-}
-
-function renderConfig() {
-  document.getElementById('cfg-salario').value   = S.config.salario;
-  document.getElementById('cfg-vt').value        = S.config.vt;
-  document.getElementById('cfg-lume').value      = S.config.lume;
-  document.getElementById('cfg-jac').value       = S.config.jac;
-  document.getElementById('data-ver-label').textContent = 'v'+DATA_VERSION;
-  document.getElementById('gastos-fixos-list').innerHTML = S.gastos_fixos.map((g,i) => `
-    <div class="c6-item">
-      <div><div style="font-size:13px;font-weight:500">${g.nome}</div><div style="font-size:11px;color:var(--muted)">${g.tipo}</div></div>
-      <div style="display:flex;align-items:center;gap:10px">
-        <input type="number" value="${g.valor}"
-          style="width:90px;background:var(--surface2);border:1px solid var(--border2);border-radius:5px;color:var(--text);padding:4px 8px;font-size:12px;font-family:var(--mono)"
-          onchange="S.gastos_fixos[${i}].valor=+this.value; saveData(S).catch(e=>console.warn(e))">
-        <button class="btn btn-danger btn-small" onclick="S.gastos_fixos.splice(${i},1);saveData(S).catch(e=>console.warn(e));renderConfig()">×</button>
-      </div>
-    </div>
-  `).join('');
-}
-
-async function addFixo() {
-  const nome = document.getElementById('fixo-nome').value.trim();
-  const valor = +document.getElementById('fixo-val').value;
-  const tipo = document.getElementById('fixo-tipo').value;
-  if (!nome) { toast('Informe o nome', true); return; }
-  S.gastos_fixos.push({ id:Date.now(), nome, valor, tipo });
-  closeModal('modal-fixo'); renderConfig();
-  try { await saveData(S); toast('Gasto fixo adicionado!'); } catch(e) { toast('Erro ao salvar', true); }
-}
-
-async function limparTudo() {
-  S = initState(); toast('Dados limpos!');
-  try { await saveData(S); } catch(e) { toast('Erro ao salvar', true); }
-  showPage('dashboard');
-}
-
-async function importarDadosIniciais() {
-  if (!confirm('Isso vai restaurar os dados iniciais e sobrescrever os atuais. Continuar?')) return;
-  S = initState();
-  document.getElementById('loading-overlay').style.display = 'flex';
-  try { await saveData(S); toast('Dados iniciais restaurados!'); }
-  catch(e) { toast('Erro ao salvar no Drive', true); }
-  document.getElementById('loading-overlay').style.display = 'none';
-  showPage('dashboard');
-}
-
-// ============================================================
-// EXPORTAR EXCEL
-// ============================================================
-function exportarExcel() {
-  const wb = XLSX.utils.book_new();
-  const lRows = [['Mês','Tipo/Categoria','Valor','Observação','Direção']];
-  Object.entries(S.meses).sort().forEach(([mes,md]) => {
-    md.entradas.forEach(e => lRows.push([mesLabel(mes), e.tipo, e.valor, e.obs, 'Entrada']));
-    md.saidas.forEach(s => lRows.push([mesLabel(mes), s.categoria, s.valor, s.obs, 'Saída']));
-  });
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(lRows), 'Lançamentos');
-  const hRows = [['Mês','Patrimônio','Guardado']];
-  S.historico.forEach(h => hRows.push([mesLabel(h.mes), h.total, h.guardar]));
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(hRows), 'Histórico');
-  const iRows = [['Conta','Valor Atual'],
-    ['Cash',S.inv_atual.cash],['Espanha',S.inv_atual.espanha],
-    ['XP Invest',S.inv_atual.xp],['Nubank',S.inv_atual.nu],
-    ['TOTAL',S.inv_atual.cash+S.inv_atual.espanha+S.inv_atual.xp+S.inv_atual.nu],
-  ];
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(iRows), 'Investimentos');
-  // Aba viagens no Excel
-  if (S.viagens && S.viagens.length>0) {
-    const vRows = [['Título','Mês','Status','Budget','Passagens','Hospedagem','Transporte','Alimentação','Lazer','Seguro','Outros','Total Gasto','Saldo','Observação']];
-    S.viagens.forEach(v => {
-      const tot = (v.passagens||0)+(v.hospedagem||0)+(v.transporte||0)+(v.alimentacao||0)+(v.lazer||0)+(v.seguro||0)+(v.outros||0);
-      vRows.push([v.titulo, fmtMesViagem(v.mes), v.status, v.budget||0, v.passagens||0, v.hospedagem||0, v.transporte||0, v.alimentacao||0, v.lazer||0, v.seguro||0, v.outros||0, tot, (v.budget||0)-tot, v.obs||'']);
-    });
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(vRows), 'Viagens');
-  }
-  XLSX.writeFile(wb, `controle-financeiro-${new Date().toISOString().split('T')[0]}.xlsx`);
-  toast('Excel exportado!');
-}
-
-// ============================================================
-// UTILS
-// ============================================================
-function mesLabel(k) {
-  if (!k) return '';
-  const [ano,m] = k.split('-');
-  return MESES[+m-1]+'/'+ano;
-}
-
-function toast(msg, isErr=false) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.className = 'show'+(isErr?' error':'');
-  setTimeout(() => t.className='', 2600);
-}
-
-document.getElementById('hoje-label').textContent = new Date().toLocaleDateString('pt-BR', { weekday:'short', day:'2-digit', month:'short', year:'numeric' });
 </script>
 </body>
 </html>
